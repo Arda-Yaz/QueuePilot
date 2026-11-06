@@ -10,7 +10,7 @@ The active DVC endpoint is `https://dagshub.com/Arda-Yaz/QueuePilot.s3`. Both su
 
 ## Actual file hashes
 
-These SHA-256 digests were computed from the local files. Reference code identity is anchored by snapshot `fccd1d1430e5a601b07edd16fc832182b2432bbf`. The local history groups the current files into 20 commits. Source agent settings and `skills-lock.json` were excluded.
+These SHA-256 digests were computed from the local files. Reference code identity is anchored by snapshot `fccd1d1430e5a601b07edd16fc832182b2432bbf`. The initial implementation was organized into 20 commits. Source agent settings and `skills-lock.json` were excluded.
 
 | Runtime/configuration file | Bytes | SHA-256 |
 | --- | --- | --- |

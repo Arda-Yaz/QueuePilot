@@ -17,16 +17,15 @@ RUN apt-get update \
 RUN groupadd -r appuser && useradd -r -g appuser -m -d /home/appuser appuser
 
 COPY requirements/ ./requirements/
-# dvc[s3] powers the startup entrypoint that pulls model artifacts from the
-# DagsHub S3-compatible remote; version matches requirements/mlops.txt.
-RUN pip install --no-cache-dir "dvc[s3]==3.67.1"
+# DVC pulls model artifacts at startup. Align its S3 stack with the runtime
+# fsspec pin, also recorded in requirements/dev.txt and requirements/mlops.txt.
+RUN pip install --no-cache-dir "dvc[s3]==3.67.1" "s3fs==2026.7.0" "fsspec==2026.7.0"
 RUN if [ "$MODEL_BACKEND" = "cnn" ]; then \
         pip install --no-cache-dir --require-hashes -r requirements/cnn.txt && \
-        pip install --no-cache-dir --no-deps torch==2.13.0+cpu --extra-index-url https://download.pytorch.org/whl/cpu && \
-        python -m pip check; \
+        pip install --no-cache-dir --no-deps torch==2.13.0+cpu --extra-index-url https://download.pytorch.org/whl/cpu; \
     else \
         pip install --no-cache-dir --require-hashes -r requirements/base.txt; \
-    fi
+    fi && python -m pip check
 
 COPY --chown=appuser:appuser app/ app/
 COPY --chown=appuser:appuser src/ src/

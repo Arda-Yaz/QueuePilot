@@ -1,6 +1,6 @@
 # QueuePilot source map
 
-Reference snapshot identifier is `fccd1d1430e5a601b07edd16fc832182b2432bbf`. The local history groups the current implementation into 20 commits. Every original application, CLI, test and reporting module has a counterpart at its original path. `src` and `app` continue to be the import packages.
+Reference snapshot identifier is `fccd1d1430e5a601b07edd16fc832182b2432bbf`. The initial implementation was organized into 20 commits. Every original application, CLI, test and reporting module has a counterpart at its original path. `src` and `app` continue to be the import packages.
 
 | Original responsibility | QueuePilot counterpart | Change |
 | --- | --- | --- |
