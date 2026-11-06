@@ -1,0 +1,63 @@
+[project]
+name = "queuepilot"
+version = "1.0.0"
+description = "QueuePilot IT ticket classification with confidence-based routing"
+requires-python = ">=3.12"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+extend-exclude = ["notebook", ".agents", ".reference", ".tools", ".checks"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src", "app"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = [
+    "pandas.*",
+    "sklearn.*",
+    "scipy.*",
+    "joblib.*",
+    "numpy.*",
+    "torch.*",
+    "fastapi.*",
+    "pydantic.*",
+    "starlette.*",
+    "mlflow.*",
+    "prometheus_client.*",
+    "matplotlib.*",
+    "yaml.*"
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "app.*",
+    "src.textcnn",
+    "src.cnn_data",
+]
+disallow_untyped_decorators = false
+disallow_subclassing_any = false
