@@ -1,0 +1,30 @@
+{
+    "selection_dataset": "validation",
+    "target_accuracy": 0.9,
+    "selection_rule": "Highest validation coverage subject to lower 95% auto-routing accuracy CI meeting the target; Macro F1 as tie-breaker",
+    "selected_backend": "baseline",
+    "selected_threshold": 0.57,
+    "selected_model_sha256": "22d97863c792e6fd01431ae6fae42fe8547295253cc0cfc341a116eccf93e734",
+    "candidates": [
+        {
+            "backend": "baseline",
+            "validation_accuracy": 0.8562460765850597,
+            "validation_macro_f1": 0.8592734998526866,
+            "threshold": 0.57,
+            "validation_coverage": 0.8382506800585897,
+            "validation_auto_routed_accuracy": 0.9161258112830754,
+            "validation_accuracy_ci_lower": 0.9009397778036978,
+            "model_sha256": "22d97863c792e6fd01431ae6fae42fe8547295253cc0cfc341a116eccf93e734"
+        },
+        {
+            "backend": "cnn",
+            "validation_accuracy": 0.8422264071981586,
+            "validation_macro_f1": 0.8484883023963822,
+            "threshold": 0.76,
+            "validation_coverage": 0.8064448629420381,
+            "validation_auto_routed_accuracy": 0.9156720290607161,
+            "validation_accuracy_ci_lower": 0.9001365121990906,
+            "model_sha256": "f2baea6b9a3a005b07436385eaeeec770773288e121e47e89aa33414a1b38111"
+        }
+    ]
+}
