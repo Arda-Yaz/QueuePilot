@@ -1,0 +1,29 @@
+{
+    "model_backend": "baseline",
+    "python_version": "3.12.14",
+    "scikit_learn_version": "1.9.0",
+    "dataset_sha256": "044fdace33fa564e1e60453f2941dafc95539c99878b0d32746950394b9dd4d4",
+    "model_sha256": "22d97863c792e6fd01431ae6fae42fe8547295253cc0cfc341a116eccf93e734",
+    "training_timestamp": "2026-08-15T02:37:28.822598+00:00",
+    "git_commit": "3f37f84e1bc4c5eaa677c2cae0645d67b6031e67",
+    "random_seed": 42,
+    "hyperparameters": {
+        "ngram_range": [
+            1,
+            2
+        ],
+        "min_df": 2,
+        "max_df": 0.98,
+        "max_features": 100000,
+        "max_iter": 2000,
+        "class_weight": "balanced",
+        "calibration_method": "sigmoid (5-fold CV on training set)"
+    },
+    "val_metrics": {
+        "accuracy": 0.8562460765850597,
+        "macro_precision": 0.8722731126445622,
+        "macro_recall": 0.8476947962369115,
+        "macro_f1": 0.8592734998526866,
+        "weighted_f1": 0.8564623164913236
+    }
+}
