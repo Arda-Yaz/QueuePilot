@@ -1,0 +1,38 @@
+.git
+.gitignore
+.venv
+.reference/
+.tools/
+.checks/
+.pytest_cache
+.ruff_cache
+.mypy_cache
+__pycache__
+*.pyc
+tests/
+notebook/
+data/
+# Include model files and runtime metadata in the image
+artifacts/.mlflow_run_id_*
+
+# Include only report files required during inference
+reports/*
+!reports/metrics/
+reports/metrics/*
+!reports/metrics/*.json
+!reports/data/
+reports/data/*
+!reports/data/data_manifest.json
+mlruns/
+# DVC runtime pull support: the image needs the remote config, stage files and
+# lock file for `dvc pull` at container startup. Exclude only the heavy/secret
+# parts (local cache, tmp state, local credentials).
+.dvc/cache/
+.dvc/tmp/
+.dvc/config.local
+params.yaml
+GEMINI.md
+README.md
+requirements/mlops.txt
+requirements/cuda.txt
+pyproject.toml
