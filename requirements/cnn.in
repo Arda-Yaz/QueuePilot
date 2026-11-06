@@ -1,0 +1,8 @@
+-r base.in
+filelock
+fsspec
+networkx
+sympy
+jinja2
+typing-extensions
+setuptools

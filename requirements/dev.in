@@ -1,0 +1,13 @@
+-r train.in
+-r mlops.in
+pytest
+httpx
+psutil
+ruff
+mypy
+dvc
+dvc-s3
+mlflow
+PyYAML
+types-PyYAML
+scipy
