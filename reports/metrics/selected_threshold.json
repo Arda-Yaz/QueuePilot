@@ -1,0 +1,71 @@
+{
+    "threshold": 0.76,
+    "target_accuracy": 0.9,
+    "selection_rule": "maximize_coverage_subject_to_simultaneous_clopper_pearson_lower_bound_gte_target",
+    "alpha": 0.05,
+    "n_candidates": 90,
+    "min_accepted_samples": 50,
+    "model_sha256": "f2baea6b9a3a005b07436385eaeeec770773288e121e47e89aa33414a1b38111",
+    "validation_coverage": 0.8064448629420381,
+    "validation_auto_routed_accuracy": 0.9156720290607161,
+    "validation_accuracy_ci_lower": 0.9001365121990906,
+    "validation_manual_review_rate": 0.1935551370579619,
+    "per_class_stats": [
+        {
+            "label": "Access",
+            "n_accepted": 614,
+            "n_correct": 579,
+            "accuracy": 0.9429967426710097,
+            "wilson_lb_95": 0.9255725115644893
+        },
+        {
+            "label": "Administrative rights",
+            "n_accepted": 143,
+            "n_correct": 128,
+            "accuracy": 0.8951048951048951,
+            "wilson_lb_95": 0.8453690809009009
+        },
+        {
+            "label": "HR Support",
+            "n_accepted": 838,
+            "n_correct": 751,
+            "accuracy": 0.89618138424821,
+            "wilson_lb_95": 0.8775539428198382
+        },
+        {
+            "label": "Hardware",
+            "n_accepted": 1033,
+            "n_correct": 914,
+            "accuracy": 0.8848015488867377,
+            "wilson_lb_95": 0.8674462102111703
+        },
+        {
+            "label": "Internal Project",
+            "n_accepted": 185,
+            "n_correct": 176,
+            "accuracy": 0.9513513513513514,
+            "wilson_lb_95": 0.9182071045988135
+        },
+        {
+            "label": "Miscellaneous",
+            "n_accepted": 563,
+            "n_correct": 527,
+            "accuracy": 0.9360568383658969,
+            "wilson_lb_95": 0.9169221909590585
+        },
+        {
+            "label": "Purchase",
+            "n_accepted": 232,
+            "n_correct": 220,
+            "accuracy": 0.9482758620689655,
+            "wilson_lb_95": 0.9187720165620799
+        },
+        {
+            "label": "Storage",
+            "n_accepted": 246,
+            "n_correct": 234,
+            "accuracy": 0.9512195121951219,
+            "wilson_lb_95": 0.9233108298427573
+        }
+    ]
+}
