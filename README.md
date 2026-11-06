@@ -1,94 +1,63 @@
 # QueuePilot
 
-QueuePilot classifies IT support tickets into eight categories and routes low-confidence predictions to human review. It serves a calibrated TF-IDF / logistic regression baseline and TextCNN through FastAPI and the included browser UI.
+**Confidence-based routing for IT support tickets.** QueuePilot reads a ticket, ranks the three most likely support categories out of eight, and recommends either automatic routing or human review. Support agents can inspect the decision in a browser or request it through a REST API.
 
-[PORT_MAP.md](docs/PORT_MAP.md) maps the code organization. [SOURCE_MANIFEST.md](docs/SOURCE_MANIFEST.md) records artifacts, checks and known limitations. License terms are in [LICENSE](LICENSE).
+**Stack** · Python · scikit-learn · PyTorch · FastAPI · DVC · Docker
 
-## Local files
+A ticket like “Cannot access my account” illustrates the triage problem. The baseline predicts **Access**, but its confidence is **0.533**, below its **0.57** routing threshold. QueuePilot returns the category suggestion and flags the ticket for review. For “My laptop keyboard is broken,” the same model predicts **Hardware** with **0.976** confidence and recommends automatic routing. Both examples are outputs from the fitted baseline.
 
-This workspace contains verified copies of both fitted models and the dataset. Binary models and raw data are excluded from Git.
+## How a ticket becomes a routing decision
 
-| Path | Purpose |
-| --- | --- |
-| `artifacts/baseline.joblib` | Fitted calibrated baseline |
-| `artifacts/cnn/textcnn.pt` | CNN state dictionary |
-| `artifacts/cnn/{vocab,labels,config,artifact_manifest}.json` | Token IDs, label order, architecture and integrity checks |
-| `data/raw/all_tickets_processed_improved_v3.csv` | Dataset for data tools and evaluation |
-| `reports/data/*_ids.csv`, `data_manifest.json` | Persisted train, tune, calibration and test membership |
-| `reports/metrics/model_selection.json` | Persisted backend selection |
-| `reports/metrics/{baseline_selected_threshold,selected_threshold}.json` | Model-bound routing thresholds |
-
-The dataset comes from [Kaggle](https://www.kaggle.com/datasets/adisongoh/it-service-ticket-classification-dataset). Both model binaries are stored in the [QueuePilot DagsHub repository](https://dagshub.com/Arda-Yaz/QueuePilot). With DagsHub authentication configured, download them using `python -m dvc pull artifacts/baseline.joblib artifacts/cnn/textcnn.pt`. In another checkout, obtain the dataset separately and compare file hashes with the manifest.
-
-## Windows setup and serving
-
-Dependency profiles are grouped under `requirements/`. `base` serves the baseline, `cnn` adds CNN runtime dependencies, `train` adds training/plotting tools, `mlops` covers DVC/MLflow, `dev` covers development checks, and `cuda` retains the GPU preparation profile. Each `.in` describes inputs and its `.txt` contains pinned packages and hashes. Technical documents are grouped under `docs/`.
-
-The prepared `.venv` is ready for use. A fresh baseline environment can be created with Python 3.12.
-
-```powershell
-py -3.12 -m venv .venv
-.venv\Scripts\python.exe -m pip install --require-hashes -r requirements/base.txt
-$env:MODEL_BACKEND = "auto"
-.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```mermaid
+flowchart LR
+    A["Ticket from UI or API"] --> B["FastAPI validates text"]
+    B --> C["Selected classifier scores 8 categories"]
+    C --> D{"Top score meets threshold?"}
+    D -->|Yes| E["Recommend the predicted queue"]
+    D -->|No| F["Flag for human review"]
 ```
 
-Open `http://127.0.0.1:8000` for the UI and `/docs` for OpenAPI. `MODEL_BACKEND` accepts `auto`, `baseline` and `cnn`. Persisted `auto` selection resolves to baseline. Source thresholds are 0.57 for baseline and 0.76 for CNN. Equality with the threshold accepts automatic routing.
+- **Confidence drives the decision.** The default model uses TF-IDF features and logistic regression with sigmoid calibration. Calibration makes the scores more meaningful when deciding how much confidence to place in a prediction.
+- **The threshold comes from tuning data.** For each model, the selection rule seeks the greatest coverage whose lower confidence bound on auto-routed accuracy reaches 90%. Both models qualified. The baseline accepted **83.83%** of tuning tickets versus **80.64%** for TextCNN, so it was selected to serve by default. [Model selection record](reports/metrics/model_selection.json)
+- **Each threshold belongs to a specific model.** At startup, the service checks the model’s SHA-256 against its threshold record. Loading fails on a mismatch. The CNN also checks its vocabulary, label mapping and configuration before serving. [Inference code](src/inference.py)
 
-For CNN serving, use the source CNN dependency profile and pinned CPU PyTorch.
+## Evaluation
 
-```powershell
-.venv\Scripts\python.exe -m pip install --require-hashes -r requirements/cnn.txt
-.venv\Scripts\python.exe -m pip install --no-deps torch==2.13.0+cpu --index-url https://download.pytorch.org/whl/cpu
-.venv\Scripts\python.exe -m pip check
-$env:MODEL_BACKEND = "cnn"
-.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
-```
+The supplied reference reports evaluate the two pre-trained models on **4,787 held-out tickets**. Coverage is the share of all tickets accepted for automatic routing. The last column measures accuracy on that accepted subset.
 
-The verified development environment uses `requirements/dev.txt` followed by the same PyTorch command. Install that profile in a fresh environment. Each source lock is a complete profile and some shared pins differ between profiles. Local verification used CPU inference, Python 3.12.10, scikit-learn 1.9.0 and PyTorch 2.13.0+cpu. Source baseline metadata records Python 3.12.14.
+| Backend | Routing threshold | Overall accuracy | Coverage | Accuracy on accepted tickets |
+| --- | ---: | ---: | ---: | ---: |
+| TF-IDF + logistic regression | 0.57 | 85.75% | 82.56% | 92.16% |
+| TextCNN | 0.76 | 84.17% | 79.42% | 91.77% |
 
-Set environment variables before startup. `APP_ENV=production` requires `API_KEY`. Setting `API_KEY` also enables the `X-API-Key` check on `/predict` in other environments. Submit a ticket in a second terminal with the configured key.
+For the baseline, that split corresponds to **3,952 recommendations for automatic routing** and **835 referrals for review**. [Baseline report](reports/metrics/baseline_routing_metrics.json) · [TextCNN report](reports/metrics/routing_metrics.json) · [Dataset](https://www.kaggle.com/datasets/adisongoh/it-service-ticket-classification-dataset)
+
+**QueuePilot verification.** The implementation reused the fitted models and matched reference outputs on 20 inputs per backend, including confidence, top-three ordering and the review flag. The local verification run passed 70 tests. GitHub Actions separately downloaded the models, verified their hashes, built both Docker images and tested predictions from each running container. [Verification manifest](docs/SOURCE_MANIFEST.md) · [CI results](https://github.com/Arda-Yaz/QueuePilot/actions/runs/42198515108)
+
+## Try a ticket
+
+With the service running locally, open `http://127.0.0.1:8000` for the browser UI or send a request from PowerShell:
 
 ```powershell
 Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/predict `
-  -Headers @{ "X-API-Key" = "your-local-key" } `
   -ContentType "application/json" `
-  -Body '{"text":"I cannot access the shared network drive"}'
+  -Body '{"text":"Cannot access my account"}'
 ```
 
-Responses contain `category`, `confidence`, `threshold`, `needs_manual_review` and `top_3`. `/health` reports backend, hash and threshold. `/model-info` serves persisted baseline metrics. Prometheus monitoring is at `/metrics/`.
+Read `category` for the suggested queue and `needs_manual_review` for the routing decision. The response also includes `confidence`, `threshold` and `top_3`. When API-key authentication is enabled, supply the key in the `X-API-Key` header.
 
-## Existing tools
+<details>
+<summary>Start the baseline on Windows</summary>
 
-These tools write generated artifacts and reports. Invoke the relevant stage deliberately.
-
-| Task | Existing command |
-| --- | --- |
-| Prepare data | `python -m src.prepare_data` |
-| Train | `python -m src.train_baseline` / `python -m src.train_cnn` |
-| Tune predictions | `python -m src.evaluate_tune_baseline` / `python -m src.evaluate_tune_cnn` |
-| Held-out calibration | `python -m src.evaluate_calibration_baseline` / `python -m src.evaluate_calibration_cnn` |
-| Threshold selection | `python -m src.analyze_threshold_baseline` / `python -m src.analyze_threshold_cnn` |
-| Test evaluation | `python -m src.evaluate_baseline` / `python -m src.evaluate_cnn` |
-| Routing evaluation | `python -m src.evaluate_routing_baseline` / `python -m src.evaluate_routing` |
-| Compare and select | `python -m src.compare_models` / `python -m src.select_model` |
-| Evaluation sequence | `python -m src.run_evaluation_pipeline` |
-| Error analysis | `python -m src.error_summary --model baseline` or `--model cnn` |
-| Figures | `python -m src.plot_results` |
-| API benchmark | `python scripts/benchmark.py --help` |
-
-MLflow uses the existing `MLFLOW_TRACKING_ENABLED`, `MLFLOW_TRACKING_URI` and `MLFLOW_EXPERIMENT_NAME` variables. Other dependency profiles are in the source lock files. Container instructions are inherited in [docs/deploy.md](docs/deploy.md). The container entrypoint performs an authenticated DVC pull at startup.
-
-## Verification
+From the repository root, with Python 3.12 and DVC authenticated to the [QueuePilot model repository](https://dagshub.com/Arda-Yaz/QueuePilot), run:
 
 ```powershell
-.venv\Scripts\python.exe -m compileall -q src app scripts tests
-.venv\Scripts\python.exe -m pip check
-.venv\Scripts\python.exe -m ruff check .
-.venv\Scripts\python.exe -m mypy src app tests
-$env:APP_ENV = "test"
-$env:MLFLOW_TRACKING_ENABLED = "false"
-.venv\Scripts\python.exe -m pytest -q --ignore=tests/test_ml_smoke.py
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements/base.txt
+dvc pull artifacts/baseline.joblib
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-The last command passed 70 tests, including both real backends. The excluded source smoke test fits a synthetic model. Training execution count for this port is zero. Source-versus-port checks matched 20 texts per backend, API responses, data/split fingerprints, routing statistics and threshold CLI output lifecycles. Actual Uvicorn serving passed health, API-key, prediction, UI and metrics checks for both backends. These are compatibility checks. Inherited `reports/` metrics and figures retain upstream provenance.
+</details>
+
+[Deployment guide](docs/deploy.md) · [Code map](docs/PORT_MAP.md) · [License](LICENSE)
