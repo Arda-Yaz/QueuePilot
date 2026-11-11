@@ -14,6 +14,7 @@ from src.data import load_data, load_splits
 from src.evaluate import build_prediction_frame, calculate_calibration_metrics, calculate_metrics
 from src.hashing import calculate_file_sha256
 from src.paths import CNN_MODEL_PATH, FIGURE_DIR, METRICS_DIR, ROOT_DIR
+from src.prediction_provenance import cnn_bundle_hashes, write_prediction_provenance
 from src.textcnn import TextCNN
 from src.tracking import log_metrics, start_run
 
@@ -21,6 +22,7 @@ CNN_DIR = ROOT_DIR / "artifacts" / "cnn"
 
 
 def main() -> None:
+    initial_bundle = cnn_bundle_hashes(CNN_MODEL_PATH)
     FIGURE_DIR.mkdir(parents=True, exist_ok=True)
     with open(CNN_DIR / "vocab.json", encoding="utf-8") as f:
         vocab = json.load(f)
@@ -122,6 +124,9 @@ def main() -> None:
         pred_names, all_confidence,
     )
     results.to_csv(METRICS_DIR / "cnn_test_predictions.csv", index=False)
+    write_prediction_provenance(
+        METRICS_DIR / "cnn_test_predictions.csv", CNN_MODEL_PATH, initial_bundle,
+    )
 
     fig, ax = plt.subplots(figsize=(10, 8))
     ConfusionMatrixDisplay.from_predictions(

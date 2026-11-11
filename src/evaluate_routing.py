@@ -2,8 +2,8 @@ import json
 
 import pandas as pd
 
-from src.hashing import calculate_file_sha256
 from src.paths import CNN_MODEL_PATH, METRICS_DIR
+from src.prediction_provenance import validate_prediction_provenance
 from src.tracking import log_metrics, start_run
 
 TEST_PREDICTIONS_PATH = METRICS_DIR / "cnn_test_predictions.csv"
@@ -18,10 +18,15 @@ def main() -> None:
     if not THRESHOLD_PATH.exists():
         raise FileNotFoundError(f"Threshold config not found: {THRESHOLD_PATH}")
 
-    results = pd.read_csv(TEST_PREDICTIONS_PATH)
+    model_sha256 = validate_prediction_provenance(TEST_PREDICTIONS_PATH, CNN_MODEL_PATH)
 
     with open(THRESHOLD_PATH, "r", encoding="utf-8") as f:
         threshold_config = json.load(f)
+
+    if threshold_config.get("model_sha256") != model_sha256:
+        raise RuntimeError("Threshold/model mismatch; rerun threshold selection for this model")
+
+    results = pd.read_csv(TEST_PREDICTIONS_PATH)
 
     threshold = float(threshold_config["threshold"])
 
@@ -61,7 +66,7 @@ def main() -> None:
     }
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        json.dump({**routing_metrics, "model_sha256": calculate_file_sha256(CNN_MODEL_PATH)}, f, indent=4)
+        json.dump({**routing_metrics, "model_sha256": model_sha256}, f, indent=4)
 
     with start_run(run_name="evaluate_routing_cnn", model_backend="cnn"):
         log_metrics({

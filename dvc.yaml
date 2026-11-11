@@ -290,6 +290,7 @@ stages:
   evaluate_cnn:
     cmd: python -m src.evaluate_cnn
     deps:
+    - src/prediction_provenance.py
     - artifacts/cnn/textcnn.pt
     - artifacts/cnn/vocab.json
     - artifacts/cnn/labels.json
@@ -311,6 +312,8 @@ stages:
     - data/raw/all_tickets_processed_improved_v3.csv
     - requirements/dev.txt
     outs:
+    - reports/metrics/cnn_test_predictions.provenance.json:
+        cache: false
     - reports/metrics/cnn_test_predictions.csv:
         cache: false
     - reports/figures/cnn_confusion_matrix.png:
@@ -321,6 +324,12 @@ stages:
   evaluate_routing_cnn:
     cmd: python -m src.evaluate_routing
     deps:
+    - artifacts/cnn/textcnn.pt
+    - artifacts/cnn/vocab.json
+    - artifacts/cnn/labels.json
+    - artifacts/cnn/config.json
+    - reports/metrics/cnn_test_predictions.provenance.json
+    - src/prediction_provenance.py
     - reports/metrics/cnn_test_predictions.csv
     - reports/metrics/selected_threshold.json
     - src/evaluate_routing.py
