@@ -32,7 +32,9 @@ The reports regenerated on 11 November 2026 evaluate the two locally retrained m
 
 For the baseline, that split corresponds to **3,952 recommendations for automatic routing** and **835 referrals for review**. [Baseline report](reports/metrics/baseline_routing_metrics.json) · [TextCNN report](reports/metrics/routing_metrics.json) · [Dataset](https://www.kaggle.com/datasets/adisongoh/it-service-ticket-classification-dataset)
 
-**QueuePilot verification.** The implementation reused the fitted models and matched reference outputs on 20 inputs per backend, including confidence, top-three ordering and the review flag. The local verification run passed 70 tests. GitHub Actions separately downloaded the models, verified their hashes, built both Docker images and tested predictions from each running container. [Verification manifest](docs/SOURCE_MANIFEST.md) · [CI results](https://github.com/Arda-Yaz/QueuePilot/actions/runs/42198515108)
+**Verification and release status.** The maintained [release status](docs/RELEASE_STATUS.md) identifies the published model pair, confirmed CI evidence and pending source changes. Older local test counts and reproduction notes are kept in the [dated archive](docs/history/2026-11-11-reproduction.md). The current metrics above belong to the preserved 11 November model pair; provenance fixes have not retrained those models.
+
+The CNN uses the same tune partition for checkpoint and threshold selection. The threshold-grid correction does not cover that entire adaptive selection process, so the 90% rule is an empirical selection criterion for this run, not an end-to-end production guarantee. [Design options and costs](docs/EXPERIMENT_DESIGN.md)
 
 ## Try a ticket
 
@@ -63,6 +65,4 @@ dvc pull artifacts/baseline.joblib
 [Deployment guide](docs/deploy.md) · [Code map](docs/PORT_MAP.md) · [License](LICENSE)
 
 
-The local reproduction completed all 15 DVC stages from the raw CSV in an isolated workspace; a second run skipped all stages. A separate fresh Python 3.12 environment was subsequently installed successfully from official PyPI and the PyTorch CPU index, retaining the existing version and hash locks. All 87 tests and real baseline/CNN server smoke checks passed in that new environment. See [reproduction instructions and limits](docs/REPRODUCTION.md). Newly trained model binaries are local until explicitly uploaded to DVC remote storage.
-
-The complete current test suite passed on Windows outside the restricted execution sandbox: **87 tests in 8.47 seconds**. The earlier TestClient timeout was traced to sandbox-blocked loopback socket initialization before application startup; see the reproduction notes.
+See [reproduction instructions](docs/REPRODUCTION.md) for inputs, source snapshots, prediction provenance and the historical LF lock migration.

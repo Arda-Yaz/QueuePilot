@@ -34,8 +34,8 @@ generated lock together. `/model-info` requires all three reports for the loaded
 backend to carry its model hash. Missing, malformed, historical unbound or stale
 reports result in `available=false`. ECE/Brier use the independent calibration
 holdout, while classification and routing use test data. Automatic backend loading
-also checks the selection's model hash and threshold. Existing historical reports
-must be regenerated before the UI performance panel becomes available.
+also checks the selection's model hash and threshold. The checked-in reports already have matching model hashes. This requirement
+applies to missing or stale reports, rather than to every historical report.
 
 The CNN promotion margin in `routing.min_coverage_improvement` applies when both
 models are eligible. Calibration-holdout comparisons use the same partition for
@@ -47,88 +47,72 @@ not. Publishing models or deployment is a separate operation. Commit the new
 lock, sidecars and reports together only after a successful complete run and
 upload the corresponding model binaries before deploying that revision.
 
-## Local verification on 11 November 2026
+## Source identity and current artifacts
 
-All 15 stages completed from raw input in `.checks/repro-clean` with empty
-generated-output directories and a new DVC cache. The existing Python 3.12
-environment was used for training. The initial fresh-install attempt failed to
-resolve aiobotocore 3.9.0 in the restricted execution environment. That version
-exists on official PyPI; the subsequent fresh installation below succeeded.
-Full training was not repeated in the newly installed environment.
+New baseline and CNN training records include `git_commit`, `git_dirty`,
+`source_tree_sha256` and `source_provenance`. The latter embeds the exact bytes
+(base64) and SHA-256 of every Python file under `src`, dependency profile, and
+`params.yaml`, `pyproject.toml` and `.gitattributes`. DVC separately records the
+stage command, dependency contract and parameters in its lock. A dirty run is
+recoverable from this snapshot without an uncommitted diff. Missing Git metadata
+is recorded as null, rather than inventing a clean commit. Training fails before
+publishing metadata if this source snapshot or HEAD changes during the run.
+Data identity remains recorded separately as `dataset_sha256`; persisted split
+IDs and environment versions are also required for reproduction. The source
+snapshot is evidence of inputs, not a promise of bit-identical GPU execution.
 
-CNN early stopping occurred at epoch 12; the best tune Macro-F1 was 0.853467.
-Thresholds are baseline 0.57 and CNN 0.77. Tune coverages are 83.8251% and
-83.9088%; the configured two percentage point promotion margin retains baseline.
-Test accuracy / routing coverage / accepted accuracy are 85.7531% / 82.5569% /
-92.1559% for baseline and 84.1863% / 84.2490% / 91.0241% for CNN.
+The training stages explicitly depend on the snapshot's files. A regression
+check requires dependency coverage when new source files are added. CNN params
+are read at training start, after the snapshot, rather than at module import.
 
-All four split ID lists and their order match the original artifacts. The
-unchanged second DVC run skipped every stage; `dvc status --json` returned `{}`
-in both the isolated workspace and the main workspace after copying outputs and
-cache. A dry run after changing target accuracy scheduled both threshold stages
-and selection. Real baseline, CNN and auto predictors returned matching model-info
-reports and successful predictions. Original artifacts and lock are retained in
-`.checks/before-reproduction`. The generated lock and artifacts are local;
-remote model storage has not been updated.
+These fields apply to future runs. Existing model metadata is preserved as the
+original training record: its `7ea2b768...` HEAD does not uniquely identify the
+uncommitted source used for that run. Do not retroactively replace it with the
+current commit or attach a newly captured source snapshot to an old model.
 
-Generated artifacts, reports and lock files use byte-preserving Git attributes so
-checkout line-ending conversion cannot invalidate CNN sidecar hashes.
+## CNN prediction provenance
 
-Ruff and strict mypy passed. The complete test suite subsequently passed outside
-this session's restricted sandbox: **87 tests, 46 warnings in 8.47 seconds**.
-The API-only suite passed 16 tests in 0.82 seconds. Direct model-info tests cover
-both backends and missing, malformed and stale reports.
+`evaluate_cnn` produces `cnn_test_predictions.csv` and the accompanying
+`cnn_test_predictions.provenance.json`. The record binds the CSV bytes to the
+model, vocabulary, labels and config bytes. It is emitted only if the bundle
+remains unchanged during inference. `evaluate_routing` checks that binding and
+requires the threshold to reference the same model, before writing any report.
+Missing, malformed or stale provenance is a hard error. Regenerate predictions
+with the actual intended model; never manufacture a sidecar for an old CSV.
+DVC tracks the model bundle and prediction provenance directly in the routing
+stage. Existing ignored CSVs have no sidecar and are intentionally rejected.
 
-The earlier Windows TestClient timeout was reproduced with a bounded 22-second
-probe and a thread dump. It blocks before application lifespan startup, in
-`socket._fallback_socketpair -> accept`, called while asyncio creates its Windows
-Proactor event loop. Running the same interpreter, dependencies and tests outside
-the sandbox removes the stall. No application or event-loop workaround was
-needed. Run Windows API tests from a normal local terminal (or an execution
-context permitting loopback sockets); increasing HTTP/test timeouts does not
-address this event-loop initialization restriction. Diagnostic evidence is in
-`.checks/api-timeout-diagnostic.log`; the full-suite result is in
-`.checks/full-tests-outside-sandbox.log`.
+## LF lock migration and verification
 
-Hosted CI and Docker verification were not run here. Training metadata records
-the repository HEAD; these local code changes were not committed before training.
+The historical run used CRLF bytes for four Python dependencies although Git
+stores LF. The [migration record](history/2026-11-11-lock/migration.json) and both
+original and LF locks retain that distinction. All original dependencies and
+outputs were byte-checked, the four source pairs were checked for exact CRLF/LF
+conversion and equal Python ASTs, and DVC 3.67.1 generated the LF lock with
+`python -m dvc commit --force` in an isolated checkout. Only the 11 proven newline
+records changed; outputs were inherited unchanged. This was a metadata migration,
+not a new training execution. Do not use `dvc commit --force` to bless arbitrary
+source changes or to hide a pending rerun.
 
+Two separate LF Git checkouts of `b0eee7c17cdfe89ab4c2009657a9fb8f3f27405f`,
+with the migrated lock, passed `dvc status --json` as `{}`. Missing raw data,
+ignored prediction CSVs and cached models were supplied from local files only
+after matching the original lock. The second checkout restored models using
+`dvc checkout` from the verified local cache. This check did not pull from remote
+storage and did not repeat training.
 
-## Fresh dependency installation verified on 11 November 2026
+The current code also contains functional provenance changes. Its training and
+CNN evaluation stages therefore correctly remain pending against the migrated
+historical lock. The current workspace must not be presented as a newly completed
+15-stage run. Preserve this state until a new experiment is authorized, then
+regenerate the complete run and lock together in an isolated checkout.
 
-A new Python 3.12.10 venv was created at `.checks/fresh-install/.venv`, with
-`include-system-site-packages = false`; its initial package list contained only
-pip. Installations used official PyPI and the official PyTorch CPU index, with
-network access permitted. No dependency versions or hashes were changed and no
-packages were copied from the original environment. Verified cached wheels were
-reused where available, which does not share installed packages between venvs.
+For a future fully reproduced release, provide the raw CSV, run `dvc pull` for
+cached models and regenerate the ignored `cache: false` prediction CSVs with their
+matching provenance. Then require an empty `dvc status --json` in a fresh checkout
+with an empty DVC state database. Artifact-only CI lacks raw data and ignored
+predictions, so a full empty-status assertion there would not test this contract.
 
-On another Windows machine with Python 3.12, start from the repository root and
-an unused `.venv` path:
-
-```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements/dev.txt --index-url https://pypi.org/simple
-.\.venv\Scripts\python.exe -m pip install --no-deps torch==2.13.0+cpu --index-url https://download.pytorch.org/whl/cpu
-.\.venv\Scripts\python.exe -m pip check
-$env:APP_ENV = "test"
-$env:MLFLOW_TRACKING_ENABLED = "false"
-.\.venv\Scripts\python.exe -m pytest -q
-```
-
-The fresh environment passed:
-
-- `pip check`: no broken requirements.
-- All 87 tests in 7.88 seconds (46 existing warnings).
-- Actual Uvicorn startup and HTTP checks for baseline and CNN: health, API-key
-  rejection, authenticated prediction, browser UI and Prometheus metrics.
-- Real baseline, CNN and auto TestClient checks: matching model-info/health model
-  hashes and successful predictions.
-- DVC status: `{}` against the existing generated artifacts.
-
-Imported FastAPI, scikit-learn, Torch and DVC paths were checked to be inside the
-new venv. Verification logs are `.checks/fresh-verification.log`,
-`.checks/fresh-install-dev.log` and `.checks/fresh-install-torch.log`.
-This validates the Windows/Python 3.12 CPU development profile. Model binaries,
-raw data and remote credentials remain separate inputs as documented above;
-Linux, Docker and GPU installation were not part of this fresh-install check.
+See [maintained release status](RELEASE_STATUS.md),
+[archived local verification](history/2026-11-11-reproduction.md), and
+[experiment design options](EXPERIMENT_DESIGN.md).
