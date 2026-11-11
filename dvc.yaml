@@ -25,21 +25,61 @@ stages:
   train_baseline:
     cmd: python -m src.train_baseline
     deps:
+    - src/__init__.py
+    - src/analyze_threshold_baseline.py
+    - src/analyze_threshold_cnn.py
+    - src/cnn_data.py
+    - src/cnn_evaluation.py
+    - src/compare_models.py
+    - src/data.py
+    - src/error_summary.py
+    - src/evaluate.py
+    - src/evaluate_baseline.py
+    - src/evaluate_calibration_baseline.py
+    - src/evaluate_calibration_cnn.py
+    - src/evaluate_cnn.py
+    - src/evaluate_routing.py
+    - src/evaluate_routing_baseline.py
+    - src/evaluate_tune_baseline.py
+    - src/evaluate_tune_cnn.py
+    - src/hashing.py
+    - src/inference.py
+    - src/paths.py
+    - src/plot_results.py
+    - src/prediction.py
+    - src/prediction_provenance.py
+    - src/prepare_data.py
     - src/provenance.py
+    - src/routing_utils.py
+    - src/run_evaluation_pipeline.py
+    - src/select_model.py
+    - src/textcnn.py
+    - src/threshold_analysis.py
+    - src/ticket_text.py
+    - src/tracking.py
+    - src/train_baseline.py
+    - src/train_cnn.py
+    - requirements/base.in
+    - requirements/base.txt
+    - requirements/cnn.in
+    - requirements/cnn.txt
+    - requirements/cuda.in
+    - requirements/cuda.txt
+    - requirements/dev.in
+    - requirements/dev.txt
+    - requirements/mlops.in
+    - requirements/mlops.txt
+    - requirements/train.in
+    - requirements/train.txt
+    - params.yaml
+    - pyproject.toml
+    - .gitattributes
     - data/raw/all_tickets_processed_improved_v3.csv
     - reports/data/train_ids.csv
     - reports/data/tune_ids.csv
     - reports/data/data_manifest.json
-    - src/train_baseline.py
-    - src/data.py
-    - src/evaluate.py
-    - src/hashing.py
-    - src/paths.py
-    - src/tracking.py
-    - src/ticket_text.py
     - reports/data/calibration_ids.csv
     - reports/data/test_ids.csv
-    - requirements/dev.txt
     params:
     - baseline.ngram_range
     - baseline.min_df
@@ -166,22 +206,61 @@ stages:
   train_cnn:
     cmd: python -m src.train_cnn
     deps:
+    - src/__init__.py
+    - src/analyze_threshold_baseline.py
+    - src/analyze_threshold_cnn.py
+    - src/cnn_data.py
+    - src/cnn_evaluation.py
+    - src/compare_models.py
+    - src/data.py
+    - src/error_summary.py
+    - src/evaluate.py
+    - src/evaluate_baseline.py
+    - src/evaluate_calibration_baseline.py
+    - src/evaluate_calibration_cnn.py
+    - src/evaluate_cnn.py
+    - src/evaluate_routing.py
+    - src/evaluate_routing_baseline.py
+    - src/evaluate_tune_baseline.py
+    - src/evaluate_tune_cnn.py
+    - src/hashing.py
+    - src/inference.py
+    - src/paths.py
+    - src/plot_results.py
+    - src/prediction.py
+    - src/prediction_provenance.py
+    - src/prepare_data.py
     - src/provenance.py
+    - src/routing_utils.py
+    - src/run_evaluation_pipeline.py
+    - src/select_model.py
+    - src/textcnn.py
+    - src/threshold_analysis.py
+    - src/ticket_text.py
+    - src/tracking.py
+    - src/train_baseline.py
+    - src/train_cnn.py
+    - requirements/base.in
+    - requirements/base.txt
+    - requirements/cnn.in
+    - requirements/cnn.txt
+    - requirements/cuda.in
+    - requirements/cuda.txt
+    - requirements/dev.in
+    - requirements/dev.txt
+    - requirements/mlops.in
+    - requirements/mlops.txt
+    - requirements/train.in
+    - requirements/train.txt
+    - params.yaml
+    - pyproject.toml
+    - .gitattributes
     - data/raw/all_tickets_processed_improved_v3.csv
     - reports/data/train_ids.csv
     - reports/data/tune_ids.csv
     - reports/data/data_manifest.json
-    - src/train_cnn.py
-    - src/data.py
-    - src/cnn_data.py
-    - src/textcnn.py
-    - src/hashing.py
-    - src/paths.py
-    - src/tracking.py
-    - src/ticket_text.py
     - reports/data/calibration_ids.csv
     - reports/data/test_ids.csv
-    - requirements/dev.txt
     params:
     - cnn.seed
     - cnn.max_vocab_size
