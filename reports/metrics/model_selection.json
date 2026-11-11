@@ -1,31 +1,30 @@
 {
-    "selection_dataset": "tune (validation)",
+    "selection_dataset": "checkpoint (backend); independent risk/tune (threshold)",
     "target_accuracy": 0.9,
-    "min_coverage_improvement": 0.02,
-    "selection_rule": "Highest tune-set coverage subject to simultaneous Clopper-Pearson lower bound >= target_accuracy; CNN promotion requires the configured coverage improvement over eligible baseline; Macro F1 as tie-breaker. Test set was NOT accessed during selection.",
+    "selection_rule": "Freeze checkpoint macro-F1 winner, then select its risk threshold; no fallback",
     "selected_backend": "baseline",
-    "selected_threshold": 0.57,
-    "selected_model_sha256": "0efbc45b797f668475b54686a93ae5cc67cf7b4d53d3c53e1625852fed8b6ffd",
+    "selected_threshold": 0.6,
+    "selected_model_sha256": "ea6b1f9ca0075bd32ee39d01a249b4b8860537f576e52ba8e8afc6dd1a169843",
+    "frozen_backend": {
+        "selection_dataset": "checkpoint",
+        "selection_rule": "macro_f1; baseline wins exact ties",
+        "selected_backend": "baseline",
+        "checkpoint_macro_f1": {
+            "baseline": 0.868978021028668,
+            "cnn": 0.8547719742038631
+        },
+        "selected_model_sha256": "ea6b1f9ca0075bd32ee39d01a249b4b8860537f576e52ba8e8afc6dd1a169843"
+    },
     "candidates": [
         {
             "backend": "baseline",
-            "validation_accuracy": 0.8562460765850597,
-            "validation_macro_f1": 0.8592734998526866,
-            "threshold": 0.57,
-            "validation_coverage": 0.8382506800585897,
-            "validation_auto_routed_accuracy": 0.9161258112830754,
-            "validation_accuracy_ci_lower": 0.9009397778036977,
-            "model_sha256": "0efbc45b797f668475b54686a93ae5cc67cf7b4d53d3c53e1625852fed8b6ffd"
-        },
-        {
-            "backend": "cnn",
-            "validation_accuracy": 0.8501778614772965,
-            "validation_macro_f1": 0.8534667431465407,
-            "threshold": 0.77,
-            "validation_coverage": 0.8390876752458674,
-            "validation_auto_routed_accuracy": 0.9164588528678305,
-            "validation_accuracy_ci_lower": 0.9013059318867186,
-            "model_sha256": "967e441434863f4d9b3e4d664e1c71f87e937971ecc4162c539670a4ffe64e35"
+            "validation_accuracy": 0.8560669456066946,
+            "validation_macro_f1": 0.8488022371399927,
+            "threshold": 0.6,
+            "validation_coverage": 0.8066945606694561,
+            "validation_auto_routed_accuracy": 0.9263485477178424,
+            "validation_accuracy_ci_lower": 0.905016284371363,
+            "model_sha256": "ea6b1f9ca0075bd32ee39d01a249b4b8860537f576e52ba8e8afc6dd1a169843"
         }
     ]
 }

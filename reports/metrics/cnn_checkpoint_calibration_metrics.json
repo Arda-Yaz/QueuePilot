@@ -1,0 +1,5 @@
+{
+    "top_label_brier_score": 0.103971,
+    "expected_calibration_error": 0.047906,
+    "model_sha256": "6b8c053e91b8ad1a47c08acb3a9ff889af871645987214be6279ef3812599045"
+}

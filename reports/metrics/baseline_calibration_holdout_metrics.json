@@ -5,5 +5,5 @@
     "top_label_brier_score": 0.104128,
     "expected_calibration_error": 0.081684,
     "note": "Calibration metrics computed on the held-out CALIBRATION partition (10% of data). This partition was never used for training or threshold selection. The model's sigmoid calibration was fitted internally on the training set via 5-fold cross-validation.",
-    "model_sha256": "0efbc45b797f668475b54686a93ae5cc67cf7b4d53d3c53e1625852fed8b6ffd"
+    "model_sha256": "ea6b1f9ca0075bd32ee39d01a249b4b8860537f576e52ba8e8afc6dd1a169843"
 }

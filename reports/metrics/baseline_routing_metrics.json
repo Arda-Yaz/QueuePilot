@@ -1,14 +1,14 @@
 {
-    "threshold": 0.57,
+    "threshold": 0.6,
     "threshold_selection_rule": "maximize_coverage_subject_to_simultaneous_clopper_pearson_lower_bound_gte_target",
     "target_accuracy_on_tune_set": 0.9,
     "overall_test_accuracy": 0.8575308126175057,
-    "coverage": 0.8255692500522248,
-    "manual_review_rate": 0.17443074994777522,
-    "auto_routed_accuracy": 0.9215587044534413,
+    "coverage": 0.7908919991644036,
+    "manual_review_rate": 0.2091080008355964,
+    "auto_routed_accuracy": 0.9294770206022187,
     "total_tickets": 4787,
-    "auto_routed_tickets": 3952,
-    "manual_review_tickets": 835,
+    "auto_routed_tickets": 3786,
+    "manual_review_tickets": 1001,
     "note": "Test-set metrics are point estimates. The statistical accuracy guarantee was established on the tune set using simultaneous Clopper-Pearson bounds; see baseline_selected_threshold.json.",
-    "model_sha256": "0efbc45b797f668475b54686a93ae5cc67cf7b4d53d3c53e1625852fed8b6ffd"
+    "model_sha256": "ea6b1f9ca0075bd32ee39d01a249b4b8860537f576e52ba8e8afc6dd1a169843"
 }

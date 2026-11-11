@@ -1,10 +1,10 @@
 {
-    "accuracy": 0.8418633799874661,
-    "macro_precision": 0.8370048950180871,
-    "macro_recall": 0.8505276388428392,
-    "macro_f1": 0.8434861137467905,
-    "weighted_f1": 0.8416313285412693,
-    "top_label_brier_score": 0.107575,
-    "expected_calibration_error": 0.071932,
-    "model_sha256": "967e441434863f4d9b3e4d664e1c71f87e937971ecc4162c539670a4ffe64e35"
+    "accuracy": 0.8406099853770629,
+    "macro_precision": 0.8436296733105729,
+    "macro_recall": 0.8482786706261923,
+    "macro_f1": 0.8433916977839069,
+    "weighted_f1": 0.8420429546222105,
+    "top_label_brier_score": 0.110755,
+    "expected_calibration_error": 0.054984,
+    "model_sha256": "6b8c053e91b8ad1a47c08acb3a9ff889af871645987214be6279ef3812599045"
 }

@@ -18,8 +18,9 @@
     ],
     "unexpected_labels": [],
     "split_counts": {
+        "checkpoint": 2389,
         "train": 33485,
-        "tune": 4779,
+        "tune": 2390,
         "calibration": 4786,
         "test": 4787
     }

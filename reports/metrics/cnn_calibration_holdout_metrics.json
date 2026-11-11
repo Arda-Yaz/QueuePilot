@@ -1,9 +1,9 @@
 {
     "partition": "calibration_holdout",
     "n_samples": 4786,
-    "accuracy": 0.8489343919765984,
-    "top_label_brier_score": 0.104103,
-    "expected_calibration_error": 0.065039,
+    "accuracy": 0.8353531132469704,
+    "top_label_brier_score": 0.10704,
+    "expected_calibration_error": 0.058631,
     "note": "Calibration metrics computed on the held-out CALIBRATION partition (10% of data). This partition was never used for training or threshold selection.",
-    "model_sha256": "967e441434863f4d9b3e4d664e1c71f87e937971ecc4162c539670a4ffe64e35"
+    "model_sha256": "6b8c053e91b8ad1a47c08acb3a9ff889af871645987214be6279ef3812599045"
 }

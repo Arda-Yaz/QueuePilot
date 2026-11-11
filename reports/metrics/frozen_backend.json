@@ -1,0 +1,10 @@
+{
+  "selection_dataset": "checkpoint",
+  "selection_rule": "macro_f1; baseline wins exact ties",
+  "selected_backend": "baseline",
+  "checkpoint_macro_f1": {
+    "baseline": 0.868978021028668,
+    "cnn": 0.8547719742038631
+  },
+  "selected_model_sha256": "ea6b1f9ca0075bd32ee39d01a249b4b8860537f576e52ba8e8afc6dd1a169843"
+}

@@ -1,71 +1,71 @@
 {
-    "threshold": 0.57,
+    "threshold": 0.6,
     "target_accuracy": 0.9,
     "selection_rule": "maximize_coverage_subject_to_simultaneous_clopper_pearson_lower_bound_gte_target",
     "alpha": 0.05,
     "n_candidates": 90,
     "min_accepted_samples": 50,
-    "model_sha256": "0efbc45b797f668475b54686a93ae5cc67cf7b4d53d3c53e1625852fed8b6ffd",
-    "validation_coverage": 0.8382506800585897,
-    "validation_auto_routed_accuracy": 0.9161258112830754,
-    "validation_accuracy_ci_lower": 0.9009397778036977,
-    "validation_manual_review_rate": 0.16174931994141029,
+    "model_sha256": "ea6b1f9ca0075bd32ee39d01a249b4b8860537f576e52ba8e8afc6dd1a169843",
+    "validation_coverage": 0.8066945606694561,
+    "validation_auto_routed_accuracy": 0.9263485477178424,
+    "validation_accuracy_ci_lower": 0.905016284371363,
+    "validation_manual_review_rate": 0.1933054393305439,
     "per_class_stats": [
         {
             "label": "Access",
-            "n_accepted": 588,
-            "n_correct": 552,
-            "accuracy": 0.9387755102040817,
-            "wilson_lb_95": 0.9204150024493488
+            "n_accepted": 278,
+            "n_correct": 265,
+            "accuracy": 0.9532374100719424,
+            "wilson_lb_95": 0.9276831655716264
         },
         {
             "label": "Administrative rights",
-            "n_accepted": 139,
-            "n_correct": 110,
-            "accuracy": 0.7913669064748201,
-            "wilson_lb_95": 0.7293776298455056
+            "n_accepted": 62,
+            "n_correct": 45,
+            "accuracy": 0.7258064516129032,
+            "wilson_lb_95": 0.6246467867969479
         },
         {
             "label": "HR Support",
-            "n_accepted": 905,
-            "n_correct": 825,
-            "accuracy": 0.9116022099447514,
-            "wilson_lb_95": 0.8948271944773074
+            "n_accepted": 444,
+            "n_correct": 407,
+            "accuracy": 0.9166666666666666,
+            "wilson_lb_95": 0.8924835676503314
         },
         {
             "label": "Hardware",
-            "n_accepted": 1151,
-            "n_correct": 1071,
-            "accuracy": 0.9304952215464813,
-            "wilson_lb_95": 0.917127801340319
+            "n_accepted": 561,
+            "n_correct": 532,
+            "accuracy": 0.948306595365419,
+            "wilson_lb_95": 0.930664099125887
         },
         {
             "label": "Internal Project",
-            "n_accepted": 175,
-            "n_correct": 161,
-            "accuracy": 0.92,
-            "wilson_lb_95": 0.8795214483980316
+            "n_accepted": 86,
+            "n_correct": 79,
+            "accuracy": 0.9186046511627907,
+            "wilson_lb_95": 0.8563983632779232
         },
         {
             "label": "Miscellaneous",
-            "n_accepted": 580,
-            "n_correct": 513,
-            "accuracy": 0.8844827586206897,
-            "wilson_lb_95": 0.8608416301855591
+            "n_accepted": 271,
+            "n_correct": 244,
+            "accuracy": 0.9003690036900369,
+            "wilson_lb_95": 0.8663683548552917
         },
         {
             "label": "Purchase",
-            "n_accepted": 232,
-            "n_correct": 213,
-            "accuracy": 0.9181034482758621,
-            "wilson_lb_95": 0.8834479312818487
+            "n_accepted": 117,
+            "n_correct": 109,
+            "accuracy": 0.9316239316239316,
+            "wilson_lb_95": 0.8826852568385407
         },
         {
             "label": "Storage",
-            "n_accepted": 236,
-            "n_correct": 225,
-            "accuracy": 0.9533898305084746,
-            "wilson_lb_95": 0.9252246353716694
+            "n_accepted": 109,
+            "n_correct": 105,
+            "accuracy": 0.963302752293578,
+            "wilson_lb_95": 0.9207375986721513
         }
     ]
 }
