@@ -103,7 +103,9 @@ def train_cnn() -> None:
     df = load_data()
     splits = load_splits(df)
     train_df = splits.train
-    tune_df = splits.tune
+    if splits.checkpoint is None:
+        raise RuntimeError("Training requires protocol v2 checkpoint partition; run prepare_data")
+    tune_df = splits.checkpoint
     print(f"Train: {len(train_df)}  Tune: {len(tune_df)}")
 
     label_encoder = LabelEncoder()

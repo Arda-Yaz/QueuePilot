@@ -23,14 +23,16 @@ from src.paths import BASELINE_MODEL_PATH, METRICS_DIR, ROOT_DIR
 MODEL_PATH = ROOT_DIR / "artifacts" / "baseline.joblib"
 
 
-def main() -> None:
+def main(partition: str = "tune") -> None:
     if not MODEL_PATH.exists():
         raise FileNotFoundError(f"Model not found: {MODEL_PATH}")
 
     model = joblib.load(MODEL_PATH)
     df = load_data()
     splits = load_splits(df)
-    tune_df = splits.tune
+    tune_df = splits.tune if partition == "tune" else splits.checkpoint
+    if tune_df is None:
+        raise RuntimeError("Checkpoint partition missing")
 
     probabilities = model.predict_proba(tune_df["Document"])
     predictions = model.predict(tune_df["Document"])
@@ -40,7 +42,7 @@ def main() -> None:
         tune_df.index.to_numpy(), tune_df["Topic_group"].values,
         predictions, confidence,
     )
-    output_path = METRICS_DIR / "baseline_tune_predictions.csv"
+    output_path = METRICS_DIR / f"baseline_{partition}_predictions.csv"
     results.to_csv(output_path, index=False)
 
     calibration = calculate_calibration_metrics(
@@ -49,7 +51,7 @@ def main() -> None:
         results["confidence"],
     )
 
-    calibration_path = METRICS_DIR / "baseline_tune_calibration_metrics.json"
+    calibration_path = METRICS_DIR / f"baseline_{partition}_calibration_metrics.json"
     with open(calibration_path, "w", encoding="utf-8") as f:
         json.dump({**calibration, "model_sha256": calculate_file_sha256(BASELINE_MODEL_PATH)}, f, indent=4)
 
@@ -61,4 +63,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--partition", choices=["tune", "checkpoint"], default="tune")
+    main(parser.parse_args().partition)

@@ -93,7 +93,7 @@ def test_training_writes_recoverable_metadata(
     monkeypatch.setattr(module, "DATA_PATH", data_path)
     monkeypatch.setattr(module, "ARTIFACT_DIR", artifacts)
     monkeypatch.setattr(module, "load_data", lambda: data)
-    monkeypatch.setattr(module, "load_splits", lambda _: SimpleNamespace(train=data, tune=data))
+    monkeypatch.setattr(module, "load_splits", lambda _: SimpleNamespace(train=data, tune=data, checkpoint=data))
     if backend == "baseline":
         monkeypatch.setattr(module, "METRICS_DIR", metrics)
         train_baseline.train_baseline()

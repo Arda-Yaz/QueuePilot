@@ -1,26 +1,8 @@
-"""Dataset loading and deterministic split utilities.
+"""Persisted split loading with historical four-way compatibility.
 
-The ``prepare_data`` DVC stage (src/prepare_data.py) is the **sole** producer
-of split IDs and the data quality report.  ``load_splits`` and ``split_data``
-consume those persisted outputs so every downstream stage uses identical
-partitions.
-
-Canonical split design (70 / 10 / 10 / 10):
-    train           â€” model fitting
-    tune            â€” threshold selection (never used for training)
-    calibration     â€” held-out calibration quality measurement (ECE, Brier);
-                      never used for training or threshold selection
-    test            â€” final held-out evaluation (never used before final report)
-
-``load_splits()`` returns a ``DataSplits`` dataclass exposing all four
-partitions as named attributes.  ``split_data()`` is a backward-compatible
-wrapper that returns ``(train, tune, test)`` â€” it does NOT return the
-calibration partition; use ``load_splits().calibration`` or
-``load_calibration_split()`` to access it.
-
-No fallback split generation: if persisted split files are absent, the
-function raises ``FileNotFoundError`` with a clear instruction.  This prevents
-silent use of a different split ratio (e.g. 70/15/15) than the canonical one.
+Protocol v2: train fits weights; checkpoint selects CNN checkpoint and backend;
+tune is the independent risk/threshold partition; calibration measures score
+quality; test supplies final descriptive evaluation. No automatic split fallback.
 """
 
 import json
@@ -52,6 +34,7 @@ class DataSplits:
     tune: pd.DataFrame
     calibration: pd.DataFrame
     test: pd.DataFrame
+    checkpoint: pd.DataFrame | None = None
 
 
 def load_data(deduplicate: bool = True) -> pd.DataFrame:
@@ -110,6 +93,7 @@ def validate_persisted_splits(
     test_ids: "pd.Index",
     manifest: dict[str, object],
     calib_ids: "pd.Index | None" = None,
+    checkpoint_ids: "pd.Index | None" = None,
 ) -> None:
     """Validate persisted splits against the current dataset.
 
@@ -151,11 +135,18 @@ def validate_persisted_splits(
     tune_set = set(tune_ids)
     test_set = set(test_ids)
     calib_set = set(calib_ids) if calib_ids is not None else set()
+    checkpoint_set = set(checkpoint_ids) if checkpoint_ids is not None else set()
     current_ids = set(df.index)
 
     partitions = [("train", train_ids), ("tune", tune_ids), ("test", test_ids)]
     if calib_ids is not None:
         partitions.append(("calibration", calib_ids))
+    if checkpoint_ids is not None:
+        partitions.append(("checkpoint", checkpoint_ids))
+        if len(checkpoint_ids) != manifest.get("checkpoint_rows"):
+            raise RuntimeError("Checkpoint split size mismatch")
+    if manifest.get("protocol_version") == 2 and checkpoint_ids is None:
+        raise RuntimeError("Protocol v2 requires checkpoint IDs")
     for name, ids in partitions:
         if not ids.is_unique:
             raise RuntimeError(f"Persisted {name} split contains duplicate IDs.")
@@ -175,6 +166,9 @@ def validate_persisted_splits(
             ("test", test_set, "calibration", calib_set),
         ])
 
+    if checkpoint_ids is not None:
+        pairs.extend(("checkpoint", checkpoint_set, name, set(ids))
+                     for name, ids in partitions if name != "checkpoint")
     for name_a, set_a, name_b, set_b in pairs:
         overlap = set_a & set_b
         if overlap:
@@ -184,7 +178,7 @@ def validate_persisted_splits(
             )
 
     # All persisted IDs must exist in current dataset
-    all_persisted = train_set | tune_set | test_set | calib_set
+    all_persisted = train_set | tune_set | test_set | calib_set | checkpoint_set
     unknown = all_persisted - current_ids
     if unknown:
         raise RuntimeError(
@@ -280,6 +274,8 @@ def load_splits(df: pd.DataFrame | None = None) -> DataSplits:
     test_ids = pd.read_csv(test_ids_path)["id"].values
     calib_ids = pd.Index(pd.read_csv(calib_ids_path)["id"].values)
 
+    checkpoint_ids = (pd.Index(pd.read_csv(REPORT_DATA_DIR / "checkpoint_ids.csv")["id"])
+                      if manifest.get("protocol_version") == 2 else None)
     validate_persisted_splits(
         df,
         pd.Index(train_ids),
@@ -287,9 +283,11 @@ def load_splits(df: pd.DataFrame | None = None) -> DataSplits:
         pd.Index(test_ids),
         manifest,
         calib_ids,
+        checkpoint_ids,
     )
 
     return DataSplits(
+        checkpoint=df.loc[checkpoint_ids].copy() if checkpoint_ids is not None else None,
         train=df.loc[train_ids].copy(),
         tune=df.loc[tune_ids].copy(),
         calibration=df.loc[calib_ids].copy(),

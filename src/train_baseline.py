@@ -49,7 +49,9 @@ def train_baseline() -> tuple[CalibratedClassifierCV, dict[str, float]]:
     df = load_data()
     splits = load_splits(df)
     train_df = splits.train
-    tune_df = splits.tune
+    if splits.checkpoint is None:
+        raise RuntimeError("Training requires protocol v2 checkpoint partition; run prepare_data")
+    tune_df = splits.checkpoint
 
     X_train = train_df["Document"]
     y_train = train_df["Topic_group"]
@@ -105,13 +107,13 @@ def train_baseline() -> tuple[CalibratedClassifierCV, dict[str, float]]:
         "source_provenance": source_snapshot,
         "random_seed": 42,
         "hyperparameters": hyperparameters,
-        "tune_metrics": tune_metrics,
+        "checkpoint_metrics": tune_metrics,
     }
 
     with open(ARTIFACT_DIR / "baseline_metadata.json", "w", encoding="utf-8") as f:
         json.dump(metadata, f, indent=4)
 
-    with open(METRICS_DIR / "baseline_tune_metrics.json", "w", encoding="utf-8") as f:
+    with open(METRICS_DIR / "baseline_checkpoint_metrics.json", "w", encoding="utf-8") as f:
         json.dump(tune_metrics, f, indent=4)
 
     with start_run(run_name="train_baseline", model_backend="baseline"):

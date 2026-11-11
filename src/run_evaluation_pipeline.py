@@ -5,7 +5,7 @@ from src.paths import CNN_MODEL_PATH, METRICS_DIR, ROOT_DIR
 
 BASELINE_OUTPUTS = [
     "baseline_tune_predictions.csv",
-    "baseline_tune_metrics.json",
+    "baseline_checkpoint_metrics.json",
     "baseline_tune_calibration_metrics.json",
     "baseline_calibration_holdout_metrics.json",
     "baseline_threshold_analysis.csv",
@@ -52,7 +52,7 @@ def run_module(module: str) -> None:
         [
             sys.executable,
             "-m",
-            module,
+            *module.split(),
         ],
         cwd=ROOT_DIR,
         check=True,
@@ -64,6 +64,12 @@ def main() -> None:
         parents=True,
         exist_ok=True,
     )
+
+    if not CNN_MODEL_PATH.exists():
+        raise RuntimeError("Protocol v2 backend freezing requires both fitted models")
+    run_module("src.evaluate_tune_baseline --partition checkpoint")
+    run_module("src.evaluate_tune_cnn --partition checkpoint")
+    run_module("src.freeze_backend")
 
     print("\nRegenerating baseline evaluation artifacts...")
 

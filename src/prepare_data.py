@@ -43,6 +43,14 @@ def split_partitions(
     return train, tune, calibration, test
 
 
+def split_checkpoint_risk(tune: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Prespecified stratified subdivision of historical tune; never read test labels."""
+    checkpoint, risk = train_test_split(
+        tune, test_size=0.50, stratify=tune["Topic_group"], random_state=42,
+    )
+    return checkpoint, risk
+
+
 def main() -> None:
     REPORT_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -101,8 +109,10 @@ def main() -> None:
     # Four-way split: 70% train / 10% tune / 10% calibration / 10% test
     train_df, tune_df, calib_df, test_df = split_partitions(raw)
 
+    checkpoint_df, tune_df = split_checkpoint_risk(tune_df)
+
     # Assert disjointness
-    sets = [set(train_df.index), set(tune_df.index), set(calib_df.index), set(test_df.index)]
+    sets = [set(checkpoint_df.index), set(train_df.index), set(tune_df.index), set(calib_df.index), set(test_df.index)]
     for i, a in enumerate(sets):
         for j, b in enumerate(sets):
             if i < j:
@@ -112,7 +122,7 @@ def main() -> None:
     dataset_sha256 = calculate_file_sha256(DATA_PATH)
 
     # Persist split IDs
-    for name, df in [("train", train_df), ("tune", tune_df),
+    for name, df in [("checkpoint", checkpoint_df), ("train", train_df), ("tune", tune_df),
                      ("calibration", calib_df), ("test", test_df)]:
         pd.DataFrame({"id": df.index}).to_csv(
             REPORT_DATA_DIR / f"{name}_ids.csv", index=False
@@ -120,9 +130,12 @@ def main() -> None:
 
     # Persist manifest
     manifest = {
+        "protocol_version": 2,
+        "checkpoint_rows": len(checkpoint_df),
+        "selection_protocol": "checkpoint macro-F1 freezes backend before risk threshold selection",
         "dataset_sha256": dataset_sha256,
         "random_seed": 42,
-        "split_ratios": {"train": 0.70, "tune": 0.10, "calibration": 0.10, "test": 0.10},
+        "split_ratios": {"train": 0.70, "checkpoint": 0.05, "tune": 0.05, "calibration": 0.10, "test": 0.10},
         "train_rows": len(train_df),
         "tune_rows": len(tune_df),
         "calibration_rows": len(calib_df),
@@ -144,6 +157,7 @@ def main() -> None:
         "label_schema": sorted(EXPECTED_LABELS),
         "unexpected_labels": sorted(unexpected),
         "split_counts": {
+            "checkpoint": len(checkpoint_df),
             "train": len(train_df),
             "tune": len(tune_df),
             "calibration": len(calib_df),

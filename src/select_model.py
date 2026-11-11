@@ -1,23 +1,7 @@
-"""Production model selection.
+"""Publish the checkpoint-frozen backend with its independent risk threshold.
 
-Selects the candidate model (baseline or CNN) that best satisfies the
-business objective:
-
-    Primary criterion (hard constraint):
-        validation_accuracy_ci_lower >= target_accuracy
-        (simultaneous Clopper-Pearson lower bound on the tune set)
-
-    Secondary criterion (maximize):
-        validation_coverage (higher coverage = more tickets auto-routed)
-
-    Tie-breaker:
-        validation_macro_f1 (performance across imbalanced classes)
-
-All parameters are read from params.yaml[routing] so the selection
-procedure is fully reproducible and config-driven.
-
-This function operates exclusively on validation (tune) set metrics.
-It must never access test-set data.
+Legacy select_candidate remains only for historical compatibility. The production
+entry point never ranks backends using risk coverage and never accesses test.
 """
 
 import json
@@ -135,26 +119,22 @@ def main() -> None:
 
     target_accuracy: float = float(params.get("target_accuracy", 0.90))
 
-    candidates = [load_candidate(backend, paths) for backend, paths in MODEL_CONFIGS.items()]
-
-    margin = float(params.get("min_coverage_improvement", 0.02))
-    winner = select_candidate(candidates, target_accuracy, margin)
-
+    frozen = json.loads((METRICS_DIR / "frozen_backend.json").read_text(encoding="utf-8"))
+    backend = frozen["selected_backend"]
+    winner = load_candidate(backend, MODEL_CONFIGS[backend])
+    if winner["model_sha256"] != frozen["selected_model_sha256"]:
+        raise RuntimeError("Frozen backend/model hash mismatch")
+    if winner["validation_accuracy_ci_lower"] < target_accuracy:
+        raise RuntimeError("Frozen backend fails risk target; no risk-driven backend fallback allowed")
     output: dict[str, object] = {
-        "selection_dataset": "tune (validation)",
+        "selection_dataset": "checkpoint (backend); independent risk/tune (threshold)",
         "target_accuracy": target_accuracy,
-        "min_coverage_improvement": margin,
-        "selection_rule": (
-            "Highest tune-set coverage subject to "
-            "simultaneous Clopper-Pearson lower bound >= target_accuracy; "
-            "CNN promotion requires the configured coverage improvement over eligible baseline; "
-            "Macro F1 as tie-breaker. "
-            "Test set was NOT accessed during selection."
-        ),
-        "selected_backend": winner["backend"],
+        "selection_rule": "Freeze checkpoint macro-F1 winner, then select its risk threshold; no fallback",
+        "selected_backend": backend,
         "selected_threshold": winner["threshold"],
         "selected_model_sha256": winner["model_sha256"],
-        "candidates": candidates,
+        "frozen_backend": frozen,
+        "candidates": [winner],
     }
 
     output_path = METRICS_DIR / "model_selection.json"

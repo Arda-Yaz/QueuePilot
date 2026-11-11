@@ -18,6 +18,8 @@ stages:
         cache: false
     - reports/data/tune_ids.csv:
         cache: false
+    - reports/data/checkpoint_ids.csv:
+        cache: false
     - reports/data/calibration_ids.csv:
         cache: false
     - reports/data/test_ids.csv:
@@ -43,6 +45,7 @@ stages:
     - src/evaluate_tune_baseline.py
     - src/evaluate_tune_cnn.py
     - src/hashing.py
+    - src/freeze_backend.py
     - src/inference.py
     - src/paths.py
     - src/plot_results.py
@@ -77,6 +80,7 @@ stages:
     - data/raw/all_tickets_processed_improved_v3.csv
     - reports/data/train_ids.csv
     - reports/data/tune_ids.csv
+    - reports/data/checkpoint_ids.csv
     - reports/data/data_manifest.json
     - reports/data/calibration_ids.csv
     - reports/data/test_ids.csv
@@ -92,13 +96,14 @@ stages:
     - artifacts/baseline_metadata.json:
         cache: false
     metrics:
-    - reports/metrics/baseline_tune_metrics.json:
+    - reports/metrics/baseline_checkpoint_metrics.json:
         cache: false
   evaluate_tune_baseline:
     cmd: python -m src.evaluate_tune_baseline
     deps:
     - artifacts/baseline.joblib
     - reports/data/tune_ids.csv
+    - reports/data/checkpoint_ids.csv
     - reports/data/data_manifest.json
     - src/evaluate_tune_baseline.py
     - src/data.py
@@ -117,6 +122,30 @@ stages:
     metrics:
     - reports/metrics/baseline_tune_calibration_metrics.json:
         cache: false
+  evaluate_checkpoint_baseline:
+    cmd: python -m src.evaluate_tune_baseline --partition checkpoint
+    deps:
+    - artifacts/baseline.joblib
+    - reports/data/tune_ids.csv
+    - reports/data/checkpoint_ids.csv
+    - reports/data/data_manifest.json
+    - src/evaluate_tune_baseline.py
+    - src/data.py
+    - src/evaluate.py
+    - src/paths.py
+    - src/hashing.py
+    - src/ticket_text.py
+    - reports/data/train_ids.csv
+    - reports/data/calibration_ids.csv
+    - reports/data/test_ids.csv
+    - data/raw/all_tickets_processed_improved_v3.csv
+    - requirements/dev.txt
+    outs:
+    - reports/metrics/baseline_checkpoint_predictions.csv:
+        cache: false
+    metrics:
+    - reports/metrics/baseline_checkpoint_calibration_metrics.json:
+        cache: false
   evaluate_calibration_baseline:
     cmd: python -m src.evaluate_calibration_baseline
     deps:
@@ -131,15 +160,31 @@ stages:
     - src/ticket_text.py
     - reports/data/train_ids.csv
     - reports/data/tune_ids.csv
+    - reports/data/checkpoint_ids.csv
     - reports/data/test_ids.csv
     - data/raw/all_tickets_processed_improved_v3.csv
     - requirements/dev.txt
     metrics:
     - reports/metrics/baseline_calibration_holdout_metrics.json:
         cache: false
+  freeze_backend:
+    cmd: python -m src.freeze_backend
+    deps:
+    - reports/metrics/baseline_checkpoint_predictions.csv
+    - reports/metrics/cnn_checkpoint_predictions.csv
+    - artifacts/baseline.joblib
+    - artifacts/cnn/textcnn.pt
+    - src/freeze_backend.py
+    - src/hashing.py
+    - src/paths.py
+    - requirements/dev.txt
+    metrics:
+    - reports/metrics/frozen_backend.json:
+        cache: false
   analyze_threshold_baseline:
     cmd: python -m src.analyze_threshold_baseline
     deps:
+    - reports/metrics/frozen_backend.json
     - reports/metrics/baseline_tune_predictions.csv
     - artifacts/baseline.joblib
     - src/analyze_threshold_baseline.py
@@ -176,6 +221,7 @@ stages:
     - src/ticket_text.py
     - reports/data/train_ids.csv
     - reports/data/tune_ids.csv
+    - reports/data/checkpoint_ids.csv
     - reports/data/calibration_ids.csv
     - data/raw/all_tickets_processed_improved_v3.csv
     - requirements/dev.txt
@@ -197,6 +243,7 @@ stages:
     - src/ticket_text.py
     - reports/data/train_ids.csv
     - reports/data/tune_ids.csv
+    - reports/data/checkpoint_ids.csv
     - reports/data/calibration_ids.csv
     - data/raw/all_tickets_processed_improved_v3.csv
     - requirements/dev.txt
@@ -224,6 +271,7 @@ stages:
     - src/evaluate_tune_baseline.py
     - src/evaluate_tune_cnn.py
     - src/hashing.py
+    - src/freeze_backend.py
     - src/inference.py
     - src/paths.py
     - src/plot_results.py
@@ -258,6 +306,7 @@ stages:
     - data/raw/all_tickets_processed_improved_v3.csv
     - reports/data/train_ids.csv
     - reports/data/tune_ids.csv
+    - reports/data/checkpoint_ids.csv
     - reports/data/data_manifest.json
     - reports/data/calibration_ids.csv
     - reports/data/test_ids.csv
@@ -293,6 +342,7 @@ stages:
     - artifacts/cnn/labels.json
     - artifacts/cnn/config.json
     - reports/data/tune_ids.csv
+    - reports/data/checkpoint_ids.csv
     - reports/data/data_manifest.json
     - src/evaluate_tune_cnn.py
     - src/data.py
@@ -316,6 +366,38 @@ stages:
         cache: false
     - reports/metrics/cnn_tune_calibration_metrics.json:
         cache: false
+  evaluate_checkpoint_cnn:
+    cmd: python -m src.evaluate_tune_cnn --partition checkpoint
+    deps:
+    - artifacts/cnn/textcnn.pt
+    - artifacts/cnn/vocab.json
+    - artifacts/cnn/labels.json
+    - artifacts/cnn/config.json
+    - reports/data/tune_ids.csv
+    - reports/data/checkpoint_ids.csv
+    - reports/data/data_manifest.json
+    - src/evaluate_tune_cnn.py
+    - src/data.py
+    - src/cnn_data.py
+    - src/textcnn.py
+    - src/paths.py
+    - src/cnn_evaluation.py
+    - src/evaluate.py
+    - src/hashing.py
+    - src/ticket_text.py
+    - reports/data/train_ids.csv
+    - reports/data/calibration_ids.csv
+    - reports/data/test_ids.csv
+    - data/raw/all_tickets_processed_improved_v3.csv
+    - requirements/dev.txt
+    outs:
+    - reports/metrics/cnn_checkpoint_predictions.csv:
+        cache: false
+    metrics:
+    - reports/metrics/cnn_checkpoint_metrics.json:
+        cache: false
+    - reports/metrics/cnn_checkpoint_calibration_metrics.json:
+        cache: false
   evaluate_calibration_cnn:
     cmd: python -m src.evaluate_calibration_cnn
     deps:
@@ -336,6 +418,7 @@ stages:
     - src/ticket_text.py
     - reports/data/train_ids.csv
     - reports/data/tune_ids.csv
+    - reports/data/checkpoint_ids.csv
     - reports/data/test_ids.csv
     - data/raw/all_tickets_processed_improved_v3.csv
     - requirements/dev.txt
@@ -345,6 +428,7 @@ stages:
   analyze_threshold_cnn:
     cmd: python -m src.analyze_threshold_cnn
     deps:
+    - reports/metrics/frozen_backend.json
     - reports/metrics/cnn_tune_predictions.csv
     - artifacts/cnn/textcnn.pt
     - src/analyze_threshold_cnn.py
@@ -387,6 +471,7 @@ stages:
     - src/tracking.py
     - reports/data/train_ids.csv
     - reports/data/tune_ids.csv
+    - reports/data/checkpoint_ids.csv
     - reports/data/calibration_ids.csv
     - data/raw/all_tickets_processed_improved_v3.csv
     - requirements/dev.txt
@@ -435,6 +520,7 @@ stages:
   select_model:
     cmd: python -m src.select_model
     deps:
+    - reports/metrics/frozen_backend.json
     - reports/metrics/baseline_tune_predictions.csv
     - reports/metrics/baseline_selected_threshold.json
     - reports/metrics/cnn_tune_predictions.csv

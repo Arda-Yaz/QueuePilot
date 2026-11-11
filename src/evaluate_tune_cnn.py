@@ -27,7 +27,7 @@ from src.textcnn import TextCNN
 CNN_DIR = ROOT_DIR / "artifacts" / "cnn"
 
 
-def main() -> None:
+def main(partition: str = "tune") -> None:
     with open(CNN_DIR / "vocab.json", "r", encoding="utf-8") as f:
         vocab = json.load(f)
 
@@ -39,7 +39,9 @@ def main() -> None:
 
     df = load_data()
     splits = load_splits(df)
-    tune_df = splits.tune
+    tune_df = splits.tune if partition == "tune" else splits.checkpoint
+    if tune_df is None:
+        raise RuntimeError("Checkpoint partition missing")
 
     label_to_id = {label: index for index, label in enumerate(labels)}
     y_tune = [label_to_id[label] for label in tune_df["Topic_group"]]
@@ -83,7 +85,7 @@ def main() -> None:
     predicted_labels = [labels[index] for index in all_predictions]
 
     tune_metrics = calculate_metrics(true_labels, np.asarray(predicted_labels))
-    with open(METRICS_DIR / "cnn_tune_metrics.json", "w", encoding="utf-8") as f:
+    with open(METRICS_DIR / f"cnn_{partition}_metrics.json", "w", encoding="utf-8") as f:
         json.dump({**tune_metrics, "model_sha256": calculate_file_sha256(CNN_MODEL_PATH)}, f, indent=4)
 
     calib_metrics = calculate_calibration_metrics(
@@ -91,7 +93,7 @@ def main() -> None:
         y_pred_labels=np.asarray(predicted_labels),
         y_confidence=np.asarray(all_confidences),
     )
-    with open(METRICS_DIR / "cnn_tune_calibration_metrics.json", "w", encoding="utf-8") as f:
+    with open(METRICS_DIR / f"cnn_{partition}_calibration_metrics.json", "w", encoding="utf-8") as f:
         json.dump({**calib_metrics, "model_sha256": calculate_file_sha256(CNN_MODEL_PATH)}, f, indent=4)
 
     print("\nCNN Tune Metrics")
@@ -107,7 +109,7 @@ def main() -> None:
         predicted_labels, all_confidences,
     )
 
-    output_path = METRICS_DIR / "cnn_tune_predictions.csv"
+    output_path = METRICS_DIR / f"cnn_{partition}_predictions.csv"
     results.to_csv(output_path, index=False)
 
     print(f"Saved tune predictions to: {output_path}")
@@ -115,4 +117,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--partition", choices=["tune", "checkpoint"], default="tune")
+    main(parser.parse_args().partition)
