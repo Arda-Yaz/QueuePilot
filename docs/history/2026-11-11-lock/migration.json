@@ -1,0 +1,146 @@
+{
+  "kind": "newline-only migration; inherited outputs, NOT a new training run",
+  "source_commit": "b0eee7c17cdfe89ab4c2009657a9fb8f3f27405f",
+  "original_lock_sha256": "0fb5929e804dacd34265f2149d62bd870cf9f2bccf98746f9fa5abe7190166c6",
+  "lf_lock_sha256": "ea2b50de56be1c6c877a59a0ff2b9d241e5ff33c491f22587e3b1efe2192f95a",
+  "command": "python -m dvc commit --force",
+  "dvc_version": "3.67.1",
+  "changed_records": 11,
+  "sources": {
+    "src/evaluate.py": {
+      "old_md5": "506a52f1d7148eacff0aad51d09b8372",
+      "old_size": 2892,
+      "lf_md5": "6010a5fc539579914b5f32db32fc6ff6",
+      "lf_size": 2809,
+      "lf_sha256": "673c032089a68f126e4a88c10e9407a8945bb584dd6aac1f51d81b4cdc2fc5c6"
+    },
+    "src/analyze_threshold_baseline.py": {
+      "old_md5": "ec35e043456cb518f2cca023a397cced",
+      "old_size": 628,
+      "lf_md5": "11502a998751a16c639d19424b421beb",
+      "lf_size": 607,
+      "lf_sha256": "90fa0a883e41f50d20e0344ee0bbc05aeee2c73cc8b9aff53538cfb81a081243"
+    },
+    "src/threshold_analysis.py": {
+      "old_md5": "af6693d514970142ad8d286713b41b22",
+      "old_size": 3687,
+      "lf_md5": "a66f240a38ba6f25d4f12ea1b50e159a",
+      "lf_size": 3594,
+      "lf_sha256": "be53b853f0239d7aab5f520067f2e78e05c6aa45ba39cb836a9814f1d6b100db"
+    },
+    "src/analyze_threshold_cnn.py": {
+      "old_md5": "d6ff3984d9d5bc8950a6e69738615905",
+      "old_size": 598,
+      "lf_md5": "c0c444b0c6af6c4e67e45a84b3ce4b48",
+      "lf_size": 577,
+      "lf_sha256": "5a901bf85e7b42df8c9b42ff75a889715ef1deab9b1f43ed51f250caabde5deb"
+    }
+  },
+  "output_sha256": {
+    "reports/data/calibration_ids.csv": "e19b38ce7e25cffddf27e456fb4468dd097890e8cec6e2011ad26c17716aa6e0",
+    "reports/data/data_manifest.json": "6585fd8b004c946cd3e3ffeed237ab958887f869779b3e186478ecbc7ad2d396",
+    "reports/data/data_quality_report.json": "02f263c64c9662f07758822a9f048cf553d184ddfd2d8b2dcf19421fedf44197",
+    "reports/data/test_ids.csv": "32eaba981dc1f3aa19be1ff4c34c5cb1b377c3a30373e8f3f00526cb25b2ec28",
+    "reports/data/train_ids.csv": "bfb0d406e1325aecc815a3f251d49109936a2159e3a2bbcaa3f058713d1c2b6d",
+    "reports/data/tune_ids.csv": "6ad4d6c9c9ce5554efba9fdf1c23eac9551fda47ad25bd421b1e577af5297c20",
+    "artifacts/baseline.joblib": "0efbc45b797f668475b54686a93ae5cc67cf7b4d53d3c53e1625852fed8b6ffd",
+    "artifacts/baseline_metadata.json": "7a025c2b0df631e45ac30d55efe54457416d3bcbf5b6ab419bbff29124023a0c",
+    "reports/metrics/baseline_tune_metrics.json": "4d430fceb042465635f8177fb933531f53a969f823a120153701d34e49e08b1f",
+    "reports/metrics/baseline_tune_calibration_metrics.json": "6a7b7f06424c6fc0c9174e99cfc8ef32a3a5723a4457900b50eb0b5aade7b4f9",
+    "reports/metrics/baseline_tune_predictions.csv": "53e9b1cc9adeda5bce2c8203196c96d7be5758f47d1f9dedca320608fdeae22d",
+    "reports/metrics/baseline_calibration_holdout_metrics.json": "3196c352933863f442324467e0f636e754f4bda5e25781ed860e5b0d1391cde8",
+    "reports/metrics/baseline_selected_threshold.json": "df1f8258e0975564d5ce5d00e35b769ab02f6b8a5622a89c2ec5137bfb7ff426",
+    "reports/metrics/baseline_threshold_analysis.csv": "7b33c026b1d588dee9d71aff05f12f274b1cd49efe892705adb82d523f6858d6",
+    "reports/metrics/baseline_metrics.json": "797d0906e945ddd178c3d506f8677aa086b9b88631405156b3a836d875d8cf93",
+    "reports/metrics/baseline_routing_metrics.json": "358db3ea3a708547e2845a275f7374c7965ae9bdaf6b08b06610c4afc08f9aa6",
+    "artifacts/cnn/artifact_manifest.json": "dd22547a368cf085c89be542cfe7f3a5605ff3b512a6cd3ef6c9a67eadc137e4",
+    "artifacts/cnn/cnn_metadata.json": "c73b39367482975f3721af277afe2acbcca70f17d58754eb4fdab776bed46203",
+    "artifacts/cnn/config.json": "80e886bb3c1fb12e93376a9cee9928b76383caa452cf7ac64f9f399a3b2f11b2",
+    "artifacts/cnn/labels.json": "85f7a6b0b6d769e18270fb06e8f1b57a4e4c096083ea928b4647de374cadc4f4",
+    "artifacts/cnn/textcnn.pt": "967e441434863f4d9b3e4d664e1c71f87e937971ecc4162c539670a4ffe64e35",
+    "artifacts/cnn/vocab.json": "746b6e3734db5864a36c84f8923548aa8734f8a87870d321abe109be6a06f43d",
+    "reports/metrics/cnn_tune_calibration_metrics.json": "b8a4f4a1c60e1156e947cc29ab1f606537eaba79735b96022c6634388ad3eefb",
+    "reports/metrics/cnn_tune_metrics.json": "13888d646ca53c5bfce2c5e675752f4e0b188277bbf08599996d3e233aef9e24",
+    "reports/metrics/cnn_tune_predictions.csv": "3534b329f832899c7bc221bbe0d0905d70e7e917f1f29e1740fb4231c019d207",
+    "reports/metrics/cnn_calibration_holdout_metrics.json": "4f5d29dcd8b9a8ab4081449c98e6e535c6addcb68d547b4437d95266dafac71f",
+    "reports/metrics/selected_threshold.json": "cd64f306202b8ab9e2f560245dbd0db764299cfd9776f1162bb27f4b5cc94144",
+    "reports/metrics/threshold_analysis.csv": "5c369e5bf3df23e4cfd44ce6a9d072c83b543dcf17f23deddf54c6ec255c7362",
+    "reports/figures/cnn_confusion_matrix.png": "811909ffffc096bce20d26034c4c589d564fa6e2bf0588799d557685acbead7e",
+    "reports/metrics/cnn_metrics.json": "ef8627baa079ab2f4efb6f5ed74fd87f545cdbf5e67551f94f6ea8bac3c2de1c",
+    "reports/metrics/cnn_test_predictions.csv": "859f54ea156c73c50467f7ddd47a7cc3ec5c1163bdcee1be07b2b17b33274ca8",
+    "reports/metrics/routing_metrics.json": "a5499aea1abf26cd8817517a90107533a8a15ff7ac264da3579f47994aec4db2",
+    "reports/metrics/model_comparison.csv": "058ed973d796bc333efe84780b7ff8c6d61990b61b408e8a3b7462c57378a395",
+    "reports/metrics/model_selection.json": "ef0081ddfd9a4c80ecd91a911fa33f58daa0d3c717add3e0b31384f600d5b010"
+  },
+  "clean_checkout_before": {
+    "train_baseline": [
+      {
+        "changed deps": {
+          "src\\evaluate.py": "modified"
+        }
+      }
+    ],
+    "evaluate_tune_baseline": [
+      {
+        "changed deps": {
+          "src\\evaluate.py": "modified"
+        }
+      }
+    ],
+    "evaluate_calibration_baseline": [
+      {
+        "changed deps": {
+          "src\\evaluate.py": "modified"
+        }
+      }
+    ],
+    "analyze_threshold_baseline": [
+      {
+        "changed deps": {
+          "src\\analyze_threshold_baseline.py": "modified",
+          "src\\threshold_analysis.py": "modified"
+        }
+      }
+    ],
+    "evaluate_baseline": [
+      {
+        "changed deps": {
+          "src\\evaluate.py": "modified"
+        }
+      }
+    ],
+    "evaluate_tune_cnn": [
+      {
+        "changed deps": {
+          "src\\evaluate.py": "modified"
+        }
+      }
+    ],
+    "evaluate_calibration_cnn": [
+      {
+        "changed deps": {
+          "src\\evaluate.py": "modified"
+        }
+      }
+    ],
+    "analyze_threshold_cnn": [
+      {
+        "changed deps": {
+          "src\\analyze_threshold_cnn.py": "modified",
+          "src\\threshold_analysis.py": "modified"
+        }
+      }
+    ],
+    "evaluate_cnn": [
+      {
+        "changed deps": {
+          "src\\evaluate.py": "modified"
+        }
+      }
+    ]
+  },
+  "clean_checkout_after": {},
+  "second_checkout_after": {},
+  "input_delivery": "Git checkout plus locally supplied lock-verified raw data, models and ignored prediction CSVs; no remote pull",
+  "execution_script_sha256": "e3432ae7fcb244d749c60b5f5cccba5bef01ce8264124c489c0a915a07911c41"
+}

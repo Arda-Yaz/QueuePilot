@@ -1,4 +1,5 @@
 * text=auto
+.gitattributes text eol=lf
 *.py text eol=lf
 *.toml text eol=lf
 *.yml text eol=lf
@@ -20,3 +21,4 @@ Dockerfile text eol=lf
 artifacts/** -text whitespace=cr-at-eol
 reports/** -text whitespace=cr-at-eol
 dvc.lock -text whitespace=cr-at-eol
+docs/history/2026-11-11-lock/*.lock -text whitespace=cr-at-eol

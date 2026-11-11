@@ -1,0 +1,108 @@
+import ast
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+import yaml
+
+root = Path.cwd()
+ref = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+checkout = root / '.checks' / 'audit-lf-checkout'
+history = root / 'docs' / 'history' / '2026-11-11-lock'
+history.mkdir(parents=True, exist_ok=True)
+original_bytes = (root / 'dvc.lock').read_bytes()
+original = yaml.safe_load(original_bytes)
+if not checkout.exists():
+    subprocess.run(['git', 'clone', '--local', '--no-hardlinks', '--no-checkout', str(root), str(checkout)], check=True)
+    subprocess.run(['git', '-C', str(checkout), '-c', 'core.autocrlf=false', 'checkout', '--detach', ref], check=True)
+    assert not subprocess.check_output(['git', 'status', '--porcelain'], cwd=checkout)
+(checkout / 'dvc.lock').write_bytes(original_bytes)
+changes = {}
+outputs = {}
+for stage_name, stage in original['stages'].items():
+    for section in ['deps', 'outs']:
+        for entry in stage.get(section, []):
+            path = entry['path']
+            src = root / path
+            dst = checkout / path
+            # Supply missing ignored inputs and cached models from verified local files.
+            if not dst.exists():
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(src, dst)
+            data = dst.read_bytes()
+            if section == 'outs':
+                outputs[path] = hashlib.sha256(data).hexdigest()
+            if hashlib.md5(data).hexdigest() == entry['md5'] and len(data) == entry['size']:
+                continue
+            assert section == 'deps' and path.endswith('.py'), (stage_name, section, path)
+            assert b'\r' not in data
+            historical = data.replace(b'\n', b'\r\n')
+            assert hashlib.md5(historical).hexdigest() == entry['md5'], path
+            assert len(historical) == entry['size'], path
+            assert ast.dump(ast.parse(data)) == ast.dump(ast.parse(historical))
+            changes[path] = {'old_md5': entry['md5'], 'old_size': entry['size'],
+                             'lf_md5': hashlib.md5(data).hexdigest(), 'lf_size': len(data),
+                             'lf_sha256': hashlib.sha256(data).hexdigest()}
+env = {**os.environ, 'DVC_SITE_CACHE_DIR': str(checkout / '.site-cache')}
+def dvc(*args):
+    p = subprocess.run([sys.executable, '-m', 'dvc', *args], cwd=checkout, env=env,
+                       capture_output=True, text=True, check=True)
+    return p.stdout
+before = json.loads(dvc('status', '--json'))
+print('Clean checkout status before migration:', json.dumps(before), flush=True)
+# This command only records a verified newline-only migration; it is not a training run.
+log = dvc('commit', '--force')
+normalized_bytes = (checkout / 'dvc.lock').read_bytes()
+normalized = yaml.safe_load(normalized_bytes)
+expected = yaml.safe_load(original_bytes)
+records = 0
+for stage in expected['stages'].values():
+    for entry in stage.get('deps', []):
+        if entry['path'] in changes:
+            change = changes[entry['path']]
+            entry['md5'], entry['size'] = change['lf_md5'], change['lf_size']
+            records += 1
+assert normalized == expected, 'DVC changed more than the verified newline records'
+assert all(hashlib.sha256((checkout / p).read_bytes()).hexdigest() == sha for p, sha in outputs.items())
+after = json.loads(dvc('status', '--json'))
+assert after == {}, after
+# A second independent checkout verifies the generated lock rather than cached DVC state.
+second = root / '.checks' / 'audit-lf-verification'
+if not second.exists():
+    subprocess.run(['git', 'clone', '--local', '--no-hardlinks', '--no-checkout', str(root), str(second)], check=True)
+    subprocess.run(['git', '-C', str(second), '-c', 'core.autocrlf=false', 'checkout', '--detach', ref], check=True)
+for stage in original['stages'].values():
+    for entry in stage.get('deps', []) + stage.get('outs', []):
+        dst = second / entry['path']
+        if not dst.exists():
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(checkout / entry['path'], dst)
+(second / 'dvc.lock').write_bytes(normalized_bytes)
+subprocess.run([sys.executable, '-m', 'dvc', 'config', '--local', 'cache.dir', str(checkout / '.dvc' / 'cache')], cwd=second, env=env, check=True)
+subprocess.run([sys.executable, '-m', 'dvc', 'checkout'], cwd=second, env=env, check=True)
+p = subprocess.run([sys.executable, '-m', 'dvc', 'status', '--json'], cwd=second,
+                   env={**env, 'DVC_SITE_CACHE_DIR': str(second / '.site-cache')},
+                   capture_output=True, text=True, check=True)
+assert json.loads(p.stdout) == {}, p.stdout
+(history / 'original.dvc.lock').write_bytes(original_bytes)
+(history / 'lf.dvc.lock').write_bytes(normalized_bytes)
+(history / 'migration.json').write_text(json.dumps({
+    'kind': 'newline-only migration; inherited outputs, NOT a new training run',
+    'source_commit': ref,
+    'original_lock_sha256': hashlib.sha256(original_bytes).hexdigest(),
+    'lf_lock_sha256': hashlib.sha256(normalized_bytes).hexdigest(),
+    'command': 'python -m dvc commit --force',
+    'dvc_version': dvc('--version').strip(),
+    'changed_records': records, 'sources': changes, 'output_sha256': outputs,
+    'clean_checkout_before': before, 'clean_checkout_after': after,
+    'second_checkout_after': json.loads(p.stdout),
+    'input_delivery': 'Git checkout plus locally supplied lock-verified raw data, models and ignored prediction CSVs; no remote pull',
+}, indent=2) + '\n', encoding='utf-8', newline='\n')
+(root / 'dvc.lock').write_bytes(normalized_bytes)
+for path in changes:
+    (root / path).write_bytes((checkout / path).read_bytes())
+print(f'Migrated {records} records in {len(changes)} sources; both checkout statuses empty.', flush=True)
