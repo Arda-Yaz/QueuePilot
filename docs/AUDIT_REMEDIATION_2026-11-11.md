@@ -1,5 +1,7 @@
 # Second-audit remediation verification: 11 November 2026
 
+This is a historical remediation record. The subsequent [protocol v2 run](PROTOCOL_V2_RUN.md) supersedes its pending-training status.
+
 The initial workspace was clean. HEAD exactly matched the audited commit,
 `b0eee7c17cdfe89ab4c2009657a9fb8f3f27405f`. No pre-existing user changes were
 overwritten. The report was treated as a source of hypotheses and checked

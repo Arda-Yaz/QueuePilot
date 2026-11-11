@@ -1,7 +1,11 @@
-# Checkpoint and threshold selection: decision required
+# Experiment design options and selected protocol
 
-No split, model artifact or performance report was changed for this design
-discussion. The preserved dataset contains 47,837 cleaned tickets: 33,485 train,
+The user selected the tune-subdivision option. Protocol v2 is implemented; see
+[the fixed protocol](SELECTION_PROTOCOL.md) for the execution order. The following
+options describe the decision context and historical dataset.
+
+At the time of the original design discussion, no split, model artifact or
+performance report had been changed. The preserved dataset contains 47,837 cleaned tickets: 33,485 train,
 4,779 tune, 4,786 calibration and 4,787 test.
 
 ## Verified issue and scope

@@ -4,7 +4,7 @@
 
 **Stack** · Python · scikit-learn · PyTorch · FastAPI · DVC · Docker
 
-A ticket like “Cannot access my account” illustrates the triage problem. The baseline predicts **Access**, but its confidence is **0.533**, below its **0.57** routing threshold. QueuePilot returns the category suggestion and flags the ticket for review. For “My laptop keyboard is broken,” the same model predicts **Hardware** with **0.976** confidence and recommends automatic routing. Both examples are outputs from the fitted baseline.
+A ticket like “Cannot access my account” illustrates the triage problem. The baseline predicts **Access**, but its confidence is **0.533**, below its **0.60** routing threshold. QueuePilot returns the category suggestion and flags the ticket for review. For “My laptop keyboard is broken,” the same model predicts **Hardware** with **0.976** confidence and recommends automatic routing. Both examples are outputs from the fitted baseline.
 
 ## How a ticket becomes a routing decision
 
@@ -18,7 +18,7 @@ flowchart LR
 ```
 
 - **Confidence drives the decision.** The default model uses TF-IDF features and logistic regression with sigmoid calibration. Calibration makes the scores more meaningful when deciding how much confidence to place in a prediction.
-- **The threshold comes from tuning data.** For each model, the selection rule seeks the greatest coverage whose lower confidence bound on auto-routed accuracy reaches 90%. Both models qualified. The baseline accepted **83.83%** of tuning tickets versus **83.91%** for TextCNN. CNN promotion requires a coverage improvement of at least **2 percentage points**, so the baseline remains the default. [Model selection record](reports/metrics/model_selection.json)
+- **Backend and threshold use separate data.** Checkpoint Macro-F1 selects the backend before risk threshold tuning: baseline **0.8690**, CNN **0.8548**. The baseline is frozen first; its independent risk threshold is **0.60**. The old coverage-based promotion rule is superseded. [Selection protocol](docs/SELECTION_PROTOCOL.md) · [Model selection record](reports/metrics/model_selection.json)
 - **Each threshold belongs to a specific model.** At startup, the service checks the model’s SHA-256 against its threshold record. Loading fails on a mismatch. The CNN also checks its vocabulary, label mapping and configuration before serving. [Inference code](src/inference.py)
 
 ## Evaluation
@@ -27,14 +27,14 @@ The reports regenerated on 11 November 2026 evaluate the two locally retrained m
 
 | Backend | Routing threshold | Overall accuracy | Coverage | Accuracy on accepted tickets |
 | --- | ---: | ---: | ---: | ---: |
-| TF-IDF + logistic regression | 0.57 | 85.75% | 82.56% | 92.16% |
-| TextCNN | 0.77 | 84.19% | 84.25% | 91.02% |
+| TF-IDF + logistic regression | 0.60 | 85.75% | 79.09% | 92.95% |
+| TextCNN | 0.84 | 84.06% | 75.37% | 92.38% |
 
-For the baseline, that split corresponds to **3,952 recommendations for automatic routing** and **835 referrals for review**. [Baseline report](reports/metrics/baseline_routing_metrics.json) · [TextCNN report](reports/metrics/routing_metrics.json) · [Dataset](https://www.kaggle.com/datasets/adisongoh/it-service-ticket-classification-dataset)
+For the baseline, that split corresponds to **3,786 recommendations for automatic routing** and **1,001 referrals for review**. [Baseline report](reports/metrics/baseline_routing_metrics.json) · [TextCNN report](reports/metrics/routing_metrics.json) · [Dataset](https://www.kaggle.com/datasets/adisongoh/it-service-ticket-classification-dataset)
 
-**Verification and release status.** The maintained [release status](docs/RELEASE_STATUS.md) identifies the published model pair, confirmed CI evidence and pending source changes. Older local test counts and reproduction notes are kept in the [dated archive](docs/history/2026-11-11-reproduction.md). The current metrics above belong to the preserved 11 November model pair; provenance fixes have not retrained those models.
+**Verification and release status.** The maintained [release status](docs/RELEASE_STATUS.md) identifies the current local model pair and distinguishes historical hosted CI evidence from the new local run. Older local test counts and reproduction notes are kept in the [dated archive](docs/history/2026-11-11-reproduction.md). The metrics above belong to the new protocol v2 model pair, trained from committed source with recoverable provenance.
 
-The CNN uses the same tune partition for checkpoint and threshold selection. The threshold-grid correction does not cover that entire adaptive selection process, so the 90% rule is an empirical selection criterion for this run, not an end-to-end production guarantee. [Design options and costs](docs/EXPERIMENT_DESIGN.md)
+Protocol v2 uses disjoint checkpoint and risk partitions. These data have a history of prior analysis, so current held-out results remain descriptive measurements; they do not establish unconditional production guarantees. [Protocol and limits](docs/SELECTION_PROTOCOL.md)
 
 ## Try a ticket
 
@@ -50,6 +50,10 @@ Read `category` for the suggested queue and `needs_manual_review` for the routin
 
 <details>
 <summary>Start the baseline on Windows</summary>
+
+The current v2 models are local and have not been published to the remote. The
+`dvc pull` step below applies after their model objects have been uploaded; until
+then use the locally trained artifacts or [reproduce the pipeline](docs/REPRODUCTION.md).
 
 From the repository root, with Python 3.12 and DVC authenticated to the [QueuePilot model repository](https://dagshub.com/Arda-Yaz/QueuePilot), run:
 
