@@ -3,5 +3,6 @@
     "macro_precision": 0.8756164501321569,
     "macro_recall": 0.8419510088158798,
     "macro_f1": 0.8573370775626656,
-    "weighted_f1": 0.8578282926550514
+    "weighted_f1": 0.8578282926550514,
+    "model_sha256": "0efbc45b797f668475b54686a93ae5cc67cf7b4d53d3c53e1625852fed8b6ffd"
 }

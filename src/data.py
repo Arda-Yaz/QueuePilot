@@ -6,15 +6,15 @@ consume those persisted outputs so every downstream stage uses identical
 partitions.
 
 Canonical split design (70 / 10 / 10 / 10):
-    train           — model fitting
-    tune            — threshold selection (never used for training)
-    calibration     — held-out calibration quality measurement (ECE, Brier);
+    train           â€” model fitting
+    tune            â€” threshold selection (never used for training)
+    calibration     â€” held-out calibration quality measurement (ECE, Brier);
                       never used for training or threshold selection
-    test            — final held-out evaluation (never used before final report)
+    test            â€” final held-out evaluation (never used before final report)
 
 ``load_splits()`` returns a ``DataSplits`` dataclass exposing all four
 partitions as named attributes.  ``split_data()`` is a backward-compatible
-wrapper that returns ``(train, tune, test)`` — it does NOT return the
+wrapper that returns ``(train, tune, test)`` â€” it does NOT return the
 calibration partition; use ``load_splits().calibration`` or
 ``load_calibration_split()`` to access it.
 
@@ -39,10 +39,10 @@ class DataSplits:
     """Canonical four-way data partition.
 
     Attributes:
-        train:       70% of cleaned dataset — used for model fitting.
-        tune:        10% — used for threshold selection (Clopper-Pearson).
-        calibration: 10% — held-out for post-hoc calibration evaluation only.
-        test:        10% — untouched until final held-out evaluation.
+        train:       70% of cleaned dataset â€” used for model fitting.
+        tune:        10% â€” used for threshold selection (Clopper-Pearson).
+        calibration: 10% â€” held-out for post-hoc calibration evaluation only.
+        test:        10% â€” untouched until final held-out evaluation.
 
     All four partitions are mutually disjoint and their union covers the
     entire cleaned dataset (verified by ``validate_persisted_splits``).
@@ -153,7 +153,16 @@ def validate_persisted_splits(
     calib_set = set(calib_ids) if calib_ids is not None else set()
     current_ids = set(df.index)
 
-    # Disjointness checks — always required
+    partitions = [("train", train_ids), ("tune", tune_ids), ("test", test_ids)]
+    if calib_ids is not None:
+        partitions.append(("calibration", calib_ids))
+    for name, ids in partitions:
+        if not ids.is_unique:
+            raise RuntimeError(f"Persisted {name} split contains duplicate IDs.")
+    if not df.index.is_unique:
+        raise RuntimeError("Current dataset contains duplicate IDs.")
+
+    # Disjointness checks â€” always required
     pairs = [
         ("train", train_set, "tune", tune_set),
         ("train", train_set, "test", test_set),
@@ -196,17 +205,17 @@ def validate_persisted_splits(
                 "Persisted calibration split size does not match data_manifest.json."
             )
 
-    # Collective exhaustiveness
-    if manifest.get("total_rows") is not None:
-        total_manifest = int(str(manifest["total_rows"]))
-        if len(all_persisted) != total_manifest:
-            if calib_ids is None:
-                missing = current_ids - all_persisted
-                raise RuntimeError(
-                    f"Persisted splits do not cover all dataset rows. "
-                    f"Missing: {len(missing)} IDs. "
-                    "Regenerate splits by running: dvc repro prepare_data"
-                )
+    # Compare actual ID sets independently of the manifest's claimed total.
+    missing = current_ids - all_persisted
+    if missing:
+        raise RuntimeError(
+            f"Persisted splits do not cover all dataset rows. Missing: {len(missing)} IDs. "
+            "Regenerate splits by running: dvc repro prepare_data"
+        )
+    if manifest.get("total_rows") is None:
+        raise RuntimeError("Persisted split manifest does not contain 'total_rows'.")
+    if int(str(manifest["total_rows"])) != len(df):
+        raise RuntimeError("Dataset size does not match data_manifest.json total_rows.")
 
 
 def load_calibration_split(df: pd.DataFrame) -> pd.DataFrame:
@@ -221,14 +230,7 @@ def load_calibration_split(df: pd.DataFrame) -> pd.DataFrame:
         FileNotFoundError: If calibration_ids.csv is not present.
             Run ``dvc repro prepare_data`` to generate it.
     """
-    calib_ids_path = REPORT_DATA_DIR / "calibration_ids.csv"
-    if not calib_ids_path.exists():
-        raise FileNotFoundError(
-            f"Calibration split IDs not found: {calib_ids_path}. "
-            "Run: dvc repro prepare_data"
-        )
-    calib_ids = pd.read_csv(calib_ids_path)["id"].values
-    return df.loc[calib_ids].copy()
+    return load_splits(df).calibration
 
 
 def load_splits(df: pd.DataFrame | None = None) -> DataSplits:
@@ -307,11 +309,11 @@ def split_data(
 
     Args:
         df: Pre-loaded dataset. If None, ``load_data()`` is called.
-        random_state: Accepted for API compatibility; has no effect — the
+        random_state: Accepted for API compatibility; has no effect â€” the
             split is always loaded from persisted files.
 
     Returns:
-        (train_df, tune_df, test_df) — non-overlapping DataFrames.
+        (train_df, tune_df, test_df) â€” non-overlapping DataFrames.
 
     Raises:
         FileNotFoundError: If any required split file or manifest is absent.

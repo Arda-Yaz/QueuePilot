@@ -4,7 +4,7 @@ Produces:
 - Tune-set predictions CSV (used by threshold selection)
 - Tune-set calibration metrics (ECE, Brier score)
 
-Note: these calibration metrics are measured on the TUNE set — the same
+Note: these calibration metrics are measured on the TUNE set â€” the same
 partition used for threshold selection.  For held-out calibration quality
 assessment on the independent CALIBRATION partition, see
 ``evaluate_calibration_baseline.py``.
@@ -17,7 +17,8 @@ import numpy as np
 
 from src.data import load_data, load_splits
 from src.evaluate import build_prediction_frame, calculate_calibration_metrics
-from src.paths import METRICS_DIR, ROOT_DIR
+from src.hashing import calculate_file_sha256
+from src.paths import BASELINE_MODEL_PATH, METRICS_DIR, ROOT_DIR
 
 MODEL_PATH = ROOT_DIR / "artifacts" / "baseline.joblib"
 
@@ -50,7 +51,7 @@ def main() -> None:
 
     calibration_path = METRICS_DIR / "baseline_tune_calibration_metrics.json"
     with open(calibration_path, "w", encoding="utf-8") as f:
-        json.dump(calibration, f, indent=4)
+        json.dump({**calibration, "model_sha256": calculate_file_sha256(BASELINE_MODEL_PATH)}, f, indent=4)
 
     print("Tune accuracy:", results["correct"].mean())
     print("Top label Brier score:", calibration["top_label_brier_score"])

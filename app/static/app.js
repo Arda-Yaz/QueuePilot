@@ -297,7 +297,7 @@
         document.getElementById("perf-note").textContent =
           "Held-out test set, " + routing.total_tickets.toLocaleString() +
           " tickets (" + Number(routing.auto_routed_tickets).toLocaleString() +
-          " auto-routed).";
+          " auto-routed). ECE/Brier: independent calibration holdout.";
       }
 
       if (cal.expected_calibration_error !== undefined) {

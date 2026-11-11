@@ -2,7 +2,8 @@ import json
 
 import pandas as pd
 
-from src.paths import METRICS_DIR
+from src.hashing import calculate_file_sha256
+from src.paths import CNN_MODEL_PATH, METRICS_DIR
 from src.tracking import log_metrics, start_run
 
 TEST_PREDICTIONS_PATH = METRICS_DIR / "cnn_test_predictions.csv"
@@ -60,7 +61,7 @@ def main() -> None:
     }
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        json.dump(routing_metrics, f, indent=4)
+        json.dump({**routing_metrics, "model_sha256": calculate_file_sha256(CNN_MODEL_PATH)}, f, indent=4)
 
     with start_run(run_name="evaluate_routing_cnn", model_backend="cnn"):
         log_metrics({

@@ -14,3 +14,9 @@ Dockerfile text eol=lf
 *.html text eol=lf
 *.css text eol=lf
 *.js text eol=lf
+
+# Generated files participate in byte-level model manifests and DVC hashes.
+# Preserve their original bytes when checking out on another platform.
+artifacts/** -text whitespace=cr-at-eol
+reports/** -text whitespace=cr-at-eol
+dvc.lock -text whitespace=cr-at-eol

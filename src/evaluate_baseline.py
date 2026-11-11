@@ -10,6 +10,7 @@ from src.evaluate import (
     calculate_metrics,
     print_report,
 )
+from src.hashing import calculate_file_sha256
 from src.paths import ARTIFACT_DIR, METRICS_DIR
 from src.tracking import log_metrics, start_run
 
@@ -39,7 +40,7 @@ def main() -> None:
         encoding="utf-8",
     ) as file:
         json.dump(
-            metrics,
+            {**metrics, "model_sha256": calculate_file_sha256(MODEL_PATH)},
             file,
             indent=4,
         )

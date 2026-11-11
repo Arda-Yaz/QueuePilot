@@ -1,6 +1,6 @@
 """Held-out calibration evaluation for the TextCNN model.
 
-Evaluates ECE and Brier score on the CALIBRATION partition — the independent
+Evaluates ECE and Brier score on the CALIBRATION partition â€” the independent
 10% hold-out that is never used for training or threshold selection.
 
 See ``evaluate_calibration_baseline.py`` for the full methodology note.
@@ -16,7 +16,8 @@ from src.cnn_data import TicketDataset
 from src.cnn_evaluation import predict_batches
 from src.data import load_calibration_split, load_data
 from src.evaluate import build_prediction_frame, calculate_calibration_metrics
-from src.paths import METRICS_DIR, ROOT_DIR
+from src.hashing import calculate_file_sha256
+from src.paths import CNN_MODEL_PATH, METRICS_DIR, ROOT_DIR
 from src.textcnn import TextCNN
 
 CNN_DIR = ROOT_DIR / "artifacts" / "cnn"
@@ -97,7 +98,7 @@ def main() -> None:
     }
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        json.dump(output, f, indent=4)
+        json.dump({**output, "model_sha256": calculate_file_sha256(CNN_MODEL_PATH)}, f, indent=4)
 
     print(f"Calibration holdout accuracy: {results['correct'].mean():.4f}")
     print(f"Top label Brier score: {calibration['top_label_brier_score']:.6f}")

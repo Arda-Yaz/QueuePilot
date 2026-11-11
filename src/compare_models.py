@@ -7,7 +7,7 @@ from src.paths import METRICS_DIR
 
 def main() -> None:
     baseline_path = METRICS_DIR / "baseline_metrics.json"
-    baseline_calib_path = METRICS_DIR / "baseline_tune_calibration_metrics.json"
+    baseline_calib_path = METRICS_DIR / "baseline_calibration_holdout_metrics.json"
     cnn_path = METRICS_DIR / "cnn_metrics.json"
 
     if not baseline_path.exists() or not cnn_path.exists():
@@ -20,20 +20,25 @@ def main() -> None:
     if baseline_calib_path.exists():
         with open(baseline_calib_path, "r", encoding="utf-8") as f:
             baseline_calib = json.load(f)
-            baseline.update(baseline_calib)
+            baseline.update({k: v for k, v in baseline_calib.items() if k in {"expected_calibration_error", "top_label_brier_score"}})
 
     with open(cnn_path, "r", encoding="utf-8") as f:
         cnn = json.load(f)
+
+    cnn_calib = json.loads((METRICS_DIR / "cnn_calibration_holdout_metrics.json").read_text(encoding="utf-8"))
+    cnn.update({k: v for k, v in cnn_calib.items() if k in {"expected_calibration_error", "top_label_brier_score"}})
 
     comparison = pd.DataFrame(
         [
             {
                 "model": "TF-IDF + Logistic Regression",
                 **baseline,
+                "calibration_partition": "calibration_holdout",
             },
             {
                 "model": "TextCNN",
                 **cnn,
+                "calibration_partition": "calibration_holdout",
             },
         ]
     )

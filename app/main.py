@@ -130,18 +130,33 @@ def health() -> dict[str, object]:
 @app.get("/model-info", include_in_schema=False)
 def model_info() -> dict[str, object]:
     """Serve persisted evaluation metrics for the UI's model panel (read-only)."""
+    predictor = app.state.predictor
+    backend = getattr(predictor, "backend", None)
+    model_hash = getattr(predictor, "model_sha256", None)
+    info: dict[str, object] = {"available": False, "model_backend": backend,
+                               "model_sha256": model_hash,
+                               "partitions": {"routing": "test", "classification": "test",
+                                              "calibration": "calibration_holdout"}}
+    if backend not in {"baseline", "cnn"} or not model_hash:
+        return info
+    prefix = "baseline" if backend == "baseline" else "cnn"
     metric_files = {
-        "routing": METRICS_DIR / "baseline_routing_metrics.json",
-        "classification": METRICS_DIR / "baseline_metrics.json",
-        "calibration": METRICS_DIR / "baseline_tune_calibration_metrics.json",
+        "routing": "baseline_routing_metrics.json" if backend == "baseline" else "routing_metrics.json",
+        "classification": f"{prefix}_metrics.json",
+        "calibration": f"{prefix}_calibration_holdout_metrics.json",
     }
-    info: dict[str, object] = {}
-    for key, path in metric_files.items():
-        if path.exists():
-            with open(path, encoding="utf-8") as f:
-                info[key] = json.load(f)
-    info["available"] = bool(info)
+    try:
+        for key, filename in metric_files.items():
+            with open(METRICS_DIR / filename, encoding="utf-8") as f:
+                report = json.load(f)
+            if not isinstance(report, dict) or report.get("model_sha256") != model_hash:
+                return info
+            info[key] = report
+    except (OSError, ValueError):
+        return {**info, "available": False}
+    info["available"] = True
     return info
+
 
 
 @app.post("/predict", response_model=PredictionResponse)

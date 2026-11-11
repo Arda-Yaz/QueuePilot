@@ -162,6 +162,13 @@ class CNNPredictor:
 def get_predictor(backend: str = "auto") -> BaselinePredictor | CNNPredictor:
     if backend == "auto":
         backend = get_selected_backend()
+        predictor = get_predictor(backend)
+        with open(MODEL_SELECTION_PATH, encoding="utf-8") as f:
+            selection = json.load(f)
+        if (selection.get("selected_model_sha256") != predictor.model_sha256
+                or selection.get("selected_threshold") != predictor.threshold):
+            raise RuntimeError("Model selection is stale. Run model selection again.")
+        return predictor
 
     if backend == "baseline":
         return BaselinePredictor()

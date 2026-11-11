@@ -10,7 +10,7 @@ This script evaluates the *pre-selected* threshold on the **test set** and
 reports point estimates only.  No confidence interval is re-computed here
 because:
 
-1. The threshold was chosen before any test-set contact — applying a CI
+1. The threshold was chosen before any test-set contact â€” applying a CI
    procedure retrospectively on the same data used for reporting would be
    post-hoc and misleading.
 2. The statistical guarantee (lower bound >= target accuracy) was established
@@ -28,8 +28,9 @@ import numpy as np
 import pandas as pd
 
 from src.data import load_data, load_splits
+from src.hashing import calculate_file_sha256
+from src.paths import BASELINE_MODEL_PATH, METRICS_DIR
 from src.paths import BASELINE_MODEL_PATH as MODEL_PATH
-from src.paths import METRICS_DIR
 from src.tracking import log_metrics, start_run
 
 THRESHOLD_PATH = METRICS_DIR / "baseline_selected_threshold.json"
@@ -113,7 +114,7 @@ def main() -> None:
     }
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        json.dump(metrics, f, indent=4)
+        json.dump({**metrics, "model_sha256": calculate_file_sha256(BASELINE_MODEL_PATH)}, f, indent=4)
 
     with start_run(run_name="evaluate_routing_baseline", model_backend="baseline"):
         log_metrics({

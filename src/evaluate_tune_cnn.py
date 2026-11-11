@@ -4,7 +4,7 @@ Produces:
 - Tune-set predictions CSV (used by threshold selection)
 - Tune-set calibration metrics (ECE, Brier score)
 
-Note: these calibration metrics are measured on the TUNE set — the same
+Note: these calibration metrics are measured on the TUNE set â€” the same
 partition used for threshold selection.  For held-out calibration quality
 assessment on the independent CALIBRATION partition, see
 ``evaluate_calibration_cnn.py``.
@@ -20,7 +20,8 @@ from src.cnn_data import TicketDataset
 from src.cnn_evaluation import predict_batches
 from src.data import load_data, load_splits
 from src.evaluate import build_prediction_frame, calculate_calibration_metrics, calculate_metrics
-from src.paths import METRICS_DIR, ROOT_DIR
+from src.hashing import calculate_file_sha256
+from src.paths import CNN_MODEL_PATH, METRICS_DIR, ROOT_DIR
 from src.textcnn import TextCNN
 
 CNN_DIR = ROOT_DIR / "artifacts" / "cnn"
@@ -83,7 +84,7 @@ def main() -> None:
 
     tune_metrics = calculate_metrics(true_labels, np.asarray(predicted_labels))
     with open(METRICS_DIR / "cnn_tune_metrics.json", "w", encoding="utf-8") as f:
-        json.dump(tune_metrics, f, indent=4)
+        json.dump({**tune_metrics, "model_sha256": calculate_file_sha256(CNN_MODEL_PATH)}, f, indent=4)
 
     calib_metrics = calculate_calibration_metrics(
         y_true_labels=true_labels,
@@ -91,7 +92,7 @@ def main() -> None:
         y_confidence=np.asarray(all_confidences),
     )
     with open(METRICS_DIR / "cnn_tune_calibration_metrics.json", "w", encoding="utf-8") as f:
-        json.dump(calib_metrics, f, indent=4)
+        json.dump({**calib_metrics, "model_sha256": calculate_file_sha256(CNN_MODEL_PATH)}, f, indent=4)
 
     print("\nCNN Tune Metrics")
     for key, value in tune_metrics.items():

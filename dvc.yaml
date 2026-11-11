@@ -2,281 +2,359 @@ stages:
   prepare_data:
     cmd: python -m src.prepare_data
     deps:
-      - data/raw/all_tickets_processed_improved_v3.csv
-      - src/prepare_data.py
-      - src/data.py
-      - src/hashing.py
-      - src/paths.py
+    - data/raw/all_tickets_processed_improved_v3.csv
+    - src/prepare_data.py
+    - src/data.py
+    - src/hashing.py
+    - src/paths.py
+    - src/ticket_text.py
+    - requirements/dev.txt
     outs:
-      - reports/data/data_manifest.json:
-          cache: false
-      - reports/data/data_quality_report.json:
-          cache: false
-      - reports/data/train_ids.csv:
-          cache: false
-      - reports/data/tune_ids.csv:
-          cache: false
-      - reports/data/calibration_ids.csv:
-          cache: false
-      - reports/data/test_ids.csv:
-          cache: false
-
+    - reports/data/data_manifest.json:
+        cache: false
+    - reports/data/data_quality_report.json:
+        cache: false
+    - reports/data/train_ids.csv:
+        cache: false
+    - reports/data/tune_ids.csv:
+        cache: false
+    - reports/data/calibration_ids.csv:
+        cache: false
+    - reports/data/test_ids.csv:
+        cache: false
   train_baseline:
     cmd: python -m src.train_baseline
     deps:
-      - data/raw/all_tickets_processed_improved_v3.csv
-      - reports/data/train_ids.csv
-      - reports/data/tune_ids.csv
-      - reports/data/data_manifest.json
-      - src/train_baseline.py
-      - src/data.py
-      - src/evaluate.py
-      - src/hashing.py
-      - src/paths.py
-      - src/tracking.py
+    - data/raw/all_tickets_processed_improved_v3.csv
+    - reports/data/train_ids.csv
+    - reports/data/tune_ids.csv
+    - reports/data/data_manifest.json
+    - src/train_baseline.py
+    - src/data.py
+    - src/evaluate.py
+    - src/hashing.py
+    - src/paths.py
+    - src/tracking.py
+    - src/ticket_text.py
+    - reports/data/calibration_ids.csv
+    - reports/data/test_ids.csv
+    - requirements/dev.txt
     params:
-      - baseline.ngram_range
-      - baseline.min_df
-      - baseline.max_df
-      - baseline.max_features
-      - baseline.max_iter
-      - baseline.class_weight
+    - baseline.ngram_range
+    - baseline.min_df
+    - baseline.max_df
+    - baseline.max_features
+    - baseline.max_iter
+    - baseline.class_weight
     outs:
-      - artifacts/baseline.joblib
-      - artifacts/baseline_metadata.json:
-          cache: false
+    - artifacts/baseline.joblib
+    - artifacts/baseline_metadata.json:
+        cache: false
     metrics:
-      - reports/metrics/baseline_tune_metrics.json:
-          cache: false
-
+    - reports/metrics/baseline_tune_metrics.json:
+        cache: false
   evaluate_tune_baseline:
     cmd: python -m src.evaluate_tune_baseline
     deps:
-      - artifacts/baseline.joblib
-      - reports/data/tune_ids.csv
-      - reports/data/data_manifest.json
-      - src/evaluate_tune_baseline.py
-      - src/data.py
-      - src/evaluate.py
-      - src/paths.py
+    - artifacts/baseline.joblib
+    - reports/data/tune_ids.csv
+    - reports/data/data_manifest.json
+    - src/evaluate_tune_baseline.py
+    - src/data.py
+    - src/evaluate.py
+    - src/paths.py
+    - src/hashing.py
+    - src/ticket_text.py
+    - reports/data/train_ids.csv
+    - reports/data/calibration_ids.csv
+    - reports/data/test_ids.csv
+    - data/raw/all_tickets_processed_improved_v3.csv
+    - requirements/dev.txt
     outs:
-      - reports/metrics/baseline_tune_predictions.csv:
-          cache: false
+    - reports/metrics/baseline_tune_predictions.csv:
+        cache: false
     metrics:
-      - reports/metrics/baseline_tune_calibration_metrics.json:
-          cache: false
-
+    - reports/metrics/baseline_tune_calibration_metrics.json:
+        cache: false
   evaluate_calibration_baseline:
     cmd: python -m src.evaluate_calibration_baseline
     deps:
-      - artifacts/baseline.joblib
-      - reports/data/calibration_ids.csv
-      - reports/data/data_manifest.json
-      - src/evaluate_calibration_baseline.py
-      - src/data.py
-      - src/evaluate.py
-      - src/paths.py
+    - artifacts/baseline.joblib
+    - reports/data/calibration_ids.csv
+    - reports/data/data_manifest.json
+    - src/evaluate_calibration_baseline.py
+    - src/data.py
+    - src/evaluate.py
+    - src/paths.py
+    - src/hashing.py
+    - src/ticket_text.py
+    - reports/data/train_ids.csv
+    - reports/data/tune_ids.csv
+    - reports/data/test_ids.csv
+    - data/raw/all_tickets_processed_improved_v3.csv
+    - requirements/dev.txt
     metrics:
-      - reports/metrics/baseline_calibration_holdout_metrics.json:
-          cache: false
-
+    - reports/metrics/baseline_calibration_holdout_metrics.json:
+        cache: false
   analyze_threshold_baseline:
     cmd: python -m src.analyze_threshold_baseline
     deps:
-      - reports/metrics/baseline_tune_predictions.csv
-      - artifacts/baseline.joblib
-      - src/analyze_threshold_baseline.py
-      - src/hashing.py
-      - src/paths.py
-      - src/routing_utils.py
+    - reports/metrics/baseline_tune_predictions.csv
+    - artifacts/baseline.joblib
+    - src/analyze_threshold_baseline.py
+    - src/hashing.py
+    - src/paths.py
+    - src/routing_utils.py
+    - src/threshold_analysis.py
+    - requirements/dev.txt
     outs:
-      - reports/metrics/baseline_threshold_analysis.csv:
-          cache: false
+    - reports/metrics/baseline_threshold_analysis.csv:
+        cache: false
     metrics:
-      - reports/metrics/baseline_selected_threshold.json:
-          cache: false
-
+    - reports/metrics/baseline_selected_threshold.json:
+        cache: false
+    params:
+    - routing.target_accuracy
+    - routing.alpha
+    - routing.min_accepted_samples
+    - routing.threshold_grid_start
+    - routing.threshold_grid_stop
+    - routing.threshold_grid_step
   evaluate_baseline:
     cmd: python -m src.evaluate_baseline
     deps:
-      - artifacts/baseline.joblib
-      - reports/data/test_ids.csv
-      - reports/data/data_manifest.json
-      - src/evaluate_baseline.py
-      - src/data.py
-      - src/evaluate.py
-      - src/paths.py
-      - src/tracking.py
+    - artifacts/baseline.joblib
+    - reports/data/test_ids.csv
+    - reports/data/data_manifest.json
+    - src/evaluate_baseline.py
+    - src/data.py
+    - src/evaluate.py
+    - src/paths.py
+    - src/tracking.py
+    - src/hashing.py
+    - src/ticket_text.py
+    - reports/data/train_ids.csv
+    - reports/data/tune_ids.csv
+    - reports/data/calibration_ids.csv
+    - data/raw/all_tickets_processed_improved_v3.csv
+    - requirements/dev.txt
     metrics:
-      - reports/metrics/baseline_metrics.json:
-          cache: false
-
+    - reports/metrics/baseline_metrics.json:
+        cache: false
   evaluate_routing_baseline:
     cmd: python -m src.evaluate_routing_baseline
     deps:
-      - artifacts/baseline.joblib
-      - reports/metrics/baseline_selected_threshold.json
-      - reports/data/test_ids.csv
-      - reports/data/data_manifest.json
-      - src/evaluate_routing_baseline.py
-      - src/data.py
-      - src/hashing.py
-      - src/paths.py
-      - src/tracking.py
+    - artifacts/baseline.joblib
+    - reports/metrics/baseline_selected_threshold.json
+    - reports/data/test_ids.csv
+    - reports/data/data_manifest.json
+    - src/evaluate_routing_baseline.py
+    - src/data.py
+    - src/hashing.py
+    - src/paths.py
+    - src/tracking.py
+    - src/ticket_text.py
+    - reports/data/train_ids.csv
+    - reports/data/tune_ids.csv
+    - reports/data/calibration_ids.csv
+    - data/raw/all_tickets_processed_improved_v3.csv
+    - requirements/dev.txt
     metrics:
-      - reports/metrics/baseline_routing_metrics.json:
-          cache: false
-
+    - reports/metrics/baseline_routing_metrics.json:
+        cache: false
   train_cnn:
     cmd: python -m src.train_cnn
     deps:
-      - data/raw/all_tickets_processed_improved_v3.csv
-      - reports/data/train_ids.csv
-      - reports/data/tune_ids.csv
-      - reports/data/data_manifest.json
-      - src/train_cnn.py
-      - src/data.py
-      - src/cnn_data.py
-      - src/textcnn.py
-      - src/hashing.py
-      - src/paths.py
-      - src/tracking.py
+    - data/raw/all_tickets_processed_improved_v3.csv
+    - reports/data/train_ids.csv
+    - reports/data/tune_ids.csv
+    - reports/data/data_manifest.json
+    - src/train_cnn.py
+    - src/data.py
+    - src/cnn_data.py
+    - src/textcnn.py
+    - src/hashing.py
+    - src/paths.py
+    - src/tracking.py
+    - src/ticket_text.py
+    - reports/data/calibration_ids.csv
+    - reports/data/test_ids.csv
+    - requirements/dev.txt
     params:
-      - cnn.seed
-      - cnn.max_vocab_size
-      - cnn.min_freq
-      - cnn.embedding_dim
-      - cnn.num_filters
-      - cnn.kernel_sizes
-      - cnn.dropout
-      - cnn.batch_size
-      - cnn.learning_rate
-      - cnn.max_epochs
-      - cnn.patience
+    - cnn.seed
+    - cnn.max_vocab_size
+    - cnn.min_freq
+    - cnn.embedding_dim
+    - cnn.num_filters
+    - cnn.kernel_sizes
+    - cnn.dropout
+    - cnn.batch_size
+    - cnn.learning_rate
+    - cnn.max_epochs
+    - cnn.patience
     outs:
-      - artifacts/cnn/textcnn.pt
-      - artifacts/cnn/vocab.json:
-          cache: false
-      - artifacts/cnn/labels.json:
-          cache: false
-      - artifacts/cnn/config.json:
-          cache: false
-      - artifacts/cnn/cnn_metadata.json:
-          cache: false
-      - artifacts/cnn/artifact_manifest.json:
-          cache: false
-
+    - artifacts/cnn/textcnn.pt
+    - artifacts/cnn/vocab.json:
+        cache: false
+    - artifacts/cnn/labels.json:
+        cache: false
+    - artifacts/cnn/config.json:
+        cache: false
+    - artifacts/cnn/cnn_metadata.json:
+        cache: false
+    - artifacts/cnn/artifact_manifest.json:
+        cache: false
   evaluate_tune_cnn:
     cmd: python -m src.evaluate_tune_cnn
     deps:
-      - artifacts/cnn/textcnn.pt
-      - artifacts/cnn/vocab.json
-      - artifacts/cnn/labels.json
-      - artifacts/cnn/config.json
-      - reports/data/tune_ids.csv
-      - reports/data/data_manifest.json
-      - src/evaluate_tune_cnn.py
-      - src/data.py
-      - src/cnn_data.py
-      - src/textcnn.py
-      - src/paths.py
+    - artifacts/cnn/textcnn.pt
+    - artifacts/cnn/vocab.json
+    - artifacts/cnn/labels.json
+    - artifacts/cnn/config.json
+    - reports/data/tune_ids.csv
+    - reports/data/data_manifest.json
+    - src/evaluate_tune_cnn.py
+    - src/data.py
+    - src/cnn_data.py
+    - src/textcnn.py
+    - src/paths.py
+    - src/cnn_evaluation.py
+    - src/evaluate.py
+    - src/hashing.py
+    - src/ticket_text.py
+    - reports/data/train_ids.csv
+    - reports/data/calibration_ids.csv
+    - reports/data/test_ids.csv
+    - data/raw/all_tickets_processed_improved_v3.csv
+    - requirements/dev.txt
     outs:
-      - reports/metrics/cnn_tune_predictions.csv:
-          cache: false
+    - reports/metrics/cnn_tune_predictions.csv:
+        cache: false
     metrics:
-      - reports/metrics/cnn_tune_metrics.json:
-          cache: false
-      - reports/metrics/cnn_tune_calibration_metrics.json:
-          cache: false
-
+    - reports/metrics/cnn_tune_metrics.json:
+        cache: false
+    - reports/metrics/cnn_tune_calibration_metrics.json:
+        cache: false
   evaluate_calibration_cnn:
     cmd: python -m src.evaluate_calibration_cnn
     deps:
-      - artifacts/cnn/textcnn.pt
-      - artifacts/cnn/vocab.json
-      - artifacts/cnn/labels.json
-      - artifacts/cnn/config.json
-      - reports/data/calibration_ids.csv
-      - reports/data/data_manifest.json
-      - src/evaluate_calibration_cnn.py
-      - src/data.py
-      - src/cnn_data.py
-      - src/textcnn.py
-      - src/paths.py
+    - artifacts/cnn/textcnn.pt
+    - artifacts/cnn/vocab.json
+    - artifacts/cnn/labels.json
+    - artifacts/cnn/config.json
+    - reports/data/calibration_ids.csv
+    - reports/data/data_manifest.json
+    - src/evaluate_calibration_cnn.py
+    - src/data.py
+    - src/cnn_data.py
+    - src/textcnn.py
+    - src/paths.py
+    - src/cnn_evaluation.py
+    - src/evaluate.py
+    - src/hashing.py
+    - src/ticket_text.py
+    - reports/data/train_ids.csv
+    - reports/data/tune_ids.csv
+    - reports/data/test_ids.csv
+    - data/raw/all_tickets_processed_improved_v3.csv
+    - requirements/dev.txt
     metrics:
-      - reports/metrics/cnn_calibration_holdout_metrics.json:
-          cache: false
-
+    - reports/metrics/cnn_calibration_holdout_metrics.json:
+        cache: false
   analyze_threshold_cnn:
     cmd: python -m src.analyze_threshold_cnn
     deps:
-      - reports/metrics/cnn_tune_predictions.csv
-      - artifacts/cnn/textcnn.pt
-      - src/analyze_threshold_cnn.py
-      - src/hashing.py
-      - src/paths.py
-      - src/routing_utils.py
+    - reports/metrics/cnn_tune_predictions.csv
+    - artifacts/cnn/textcnn.pt
+    - src/analyze_threshold_cnn.py
+    - src/hashing.py
+    - src/paths.py
+    - src/routing_utils.py
+    - src/threshold_analysis.py
+    - requirements/dev.txt
     outs:
-      - reports/metrics/threshold_analysis.csv:
-          cache: false
+    - reports/metrics/threshold_analysis.csv:
+        cache: false
     metrics:
-      - reports/metrics/selected_threshold.json:
-          cache: false
-
+    - reports/metrics/selected_threshold.json:
+        cache: false
+    params:
+    - routing.target_accuracy
+    - routing.alpha
+    - routing.min_accepted_samples
+    - routing.threshold_grid_start
+    - routing.threshold_grid_stop
+    - routing.threshold_grid_step
   evaluate_cnn:
     cmd: python -m src.evaluate_cnn
     deps:
-      - artifacts/cnn/textcnn.pt
-      - artifacts/cnn/vocab.json
-      - artifacts/cnn/labels.json
-      - artifacts/cnn/config.json
-      - reports/data/test_ids.csv
-      - reports/data/data_manifest.json
-      - src/evaluate_cnn.py
-      - src/data.py
-      - src/cnn_data.py
-      - src/textcnn.py
-      - src/paths.py
+    - artifacts/cnn/textcnn.pt
+    - artifacts/cnn/vocab.json
+    - artifacts/cnn/labels.json
+    - artifacts/cnn/config.json
+    - reports/data/test_ids.csv
+    - reports/data/data_manifest.json
+    - src/evaluate_cnn.py
+    - src/data.py
+    - src/cnn_data.py
+    - src/textcnn.py
+    - src/paths.py
+    - src/evaluate.py
+    - src/hashing.py
+    - src/ticket_text.py
+    - src/tracking.py
+    - reports/data/train_ids.csv
+    - reports/data/tune_ids.csv
+    - reports/data/calibration_ids.csv
+    - data/raw/all_tickets_processed_improved_v3.csv
+    - requirements/dev.txt
     outs:
-      - reports/metrics/cnn_test_predictions.csv:
-          cache: false
+    - reports/metrics/cnn_test_predictions.csv:
+        cache: false
+    - reports/figures/cnn_confusion_matrix.png:
+        cache: false
     metrics:
-      - reports/metrics/cnn_metrics.json:
-          cache: false
-
+    - reports/metrics/cnn_metrics.json:
+        cache: false
   evaluate_routing_cnn:
     cmd: python -m src.evaluate_routing
     deps:
-      - reports/metrics/cnn_test_predictions.csv
-      - reports/metrics/selected_threshold.json
-      - src/evaluate_routing.py
-      - src/paths.py
-      - src/tracking.py
+    - reports/metrics/cnn_test_predictions.csv
+    - reports/metrics/selected_threshold.json
+    - src/evaluate_routing.py
+    - src/paths.py
+    - src/tracking.py
+    - src/hashing.py
+    - requirements/dev.txt
     metrics:
-      - reports/metrics/routing_metrics.json:
-          cache: false
-
+    - reports/metrics/routing_metrics.json:
+        cache: false
   compare_models:
     cmd: python -m src.compare_models
     deps:
-      - reports/metrics/baseline_metrics.json
-      - reports/metrics/baseline_tune_calibration_metrics.json
-      - reports/metrics/cnn_metrics.json
-      - src/compare_models.py
-      - src/paths.py
+    - reports/metrics/baseline_metrics.json
+    - reports/metrics/cnn_metrics.json
+    - src/compare_models.py
+    - src/paths.py
+    - requirements/dev.txt
+    - reports/metrics/baseline_calibration_holdout_metrics.json
+    - reports/metrics/cnn_calibration_holdout_metrics.json
     outs:
-      - reports/metrics/model_comparison.csv:
-          cache: false
-
+    - reports/metrics/model_comparison.csv:
+        cache: false
   select_model:
     cmd: python -m src.select_model
     deps:
-      - reports/metrics/baseline_tune_predictions.csv
-      - reports/metrics/baseline_selected_threshold.json
-      - reports/metrics/cnn_tune_predictions.csv
-      - reports/metrics/selected_threshold.json
-      - src/select_model.py
-      - src/paths.py
+    - reports/metrics/baseline_tune_predictions.csv
+    - reports/metrics/baseline_selected_threshold.json
+    - reports/metrics/cnn_tune_predictions.csv
+    - reports/metrics/selected_threshold.json
+    - src/select_model.py
+    - src/paths.py
+    - requirements/dev.txt
     metrics:
-      - reports/metrics/model_selection.json:
-          cache: false
+    - reports/metrics/model_selection.json:
+        cache: false
+    params:
+    - routing.target_accuracy
+    - routing.min_coverage_improvement
