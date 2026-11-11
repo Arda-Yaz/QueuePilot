@@ -25,6 +25,7 @@ stages:
   train_baseline:
     cmd: python -m src.train_baseline
     deps:
+    - src/provenance.py
     - data/raw/all_tickets_processed_improved_v3.csv
     - reports/data/train_ids.csv
     - reports/data/tune_ids.csv
@@ -165,6 +166,7 @@ stages:
   train_cnn:
     cmd: python -m src.train_cnn
     deps:
+    - src/provenance.py
     - data/raw/all_tickets_processed_improved_v3.csv
     - reports/data/train_ids.csv
     - reports/data/tune_ids.csv

@@ -2,7 +2,6 @@ import datetime
 import json
 import platform
 import random
-import subprocess
 
 import numpy as np
 import torch
@@ -16,27 +15,11 @@ from src.cnn_data import TicketDataset, build_vocab
 from src.data import load_data, load_splits
 from src.hashing import calculate_file_sha256
 from src.paths import ARTIFACT_DIR, DATA_PATH, ROOT_DIR
+from src.provenance import assert_training_source_unchanged, capture_training_source
 from src.textcnn import TextCNN
 from src.tracking import log_artifact, log_dict_as_artifact, log_metrics, log_params, start_run
 
 CNN_DIR = ARTIFACT_DIR / "cnn"
-
-with open(ROOT_DIR / "params.yaml", "r") as f:
-    cnn_params = yaml.safe_load(f)["cnn"]
-
-SEED = cnn_params["seed"]
-MAX_VOCAB_SIZE = cnn_params["max_vocab_size"]
-MIN_FREQ = cnn_params["min_freq"]
-
-EMBEDDING_DIM = cnn_params["embedding_dim"]
-NUM_FILTERS = cnn_params["num_filters"]
-KERNEL_SIZES = cnn_params["kernel_sizes"]
-DROPOUT = cnn_params["dropout"]
-
-BATCH_SIZE = cnn_params["batch_size"]
-LEARNING_RATE = cnn_params["learning_rate"]
-MAX_EPOCHS = cnn_params["max_epochs"]
-PATIENCE = cnn_params["patience"]
 
 
 def set_seed(seed: int) -> None:
@@ -95,6 +78,24 @@ def evaluate_on_tune(
 
 
 def train_cnn() -> None:
+    source_snapshot = capture_training_source(ROOT_DIR)
+    with open(ROOT_DIR / "params.yaml", "r") as f:
+        cnn_params = yaml.safe_load(f)["cnn"]
+
+    SEED = cnn_params["seed"]
+    MAX_VOCAB_SIZE = cnn_params["max_vocab_size"]
+    MIN_FREQ = cnn_params["min_freq"]
+
+    EMBEDDING_DIM = cnn_params["embedding_dim"]
+    NUM_FILTERS = cnn_params["num_filters"]
+    KERNEL_SIZES = cnn_params["kernel_sizes"]
+    DROPOUT = cnn_params["dropout"]
+
+    BATCH_SIZE = cnn_params["batch_size"]
+    LEARNING_RATE = cnn_params["learning_rate"]
+    MAX_EPOCHS = cnn_params["max_epochs"]
+    PATIENCE = cnn_params["patience"]
+
     set_seed(SEED)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Using device:", device)
@@ -214,12 +215,7 @@ def train_cnn() -> None:
 
     model_sha256 = calculate_file_sha256(model_path)
 
-    try:
-        git_commit: str | None = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT_DIR, text=True
-        ).strip()
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        git_commit = None
+    assert_training_source_unchanged(source_snapshot, ROOT_DIR)
 
     metadata: dict[str, object] = {
         "model_backend": "cnn",
@@ -228,7 +224,10 @@ def train_cnn() -> None:
         "model_sha256": model_sha256,
         "training_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "python_version": platform.python_version(),
-        "git_commit": git_commit,
+        "git_commit": source_snapshot["git_commit"],
+        "git_dirty": source_snapshot["git_dirty"],
+        "source_tree_sha256": source_snapshot["source_tree_sha256"],
+        "source_provenance": source_snapshot,
         "random_seed": SEED,
         "hyperparameters": config,
         "best_val_macro_f1": best_val_f1,

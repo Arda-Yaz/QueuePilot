@@ -1,7 +1,6 @@
 import datetime
 import json
 import platform
-import subprocess
 from typing import Any
 
 import joblib
@@ -16,6 +15,7 @@ from src.data import load_data, load_splits
 from src.evaluate import calculate_metrics
 from src.hashing import calculate_file_sha256
 from src.paths import ARTIFACT_DIR, DATA_PATH, METRICS_DIR, ROOT_DIR
+from src.provenance import assert_training_source_unchanged, capture_training_source
 from src.tracking import log_artifact, log_dict_as_artifact, log_metrics, log_params, start_run
 
 
@@ -43,6 +43,7 @@ def build_baseline_pipeline(params: dict[str, Any]) -> Pipeline:
 
 
 def train_baseline() -> tuple[CalibratedClassifierCV, dict[str, float]]:
+    source_snapshot = capture_training_source(ROOT_DIR)
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     METRICS_DIR.mkdir(parents=True, exist_ok=True)
     df = load_data()
@@ -79,12 +80,7 @@ def train_baseline() -> tuple[CalibratedClassifierCV, dict[str, float]]:
     model_sha256 = calculate_file_sha256(model_path)
     dataset_sha256 = calculate_file_sha256(DATA_PATH)
 
-    try:
-        git_commit: str | None = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT_DIR, text=True
-        ).strip()
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        git_commit = None
+    assert_training_source_unchanged(source_snapshot, ROOT_DIR)
 
     hyperparameters = {
         "ngram_range": params["ngram_range"],
@@ -103,7 +99,10 @@ def train_baseline() -> tuple[CalibratedClassifierCV, dict[str, float]]:
         "dataset_sha256": dataset_sha256,
         "model_sha256": model_sha256,
         "training_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "git_commit": git_commit,
+        "git_commit": source_snapshot["git_commit"],
+        "git_dirty": source_snapshot["git_dirty"],
+        "source_tree_sha256": source_snapshot["source_tree_sha256"],
+        "source_provenance": source_snapshot,
         "random_seed": 42,
         "hyperparameters": hyperparameters,
         "tune_metrics": tune_metrics,
