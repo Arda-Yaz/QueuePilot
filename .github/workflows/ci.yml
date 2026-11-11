@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, "refactor/**", "fix/**"]
+    branches: [main, "refactor/**", "fix/**", "codex/**"]
   pull_request:
     branches: [main]
 
@@ -33,7 +33,7 @@ jobs:
         run: mypy src/ app/ tests/
 
       - name: Run unit and API tests
-        run: python -m pytest -v tests/test_api.py tests/test_api_hardening.py tests/test_ml_smoke.py tests/test_validation_design.py tests/test_integration.py tests/test_data_split.py tests/test_port_contracts.py tests/test_pipeline_fixes.py
+        run: python -m pytest -v tests/test_api.py tests/test_api_hardening.py tests/test_ml_smoke.py tests/test_validation_design.py tests/test_integration.py tests/test_data_split.py tests/test_port_contracts.py tests/test_pipeline_fixes.py tests/test_lock_migration.py tests/test_training_provenance.py tests/test_prediction_provenance.py tests/test_dvc_provenance_contracts.py
 
   artifact-integration:
     runs-on: ubuntu-latest
