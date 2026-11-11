@@ -12,7 +12,8 @@ from torch.utils.data import DataLoader
 from src.cnn_data import TicketDataset
 from src.data import load_data, load_splits
 from src.evaluate import build_prediction_frame, calculate_calibration_metrics, calculate_metrics
-from src.paths import FIGURE_DIR, METRICS_DIR, ROOT_DIR
+from src.hashing import calculate_file_sha256
+from src.paths import CNN_MODEL_PATH, FIGURE_DIR, METRICS_DIR, ROOT_DIR
 from src.textcnn import TextCNN
 from src.tracking import log_metrics, start_run
 
@@ -20,6 +21,7 @@ CNN_DIR = ROOT_DIR / "artifacts" / "cnn"
 
 
 def main() -> None:
+    FIGURE_DIR.mkdir(parents=True, exist_ok=True)
     with open(CNN_DIR / "vocab.json", encoding="utf-8") as f:
         vocab = json.load(f)
 
@@ -110,7 +112,7 @@ def main() -> None:
     )
 
     with open(METRICS_DIR / "cnn_metrics.json", "w", encoding="utf-8") as f:
-        json.dump(metrics, f, indent=4)
+        json.dump({**metrics, "model_sha256": calculate_file_sha256(CNN_MODEL_PATH)}, f, indent=4)
 
     with start_run(run_name="evaluate_cnn", model_backend="cnn"):
         log_metrics({"test_" + k: v for k, v in metrics.items()})

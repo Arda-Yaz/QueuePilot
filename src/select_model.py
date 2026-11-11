@@ -102,6 +102,7 @@ def load_candidate(backend: str, paths: ModelPaths) -> CandidateResult:
 
 def select_candidate(
     candidates: list[CandidateResult], target_accuracy: float,
+    min_coverage_improvement: float = 0.0,
 ) -> CandidateResult:
     """Choose by coverage, then macro F1, after the original risk gate."""
     eligible = [c for c in candidates if c["validation_accuracy_ci_lower"] >= target_accuracy]
@@ -117,6 +118,11 @@ def select_candidate(
             )
         )
 
+    baseline = next((c for c in eligible if c["backend"] == "baseline"), None)
+    cnn = next((c for c in eligible if c["backend"] == "cnn"), None)
+    if baseline is not None and cnn is not None and min_coverage_improvement > 0:
+        if cnn["validation_coverage"] < baseline["validation_coverage"] + min_coverage_improvement:
+            return baseline
     return max(
         eligible,
         key=lambda c: (c["validation_coverage"], c["validation_macro_f1"]),
@@ -131,14 +137,17 @@ def main() -> None:
 
     candidates = [load_candidate(backend, paths) for backend, paths in MODEL_CONFIGS.items()]
 
-    winner = select_candidate(candidates, target_accuracy)
+    margin = float(params.get("min_coverage_improvement", 0.02))
+    winner = select_candidate(candidates, target_accuracy, margin)
 
     output: dict[str, object] = {
         "selection_dataset": "tune (validation)",
         "target_accuracy": target_accuracy,
+        "min_coverage_improvement": margin,
         "selection_rule": (
             "Highest tune-set coverage subject to "
             "simultaneous Clopper-Pearson lower bound >= target_accuracy; "
+            "CNN promotion requires the configured coverage improvement over eligible baseline; "
             "Macro F1 as tie-breaker. "
             "Test set was NOT accessed during selection."
         ),

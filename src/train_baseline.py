@@ -43,6 +43,8 @@ def build_baseline_pipeline(params: dict[str, Any]) -> Pipeline:
 
 
 def train_baseline() -> tuple[CalibratedClassifierCV, dict[str, float]]:
+    ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
+    METRICS_DIR.mkdir(parents=True, exist_ok=True)
     df = load_data()
     splits = load_splits(df)
     train_df = splits.train

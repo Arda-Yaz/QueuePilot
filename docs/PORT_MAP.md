@@ -30,3 +30,6 @@ The project/package display name and browser/API title are QueuePilot. Public sc
 Source agent skills and `skills-lock.json` were excluded from the application import. Local reference, runtime and verification directories are excluded from Git and Docker build contexts.
 
 The source DVC lock predates its tune-stage rename. Historical stage records and model hashes are retained for provenance. The source four-way collective-exhaustiveness validation has a missing error branch, and `/model-info` reads baseline reports even when CNN serves predictions. These source behaviors were retained during the port.
+
+
+Update, 11 November 2026: the split validation and backend-specific model-info gaps described above are historical. Current code validates complete unique split membership (including calibration consumers), binds reports and automatic model selection to the loaded model, and tracks transitive source dependencies and routing parameters in DVC. See `docs/REPRODUCTION.md` for the current reproduction procedure and verification limits.

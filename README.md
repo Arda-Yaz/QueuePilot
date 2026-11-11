@@ -18,17 +18,17 @@ flowchart LR
 ```
 
 - **Confidence drives the decision.** The default model uses TF-IDF features and logistic regression with sigmoid calibration. Calibration makes the scores more meaningful when deciding how much confidence to place in a prediction.
-- **The threshold comes from tuning data.** For each model, the selection rule seeks the greatest coverage whose lower confidence bound on auto-routed accuracy reaches 90%. Both models qualified. The baseline accepted **83.83%** of tuning tickets versus **80.64%** for TextCNN, so it was selected to serve by default. [Model selection record](reports/metrics/model_selection.json)
+- **The threshold comes from tuning data.** For each model, the selection rule seeks the greatest coverage whose lower confidence bound on auto-routed accuracy reaches 90%. Both models qualified. The baseline accepted **83.83%** of tuning tickets versus **83.91%** for TextCNN. CNN promotion requires a coverage improvement of at least **2 percentage points**, so the baseline remains the default. [Model selection record](reports/metrics/model_selection.json)
 - **Each threshold belongs to a specific model.** At startup, the service checks the model’s SHA-256 against its threshold record. Loading fails on a mismatch. The CNN also checks its vocabulary, label mapping and configuration before serving. [Inference code](src/inference.py)
 
 ## Evaluation
 
-The supplied reference reports evaluate the two pre-trained models on **4,787 held-out tickets**. Coverage is the share of all tickets accepted for automatic routing. The last column measures accuracy on that accepted subset.
+The reports regenerated on 11 November 2026 evaluate the two locally retrained models on **4,787 held-out tickets**. Coverage is the share of all tickets accepted for automatic routing. The last column measures accuracy on that accepted subset.
 
 | Backend | Routing threshold | Overall accuracy | Coverage | Accuracy on accepted tickets |
 | --- | ---: | ---: | ---: | ---: |
 | TF-IDF + logistic regression | 0.57 | 85.75% | 82.56% | 92.16% |
-| TextCNN | 0.76 | 84.17% | 79.42% | 91.77% |
+| TextCNN | 0.77 | 84.19% | 84.25% | 91.02% |
 
 For the baseline, that split corresponds to **3,952 recommendations for automatic routing** and **835 referrals for review**. [Baseline report](reports/metrics/baseline_routing_metrics.json) · [TextCNN report](reports/metrics/routing_metrics.json) · [Dataset](https://www.kaggle.com/datasets/adisongoh/it-service-ticket-classification-dataset)
 
@@ -61,3 +61,8 @@ dvc pull artifacts/baseline.joblib
 </details>
 
 [Deployment guide](docs/deploy.md) · [Code map](docs/PORT_MAP.md) · [License](LICENSE)
+
+
+The local reproduction completed all 15 DVC stages from the raw CSV in an isolated workspace; a second run skipped all stages. A separate fresh Python 3.12 environment was subsequently installed successfully from official PyPI and the PyTorch CPU index, retaining the existing version and hash locks. All 87 tests and real baseline/CNN server smoke checks passed in that new environment. See [reproduction instructions and limits](docs/REPRODUCTION.md). Newly trained model binaries are local until explicitly uploaded to DVC remote storage.
+
+The complete current test suite passed on Windows outside the restricted execution sandbox: **87 tests in 8.47 seconds**. The earlier TestClient timeout was traced to sandbox-blocked loopback socket initialization before application startup; see the reproduction notes.
