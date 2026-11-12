@@ -1,0 +1,22 @@
+{
+  "publisher_url": "https://www.kaggle.com/datasets/adisongoh/it-service-ticket-classification-dataset",
+  "metadata_url": "https://www.kaggle.com/api/v1/datasets/view/adisongoh/it-service-ticket-classification-dataset",
+  "metadata_sha256": "2ae3756d94dd2df475c8d243323922fac3b0c57f407d97f7d082ca61443d2d88",
+  "dataset_version": 1,
+  "publisher_category_names": [
+    "Access",
+    "Administrative rights",
+    "Hardware",
+    "Storage",
+    "Purchase",
+    "HR Support",
+    "Internal Project",
+    "Miscellaneous"
+  ],
+  "publisher_license": "CC0: Public Domain",
+  "examined_metadata_contains_operational_class_rules": false,
+  "original_class_meanings_verified": false,
+  "proposed_taxonomy_status": "proposal_requires_domain_adjudication",
+  "proposed_taxonomy_sha256": "88032c490664145ffd9e90e82a9d91d4a78f3fa3f389549d0eb66b1e90d01ee5",
+  "inference_limit": "Vocabulary associations are descriptive, not source-author definitions; no arbitrary source-to-target mapping was applied"
+}

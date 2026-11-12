@@ -1,0 +1,15 @@
+{
+  "pilot_rows": 64,
+  "eligible_unique_groups": 1470,
+  "reserved_unreviewed_groups": 1406,
+  "conflicting_text_groups_quarantined": 1,
+  "original_overlap_rows_excluded": 0,
+  "taxonomy_sha256": "88032c490664145ffd9e90e82a9d91d4a78f3fa3f389549d0eb66b1e90d01ee5",
+  "taxonomy_approved": false,
+  "blind_sheet_sha256": "41c2c317d55c0c4d2f67261ea32891fddb2fc152420b1dbd94fdd48fd138d780",
+  "sampling": "normalized text group, seed42 hash order, no model or service-label selection",
+  "source": "https://zenodo.org/records/7384758",
+  "license": "CC-BY-4.0",
+  "status": "development_pilot_not_independent_audit",
+  "automatic_gold_export": false
+}
