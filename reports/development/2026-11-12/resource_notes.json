@@ -1,0 +1,8 @@
+{
+  "reference_model_bytes": 53099876,
+  "candidate_model_bytes": 68221447,
+  "candidate_training_and_checkpoint_seconds": 115.5234315000016,
+  "reference_seconds_cover_prediction_only": 0.7467737000006309,
+  "timing_is_not_a_fair_training_speed_comparison": true,
+  "cpu_threads": 4
+}

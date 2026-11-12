@@ -1,0 +1,7 @@
+{
+  "method": "nearest train document in first calibration-fold word TF-IDF representation; diagnostic only",
+  "n_admin_checkpoint": 88,
+  "cross_label_nearest_above_085": 0,
+  "cross_label_nearest_above_090": 0,
+  "high_similarity_conflicts": []
+}

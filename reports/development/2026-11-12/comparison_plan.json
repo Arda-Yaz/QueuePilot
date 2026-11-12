@@ -1,0 +1,48 @@
+{
+  "hypothesis": "Character 3-5 grams may complement word unigrams/bigrams on short technical fragments and spelling/morphology; not an established cause",
+  "candidates": [
+    "frozen_reference",
+    "word_plus_char_wb_3_5"
+  ],
+  "unchanged": {
+    "baseline_params": {
+      "ngram_range": [
+        1,
+        2
+      ],
+      "min_df": 2,
+      "max_df": 0.98,
+      "max_features": 100000,
+      "max_iter": 2000,
+      "class_weight": "balanced"
+    },
+    "calibration": "sigmoid 5-fold CV on train; n_jobs=1"
+  },
+  "added_features": {
+    "analyzer": "char_wb",
+    "ngram_range": [
+      3,
+      5
+    ],
+    "min_df": 2,
+    "max_features": 50000,
+    "sublinear_tf": true,
+    "feature_weight": 1.0
+  },
+  "screen": "checkpoint Macro-F1 no loss; exploratory CP-gated coverage +1pp; Administrative rights F1 loss <=2pp",
+  "no_promotion": "No risk/calibration/test partition inspected; passing screen still needs new independent risk confirmation",
+  "dataset_sha256": "044fdace33fa564e1e60453f2941dafc95539c99878b0d32746950394b9dd4d4",
+  "reference_model_sha256": "ea6b1f9ca0075bd32ee39d01a249b4b8860537f576e52ba8e8afc6dd1a169843",
+  "split_sha256": {
+    "train": "bfb0d406e1325aecc815a3f251d49109936a2159e3a2bbcaa3f058713d1c2b6d",
+    "checkpoint": "7afc5bf68cfdeca052083ddce12b7a97aa42547a9ac8933f69b9849230ae1bbd"
+  },
+  "python": "3.12.10",
+  "sklearn": "1.9.0",
+  "git_commit": "b6151350cb3ef2e757eda515998db7cf1d8508ba",
+  "experiment_source": {
+    "experiments/__init__.py": "012c0d995e3e6c01cbae285df82f0c374dd72f79363d38c6c6dcef2b239efd4a",
+    "experiments/compare_word_char.py": "0f54e23fb42597d36e06fef9ffa2da2a090666c9d5ba982de3dc37fd46d2f71f",
+    "experiments/development_analysis.py": "72e86d62dc94182613706105ce8f64669ffe9abb3577eb20c47f1f29935e2286"
+  }
+}
