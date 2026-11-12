@@ -30,10 +30,10 @@ jobs:
         run: ruff check .
 
       - name: Type check with mypy
-        run: mypy src/ app/ tests/
+        run: mypy src/ app/ tests/ experiments/ benchmarks/ annotation/
 
       - name: Run unit and API tests
-        run: python -m pytest -v tests/test_api.py tests/test_api_hardening.py tests/test_ml_smoke.py tests/test_validation_design.py tests/test_integration.py tests/test_data_split.py tests/test_port_contracts.py tests/test_pipeline_fixes.py tests/test_lock_migration.py tests/test_training_provenance.py tests/test_prediction_provenance.py tests/test_dvc_provenance_contracts.py tests/test_independent_selection.py
+        run: python -m pytest -v tests/test_api.py tests/test_api_hardening.py tests/test_ml_smoke.py tests/test_validation_design.py tests/test_integration.py tests/test_data_split.py tests/test_port_contracts.py tests/test_pipeline_fixes.py tests/test_lock_migration.py tests/test_training_provenance.py tests/test_prediction_provenance.py tests/test_dvc_provenance_contracts.py tests/test_independent_selection.py tests/test_development_experiments.py tests/test_independent_validation.py tests/test_external_benchmarks.py tests/test_annotation_review.py
 
   artifact-integration:
     runs-on: ubuntu-latest
