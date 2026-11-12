@@ -1,0 +1,561 @@
+case_id,scenario_id,variant,Document,expected_label,origin,predicted_label,confidence,matches_specification,accepted
+Access-01-plain,Access-01,plain,I forgot my account password and need a reset so I can sign in.,Access,AI-authored synthetic; not a real customer ticket,Access,0.9247653823548962,True,True
+Access-01-email,Access-01,email,"Hello service desk,
+
+I forgot my account password and need a reset so I can sign in.
+
+Please help with this request. Thank you.",Access,AI-authored synthetic; not a real customer ticket,Access,0.8725401211624296,True,True
+Access-01-typo,Access-01,typo,I forgot my account passowrd and need a reset so I can sign in.,Access,AI-authored synthetic; not a real customer ticket,Access,0.8021127915681205,True,True
+Access-02-plain,Access-02,plain,My account is locked after several failed login attempts. Please unlock it.,Access,AI-authored synthetic; not a real customer ticket,Access,0.9572894052850414,True,True
+Access-02-email,Access-02,email,"Hello service desk,
+
+My account is locked after several failed login attempts. Please unlock it.
+
+Please help with this request. Thank you.",Access,AI-authored synthetic; not a real customer ticket,Access,0.9148610381523989,True,True
+Access-02-typo,Access-02,typo,My account is locked after several failed login attepmts. Please unlock it.,Access,AI-authored synthetic; not a real customer ticket,Access,0.9611826701649792,True,True
+Access-03-plain,Access-03,plain,I changed my password but the VPN still rejects my login credentials.,Access,AI-authored synthetic; not a real customer ticket,Access,0.9032869697040787,True,True
+Access-03-email,Access-03,email,"Hello service desk,
+
+I changed my password but the VPN still rejects my login credentials.
+
+Please help with this request. Thank you.",Access,AI-authored synthetic; not a real customer ticket,Access,0.7378654432378507,True,True
+Access-03-typo,Access-03,typo,I changed my password but the VPN still rejects my login credetnials.,Access,AI-authored synthetic; not a real customer ticket,Access,0.9209950123278071,True,True
+Access-04-plain,Access-04,plain,The sign-in page loops back to the login form although my password is correct.,Access,AI-authored synthetic; not a real customer ticket,Access,0.6952809443346787,True,True
+Access-04-email,Access-04,email,"Hello service desk,
+
+The sign-in page loops back to the login form although my password is correct.
+
+Please help with this request. Thank you.",Access,AI-authored synthetic; not a real customer ticket,Access,0.3344808827859552,True,False
+Access-04-typo,Access-04,typo,The sign-in page loops back to the login form althuogh my password is correct.,Access,AI-authored synthetic; not a real customer ticket,Access,0.7582898102096127,True,True
+Access-05-plain,Access-05,plain,I replaced my phone and cannot complete the account's two-factor authentication.,Access,AI-authored synthetic; not a real customer ticket,Hardware,0.5942074812717599,False,False
+Access-05-email,Access-05,email,"Hello service desk,
+
+I replaced my phone and cannot complete the account's two-factor authentication.
+
+Please help with this request. Thank you.",Access,AI-authored synthetic; not a real customer ticket,Hardware,0.7265601280566134,False,True
+Access-05-typo,Access-05,typo,I replaced my phone and cannot complete the account's two-factor authentciation.,Access,AI-authored synthetic; not a real customer ticket,Hardware,0.5000243014460769,False,False
+Access-06-plain,Access-06,plain,My session expired and now the employee portal refuses my username and password.,Access,AI-authored synthetic; not a real customer ticket,Access,0.9388139394784959,True,True
+Access-06-email,Access-06,email,"Hello service desk,
+
+My session expired and now the employee portal refuses my username and password.
+
+Please help with this request. Thank you.",Access,AI-authored synthetic; not a real customer ticket,Access,0.8382762207457896,True,True
+Access-06-typo,Access-06,typo,My session expired and now the emplyoee portal refuses my username and password.,Access,AI-authored synthetic; not a real customer ticket,Access,0.9430923713365809,True,True
+Access-07-plain,Access-07,plain,The password reset link has expired. Could you send a new one?,Access,AI-authored synthetic; not a real customer ticket,Access,0.9482312621254352,True,True
+Access-07-email,Access-07,email,"Hello service desk,
+
+The password reset link has expired. Could you send a new one?
+
+Please help with this request. Thank you.",Access,AI-authored synthetic; not a real customer ticket,Access,0.9143024448735115,True,True
+Access-07-typo,Access-07,typo,The passowrd reset link has expired. Could you send a new one?,Access,AI-authored synthetic; not a real customer ticket,Access,0.7697277633891508,True,True
+Access-08-plain,Access-08,plain,My new employee account has not been activated and I cannot log in.,Access,AI-authored synthetic; not a real customer ticket,Access,0.7480470410696062,True,True
+Access-08-email,Access-08,email,"Hello service desk,
+
+My new employee account has not been activated and I cannot log in.
+
+Please help with this request. Thank you.",Access,AI-authored synthetic; not a real customer ticket,Access,0.4913743922066459,True,False
+Access-08-typo,Access-08,typo,My new employee account has not been actiavted and I cannot log in.,Access,AI-authored synthetic; not a real customer ticket,Access,0.7547647623607199,True,True
+Access-09-plain,Access-09,plain,I can access the desktop but my usual email account login is being rejected.,Access,AI-authored synthetic; not a real customer ticket,Access,0.5299454468719198,True,False
+Access-09-email,Access-09,email,"Hello service desk,
+
+I can access the desktop but my usual email account login is being rejected.
+
+Please help with this request. Thank you.",Access,AI-authored synthetic; not a real customer ticket,Hardware,0.5283812009048626,False,False
+Access-09-typo,Access-09,typo,I can access the desktop but my usual email account login is being rejetced.,Access,AI-authored synthetic; not a real customer ticket,Access,0.5346191757280347,True,False
+Access-10-plain,Access-10,plain,The security token used for my normal account sign-in is no longer working.,Access,AI-authored synthetic; not a real customer ticket,Access,0.6865330918877243,True,True
+Access-10-email,Access-10,email,"Hello service desk,
+
+The security token used for my normal account sign-in is no longer working.
+
+Please help with this request. Thank you.",Access,AI-authored synthetic; not a real customer ticket,Access,0.532802863473038,True,False
+Access-10-typo,Access-10,typo,The secuirty token used for my normal account sign-in is no longer working.,Access,AI-authored synthetic; not a real customer ticket,Access,0.6967637671853577,True,True
+Administrative rights-01-plain,Administrative rights-01,plain,Please grant temporary local administrator rights so I can install a device driver.,Administrative rights,AI-authored synthetic; not a real customer ticket,Purchase,0.6856004722965604,False,True
+Administrative rights-01-email,Administrative rights-01,email,"Hello service desk,
+
+Please grant temporary local administrator rights so I can install a device driver.
+
+Please help with this request. Thank you.",Administrative rights,AI-authored synthetic; not a real customer ticket,Hardware,0.4489929118065252,False,False
+Administrative rights-01-typo,Administrative rights-01,typo,Please grant temporary local adminitsrator rights so I can install a device driver.,Administrative rights,AI-authored synthetic; not a real customer ticket,Hardware,0.46332093211999875,False,False
+Administrative rights-02-plain,Administrative rights-02,plain,I need sudo privileges on my development workstation to configure a local service.,Administrative rights,AI-authored synthetic; not a real customer ticket,Hardware,0.4780587645680905,False,False
+Administrative rights-02-email,Administrative rights-02,email,"Hello service desk,
+
+I need sudo privileges on my development workstation to configure a local service.
+
+Please help with this request. Thank you.",Administrative rights,AI-authored synthetic; not a real customer ticket,Hardware,0.4564135684230644,False,False
+Administrative rights-02-typo,Administrative rights-02,typo,I need sudo privileges on my develpoment workstation to configure a local service.,Administrative rights,AI-authored synthetic; not a real customer ticket,Hardware,0.4533609722909196,False,False
+Administrative rights-03-plain,Administrative rights-03,plain,Please remove local administrator privileges from my account after the approved maintenance.,Administrative rights,AI-authored synthetic; not a real customer ticket,Access,0.6440438628096219,False,True
+Administrative rights-03-email,Administrative rights-03,email,"Hello service desk,
+
+Please remove local administrator privileges from my account after the approved maintenance.
+
+Please help with this request. Thank you.",Administrative rights,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.49972706318509896,False,False
+Administrative rights-03-typo,Administrative rights-03,typo,Please remove local adminitsrator privileges from my account after the approved maintenance.,Administrative rights,AI-authored synthetic; not a real customer ticket,Access,0.6241260428794012,False,True
+Administrative rights-04-plain,Administrative rights-04,plain,The installer requires elevation and my standard user account cannot approve it.,Administrative rights,AI-authored synthetic; not a real customer ticket,Access,0.8298786596386037,False,True
+Administrative rights-04-email,Administrative rights-04,email,"Hello service desk,
+
+The installer requires elevation and my standard user account cannot approve it.
+
+Please help with this request. Thank you.",Administrative rights,AI-authored synthetic; not a real customer ticket,Access,0.7341012927701914,False,True
+Administrative rights-04-typo,Administrative rights-04,typo,The instlaler requires elevation and my standard user account cannot approve it.,Administrative rights,AI-authored synthetic; not a real customer ticket,Access,0.7952598430808798,False,True
+Administrative rights-05-plain,Administrative rights-05,plain,"My login works, but I need administrator permission to change the system configuration.",Administrative rights,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6282143494496026,False,True
+Administrative rights-05-email,Administrative rights-05,email,"Hello service desk,
+
+My login works, but I need administrator permission to change the system configuration.
+
+Please help with this request. Thank you.",Administrative rights,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6333120003716518,False,True
+Administrative rights-05-typo,Administrative rights-05,typo,"My login works, but I need adminitsrator permission to change the system configuration.",Administrative rights,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6595146466602089,False,True
+Administrative rights-06-plain,Administrative rights-06,plain,Please approve privileged access for the engineer maintaining the production service.,Administrative rights,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.7533651550724623,False,True
+Administrative rights-06-email,Administrative rights-06,email,"Hello service desk,
+
+Please approve privileged access for the engineer maintaining the production service.
+
+Please help with this request. Thank you.",Administrative rights,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6440228002616767,False,True
+Administrative rights-06-typo,Administrative rights-06,typo,Please approve privileged access for the engineer maintianing the production service.,Administrative rights,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.7674364700279142,False,True
+Administrative rights-07-plain,Administrative rights-07,plain,I need membership in the administrators group to perform the approved installation.,Administrative rights,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.5560313996941804,False,False
+Administrative rights-07-email,Administrative rights-07,email,"Hello service desk,
+
+I need membership in the administrators group to perform the approved installation.
+
+Please help with this request. Thank you.",Administrative rights,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.7098543509897579,False,True
+Administrative rights-07-typo,Administrative rights-07,typo,I need membership in the adminisrtators group to perform the approved installation.,Administrative rights,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.551847607671336,False,False
+Administrative rights-08-plain,Administrative rights-08,plain,Can an administrator run this setup with elevated privileges? My account is a standard user.,Administrative rights,AI-authored synthetic; not a real customer ticket,Access,0.9454881957542363,False,True
+Administrative rights-08-email,Administrative rights-08,email,"Hello service desk,
+
+Can an administrator run this setup with elevated privileges? My account is a standard user.
+
+Please help with this request. Thank you.",Administrative rights,AI-authored synthetic; not a real customer ticket,Access,0.9308246809097815,False,True
+Administrative rights-08-typo,Administrative rights-08,typo,Can an adminitsrator run this setup with elevated privileges? My account is a standard user.,Administrative rights,AI-authored synthetic; not a real customer ticket,Access,0.9423727758423472,False,True
+Administrative rights-09-plain,Administrative rights-09,plain,Please revoke the temporary root permissions granted for yesterday's maintenance.,Administrative rights,AI-authored synthetic; not a real customer ticket,Hardware,0.5155671184666467,False,False
+Administrative rights-09-email,Administrative rights-09,email,"Hello service desk,
+
+Please revoke the temporary root permissions granted for yesterday's maintenance.
+
+Please help with this request. Thank you.",Administrative rights,AI-authored synthetic; not a real customer ticket,Hardware,0.5517894622722418,False,False
+Administrative rights-09-typo,Administrative rights-09,typo,Please revoke the temporary root permisions granted for yesterday's maintenance.,Administrative rights,AI-authored synthetic; not a real customer ticket,Hardware,0.7174062158141274,False,True
+Administrative rights-10-plain,Administrative rights-10,plain,The task requires an elevated command prompt and I do not have administrative privileges.,Administrative rights,AI-authored synthetic; not a real customer ticket,Hardware,0.5139624056943604,False,False
+Administrative rights-10-email,Administrative rights-10,email,"Hello service desk,
+
+The task requires an elevated command prompt and I do not have administrative privileges.
+
+Please help with this request. Thank you.",Administrative rights,AI-authored synthetic; not a real customer ticket,Hardware,0.43716421011653744,False,False
+Administrative rights-10-typo,Administrative rights-10,typo,The task requires an elevated command prompt and I do not have adminisrtative privileges.,Administrative rights,AI-authored synthetic; not a real customer ticket,Hardware,0.5139624056943604,False,False
+Hardware-01-plain,Hardware-01,plain,The laptop battery no longer charges even when its power adapter is connected.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.9534995021551971,True,True
+Hardware-01-email,Hardware-01,email,"Hello service desk,
+
+The laptop battery no longer charges even when its power adapter is connected.
+
+Please help with this request. Thank you.",Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.926992351150594,True,True
+Hardware-01-typo,Hardware-01,typo,The laptop battery no longer charges even when its power adapter is connceted.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.9532393390682585,True,True
+Hardware-02-plain,Hardware-02,plain,My monitor shows a cracked screen after an accidental drop.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.9520839035409798,True,True
+Hardware-02-email,Hardware-02,email,"Hello service desk,
+
+My monitor shows a cracked screen after an accidental drop.
+
+Please help with this request. Thank you.",Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.8901302320970119,True,True
+Hardware-02-typo,Hardware-02,typo,My monitor shows a cracked screen after an accidnetal drop.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.9536497607042573,True,True
+Hardware-03-plain,Hardware-03,plain,Several keys on the keyboard are physically broken and no longer register input.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.9377365029105075,True,True
+Hardware-03-email,Hardware-03,email,"Hello service desk,
+
+Several keys on the keyboard are physically broken and no longer register input.
+
+Please help with this request. Thank you.",Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.8839583948913132,True,True
+Hardware-03-typo,Hardware-03,typo,Several keys on the keyboard are physiaclly broken and no longer register input.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.9410307562846174,True,True
+Hardware-04-plain,Hardware-04,plain,The docking station has a damaged connector and cannot power my laptop.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.9441777500411751,True,True
+Hardware-04-email,Hardware-04,email,"Hello service desk,
+
+The docking station has a damaged connector and cannot power my laptop.
+
+Please help with this request. Thank you.",Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.9174037495897247,True,True
+Hardware-04-typo,Hardware-04,typo,The docking station has a damaged conncetor and cannot power my laptop.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.9438654098009008,True,True
+Hardware-05-plain,Hardware-05,plain,My laptop fan makes a grinding noise and the device overheats.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.91239044743085,True,True
+Hardware-05-email,Hardware-05,email,"Hello service desk,
+
+My laptop fan makes a grinding noise and the device overheats.
+
+Please help with this request. Thank you.",Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.9049359691030538,True,True
+Hardware-05-typo,Hardware-05,typo,My laptop fan makes a grinding noise and the device overehats.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.91239044743085,True,True
+Hardware-06-plain,Hardware-06,plain,The mouse button is stuck and needs a physical replacement.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.8902970916267143,True,True
+Hardware-06-email,Hardware-06,email,"Hello service desk,
+
+The mouse button is stuck and needs a physical replacement.
+
+Please help with this request. Thank you.",Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.7732924375258518,True,True
+Hardware-06-typo,Hardware-06,typo,The mouse button is stuck and needs a physical replaecment.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.7422993725285044,True,True
+Hardware-07-plain,Hardware-07,plain,The webcam lens is damaged and the image is permanently blurred.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.6866909042340948,True,True
+Hardware-07-email,Hardware-07,email,"Hello service desk,
+
+The webcam lens is damaged and the image is permanently blurred.
+
+Please help with this request. Thank you.",Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.592937220406942,True,False
+Hardware-07-typo,Hardware-07,typo,The webcam lens is damaged and the image is permaenntly blurred.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.6772640892998332,True,True
+Hardware-08-plain,Hardware-08,plain,The printer has a paper feed roller failure and repeatedly jams.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.49687227785723265,True,False
+Hardware-08-email,Hardware-08,email,"Hello service desk,
+
+The printer has a paper feed roller failure and repeatedly jams.
+
+Please help with this request. Thank you.",Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.41749697386357065,True,False
+Hardware-08-typo,Hardware-08,typo,The printer has a paper feed roller failure and repeaetdly jams.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.5073368121742177,True,False
+Hardware-09-plain,Hardware-09,plain,My headset cable is broken and sound disappears when the cable moves.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.9454855535339923,True,True
+Hardware-09-email,Hardware-09,email,"Hello service desk,
+
+My headset cable is broken and sound disappears when the cable moves.
+
+Please help with this request. Thank you.",Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.8975212899763557,True,True
+Hardware-09-typo,Hardware-09,typo,My headset cable is broken and sound disapepars when the cable moves.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.9488931589530794,True,True
+Hardware-10-plain,Hardware-10,plain,The workstation will not turn on; its power supply emits a burning smell.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.6993241143610825,True,True
+Hardware-10-email,Hardware-10,email,"Hello service desk,
+
+The workstation will not turn on; its power supply emits a burning smell.
+
+Please help with this request. Thank you.",Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.5977880182894674,True,False
+Hardware-10-typo,Hardware-10,typo,The worksattion will not turn on; its power supply emits a burning smell.,Hardware,AI-authored synthetic; not a real customer ticket,Hardware,0.778321539296659,True,True
+Storage-01-plain,Storage-01,plain,My home directory has reached its storage quota. Please increase the available space.,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.9483410152397432,True,True
+Storage-01-email,Storage-01,email,"Hello service desk,
+
+My home directory has reached its storage quota. Please increase the available space.
+
+Please help with this request. Thank you.",Storage,AI-authored synthetic; not a real customer ticket,Storage,0.8755676662882331,True,True
+Storage-01-typo,Storage-01,typo,My home diretcory has reached its storage quota. Please increase the available space.,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.9535717713944296,True,True
+Storage-02-plain,Storage-02,plain,The shared storage volume is full and cannot accept any new files.,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.9696728618450381,True,True
+Storage-02-email,Storage-02,email,"Hello service desk,
+
+The shared storage volume is full and cannot accept any new files.
+
+Please help with this request. Thank you.",Storage,AI-authored synthetic; not a real customer ticket,Storage,0.9374925881949088,True,True
+Storage-02-typo,Storage-02,typo,The shared stoarge volume is full and cannot accept any new files.,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.9456025063214085,True,True
+Storage-03-plain,Storage-03,plain,Please restore yesterday's deleted folder from the storage backup.,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.9669446381071218,True,True
+Storage-03-email,Storage-03,email,"Hello service desk,
+
+Please restore yesterday's deleted folder from the storage backup.
+
+Please help with this request. Thank you.",Storage,AI-authored synthetic; not a real customer ticket,Storage,0.9111553533544414,True,True
+Storage-03-typo,Storage-03,typo,Please restore yestreday's deleted folder from the storage backup.,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.9685066444025464,True,True
+Storage-04-plain,Storage-04,plain,We need additional capacity on the network file server for our documents.,Storage,AI-authored synthetic; not a real customer ticket,Hardware,0.916385646063816,False,True
+Storage-04-email,Storage-04,email,"Hello service desk,
+
+We need additional capacity on the network file server for our documents.
+
+Please help with this request. Thank you.",Storage,AI-authored synthetic; not a real customer ticket,Hardware,0.9346415225682755,False,True
+Storage-04-typo,Storage-04,typo,We need additoinal capacity on the network file server for our documents.,Storage,AI-authored synthetic; not a real customer ticket,Hardware,0.907028313439983,False,True
+Storage-05-plain,Storage-05,plain,The backup job reports that its destination disk has no free space.,Storage,AI-authored synthetic; not a real customer ticket,Hardware,0.36158788434047234,False,False
+Storage-05-email,Storage-05,email,"Hello service desk,
+
+The backup job reports that its destination disk has no free space.
+
+Please help with this request. Thank you.",Storage,AI-authored synthetic; not a real customer ticket,Hardware,0.379207531063963,False,False
+Storage-05-typo,Storage-05,typo,The backup job reports that its destiantion disk has no free space.,Storage,AI-authored synthetic; not a real customer ticket,Hardware,0.3555888441031512,False,False
+Storage-06-plain,Storage-06,plain,Please recover the previous version of a spreadsheet from the file backup.,Storage,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.4053798369202714,False,False
+Storage-06-email,Storage-06,email,"Hello service desk,
+
+Please recover the previous version of a spreadsheet from the file backup.
+
+Please help with this request. Thank you.",Storage,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.4976001932443639,False,False
+Storage-06-typo,Storage-06,typo,Please recover the previous version of a spreasdheet from the file backup.,Storage,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.3974797441104886,False,False
+Storage-07-plain,Storage-07,plain,My cloud drive quota is exhausted and file synchronization has stopped.,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.6736367314725344,True,True
+Storage-07-email,Storage-07,email,"Hello service desk,
+
+My cloud drive quota is exhausted and file synchronization has stopped.
+
+Please help with this request. Thank you.",Storage,AI-authored synthetic; not a real customer ticket,Hardware,0.5581620595668082,False,False
+Storage-07-typo,Storage-07,typo,My cloud drive quota is exhausted and file synchroinzation has stopped.,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.6466840404436082,True,True
+Storage-08-plain,Storage-08,plain,Can you extend the disk volume allocated to our shared document archive?,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.7535450809430697,True,True
+Storage-08-email,Storage-08,email,"Hello service desk,
+
+Can you extend the disk volume allocated to our shared document archive?
+
+Please help with this request. Thank you.",Storage,AI-authored synthetic; not a real customer ticket,Storage,0.5577946349741992,True,False
+Storage-08-typo,Storage-08,typo,Can you extend the disk volume alloacted to our shared document archive?,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.77744288781458,True,True
+Storage-09-plain,Storage-09,plain,The storage array reports a degraded disk volume and needs recovery.,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.7556748077944647,True,True
+Storage-09-email,Storage-09,email,"Hello service desk,
+
+The storage array reports a degraded disk volume and needs recovery.
+
+Please help with this request. Thank you.",Storage,AI-authored synthetic; not a real customer ticket,Hardware,0.37364825751964936,False,False
+Storage-09-typo,Storage-09,typo,The storage array reports a degrdaed disk volume and needs recovery.,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.8202936976735151,True,True
+Storage-10-plain,Storage-10,plain,Please migrate the archived files to a larger storage volume without deleting them.,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.9491290410794566,True,True
+Storage-10-email,Storage-10,email,"Hello service desk,
+
+Please migrate the archived files to a larger storage volume without deleting them.
+
+Please help with this request. Thank you.",Storage,AI-authored synthetic; not a real customer ticket,Storage,0.7918763991988597,True,True
+Storage-10-typo,Storage-10,typo,Please migrate the archvied files to a larger storage volume without deleting them.,Storage,AI-authored synthetic; not a real customer ticket,Storage,0.9493339716135465,True,True
+Purchase-01-plain,Purchase-01,plain,Please purchase two new monitors for the approved equipment order.,Purchase,AI-authored synthetic; not a real customer ticket,Purchase,0.7467500890859735,True,True
+Purchase-01-email,Purchase-01,email,"Hello service desk,
+
+Please purchase two new monitors for the approved equipment order.
+
+Please help with this request. Thank you.",Purchase,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.32582082437862525,False,False
+Purchase-01-typo,Purchase-01,typo,Please purchase two new monitors for the approved equimpent order.,Purchase,AI-authored synthetic; not a real customer ticket,Purchase,0.710154220882971,True,True
+Purchase-02-plain,Purchase-02,plain,I need a price quotation before ordering a new laptop through procurement.,Purchase,AI-authored synthetic; not a real customer ticket,Hardware,0.9477801495215992,False,True
+Purchase-02-email,Purchase-02,email,"Hello service desk,
+
+I need a price quotation before ordering a new laptop through procurement.
+
+Please help with this request. Thank you.",Purchase,AI-authored synthetic; not a real customer ticket,Hardware,0.9091591885075637,False,True
+Purchase-02-typo,Purchase-02,typo,I need a price quotation before ordering a new laptop through procuerment.,Purchase,AI-authored synthetic; not a real customer ticket,Hardware,0.9527804500470538,False,True
+Purchase-03-plain,Purchase-03,plain,Please raise a purchase order for ten software licenses.,Purchase,AI-authored synthetic; not a real customer ticket,Purchase,0.5871608815634941,True,False
+Purchase-03-email,Purchase-03,email,"Hello service desk,
+
+Please raise a purchase order for ten software licenses.
+
+Please help with this request. Thank you.",Purchase,AI-authored synthetic; not a real customer ticket,Access,0.29073900314154416,False,False
+Purchase-03-typo,Purchase-03,typo,Please raise a purcahse order for ten software licenses.,Purchase,AI-authored synthetic; not a real customer ticket,Access,0.7586927654921231,False,True
+Purchase-04-plain,Purchase-04,plain,Has the supplier confirmed delivery of the computers we ordered?,Purchase,AI-authored synthetic; not a real customer ticket,Hardware,0.41192517845640564,False,False
+Purchase-04-email,Purchase-04,email,"Hello service desk,
+
+Has the supplier confirmed delivery of the computers we ordered?
+
+Please help with this request. Thank you.",Purchase,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.43889677178401837,False,False
+Purchase-04-typo,Purchase-04,typo,Has the supplier confrimed delivery of the computers we ordered?,Purchase,AI-authored synthetic; not a real customer ticket,Hardware,0.4043938847897848,False,False
+Purchase-05-plain,Purchase-05,plain,Please process the approved procurement request for replacement docking stations.,Purchase,AI-authored synthetic; not a real customer ticket,Hardware,0.47343675066125745,False,False
+Purchase-05-email,Purchase-05,email,"Hello service desk,
+
+Please process the approved procurement request for replacement docking stations.
+
+Please help with this request. Thank you.",Purchase,AI-authored synthetic; not a real customer ticket,Hardware,0.41869263484008706,False,False
+Purchase-05-typo,Purchase-05,typo,Please process the approved procuerment request for replacement docking stations.,Purchase,AI-authored synthetic; not a real customer ticket,Hardware,0.4729903637331419,False,False
+Purchase-06-plain,Purchase-06,plain,We need to buy an annual subscription and require a supplier quote.,Purchase,AI-authored synthetic; not a real customer ticket,HR Support,0.4937600791791482,False,False
+Purchase-06-email,Purchase-06,email,"Hello service desk,
+
+We need to buy an annual subscription and require a supplier quote.
+
+Please help with this request. Thank you.",Purchase,AI-authored synthetic; not a real customer ticket,HR Support,0.473612528695759,False,False
+Purchase-06-typo,Purchase-06,typo,We need to buy an annual subscrpition and require a supplier quote.,Purchase,AI-authored synthetic; not a real customer ticket,HR Support,0.581210387092548,False,False
+Purchase-07-plain,Purchase-07,plain,Can procurement confirm the cost and approval needed to order new headsets?,Purchase,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.7903123439481095,False,True
+Purchase-07-email,Purchase-07,email,"Hello service desk,
+
+Can procurement confirm the cost and approval needed to order new headsets?
+
+Please help with this request. Thank you.",Purchase,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.7295788537280488,False,True
+Purchase-07-typo,Purchase-07,typo,Can procuerment confirm the cost and approval needed to order new headsets?,Purchase,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.8380495088284133,False,True
+Purchase-08-plain,Purchase-08,plain,Please renew the software license purchase before the supplier deadline.,Purchase,AI-authored synthetic; not a real customer ticket,Access,0.8802194606234488,False,True
+Purchase-08-email,Purchase-08,email,"Hello service desk,
+
+Please renew the software license purchase before the supplier deadline.
+
+Please help with this request. Thank you.",Purchase,AI-authored synthetic; not a real customer ticket,Access,0.7352455218455722,False,True
+Purchase-08-typo,Purchase-08,typo,Please renew the softawre license purchase before the supplier deadline.,Purchase,AI-authored synthetic; not a real customer ticket,Access,0.8629392123153504,False,True
+Purchase-09-plain,Purchase-09,plain,The invoice for our equipment order does not match the purchase order.,Purchase,AI-authored synthetic; not a real customer ticket,Purchase,0.714186111722422,True,True
+Purchase-09-email,Purchase-09,email,"Hello service desk,
+
+The invoice for our equipment order does not match the purchase order.
+
+Please help with this request. Thank you.",Purchase,AI-authored synthetic; not a real customer ticket,Hardware,0.435402715098567,False,False
+Purchase-09-typo,Purchase-09,typo,The invoice for our equimpent order does not match the purchase order.,Purchase,AI-authored synthetic; not a real customer ticket,Purchase,0.7537574444573175,True,True
+Purchase-10-plain,Purchase-10,plain,Please cancel the unshipped monitor order with the vendor.,Purchase,AI-authored synthetic; not a real customer ticket,Hardware,0.9355540795248534,False,True
+Purchase-10-email,Purchase-10,email,"Hello service desk,
+
+Please cancel the unshipped monitor order with the vendor.
+
+Please help with this request. Thank you.",Purchase,AI-authored synthetic; not a real customer ticket,Hardware,0.8699490242910155,False,True
+Purchase-10-typo,Purchase-10,typo,Please cancel the unshpiped monitor order with the vendor.,Purchase,AI-authored synthetic; not a real customer ticket,Hardware,0.9355540795248534,False,True
+HR Support-01-plain,HR Support-01,plain,My payslip lists an incorrect tax deduction. Please ask payroll to review it.,HR Support,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.7441451395574642,False,True
+HR Support-01-email,HR Support-01,email,"Hello service desk,
+
+My payslip lists an incorrect tax deduction. Please ask payroll to review it.
+
+Please help with this request. Thank you.",HR Support,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6986886175282102,False,True
+HR Support-01-typo,HR Support-01,typo,My payslip lists an incorect tax deduction. Please ask payroll to review it.,HR Support,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6596244927739544,False,True
+HR Support-02-plain,HR Support-02,plain,How do I submit an annual leave request to the human resources team?,HR Support,AI-authored synthetic; not a real customer ticket,HR Support,0.9671339872952043,True,True
+HR Support-02-email,HR Support-02,email,"Hello service desk,
+
+How do I submit an annual leave request to the human resources team?
+
+Please help with this request. Thank you.",HR Support,AI-authored synthetic; not a real customer ticket,HR Support,0.9546462116586198,True,True
+HR Support-02-typo,HR Support-02,typo,How do I submit an annual leave request to the human resoruces team?,HR Support,AI-authored synthetic; not a real customer ticket,HR Support,0.9740489128641718,True,True
+HR Support-03-plain,HR Support-03,plain,Please correct the employment start date recorded in my personnel file.,HR Support,AI-authored synthetic; not a real customer ticket,HR Support,0.4157965976271353,True,False
+HR Support-03-email,HR Support-03,email,"Hello service desk,
+
+Please correct the employment start date recorded in my personnel file.
+
+Please help with this request. Thank you.",HR Support,AI-authored synthetic; not a real customer ticket,HR Support,0.39755252745584296,True,False
+HR Support-03-typo,HR Support-03,typo,Please correct the emplomyent start date recorded in my personnel file.,HR Support,AI-authored synthetic; not a real customer ticket,HR Support,0.3580245446361165,True,False
+HR Support-04-plain,HR Support-04,plain,I need information about the employee health insurance enrollment process.,HR Support,AI-authored synthetic; not a real customer ticket,Hardware,0.8741452348349643,False,True
+HR Support-04-email,HR Support-04,email,"Hello service desk,
+
+I need information about the employee health insurance enrollment process.
+
+Please help with this request. Thank you.",HR Support,AI-authored synthetic; not a real customer ticket,Hardware,0.7349836928172443,False,True
+HR Support-04-typo,HR Support-04,typo,I need inforamtion about the employee health insurance enrollment process.,HR Support,AI-authored synthetic; not a real customer ticket,Hardware,0.8474356271213468,False,True
+HR Support-05-plain,HR Support-05,plain,My approved holiday balance is missing from the HR record.,HR Support,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.7112680079444418,False,True
+HR Support-05-email,HR Support-05,email,"Hello service desk,
+
+My approved holiday balance is missing from the HR record.
+
+Please help with this request. Thank you.",HR Support,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6427420149875709,False,True
+HR Support-05-typo,HR Support-05,typo,My apprvoed holiday balance is missing from the HR record.,HR Support,AI-authored synthetic; not a real customer ticket,HR Support,0.35406735004794104,True,False
+HR Support-06-plain,HR Support-06,plain,Could HR provide an employment confirmation letter for my bank?,HR Support,AI-authored synthetic; not a real customer ticket,Hardware,0.4788116155988688,False,False
+HR Support-06-email,HR Support-06,email,"Hello service desk,
+
+Could HR provide an employment confirmation letter for my bank?
+
+Please help with this request. Thank you.",HR Support,AI-authored synthetic; not a real customer ticket,Hardware,0.42518550681225814,False,False
+HR Support-06-typo,HR Support-06,typo,Could HR provide an employment confiramtion letter for my bank?,HR Support,AI-authored synthetic; not a real customer ticket,Hardware,0.5024041826528198,False,False
+HR Support-07-plain,HR Support-07,plain,Please update my emergency contact in the personnel records.,HR Support,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.5136920535008226,False,False
+HR Support-07-email,HR Support-07,email,"Hello service desk,
+
+Please update my emergency contact in the personnel records.
+
+Please help with this request. Thank you.",HR Support,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.46070610888017605,False,False
+HR Support-07-typo,HR Support-07,typo,Please update my emeregncy contact in the personnel records.,HR Support,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.5455006599030081,False,False
+HR Support-08-plain,HR Support-08,plain,I have a question about parental leave eligibility and the HR policy.,HR Support,AI-authored synthetic; not a real customer ticket,HR Support,0.4471502296865772,True,False
+HR Support-08-email,HR Support-08,email,"Hello service desk,
+
+I have a question about parental leave eligibility and the HR policy.
+
+Please help with this request. Thank you.",HR Support,AI-authored synthetic; not a real customer ticket,HR Support,0.4246008383801108,True,False
+HR Support-08-typo,HR Support-08,typo,I have a question about parental leave eligiiblity and the HR policy.,HR Support,AI-authored synthetic; not a real customer ticket,HR Support,0.49275238353401873,True,False
+HR Support-09-plain,HR Support-09,plain,The overtime hours on my salary statement are incorrect.,HR Support,AI-authored synthetic; not a real customer ticket,HR Support,0.5911318591324959,True,False
+HR Support-09-email,HR Support-09,email,"Hello service desk,
+
+The overtime hours on my salary statement are incorrect.
+
+Please help with this request. Thank you.",HR Support,AI-authored synthetic; not a real customer ticket,HR Support,0.4639195489353474,True,False
+HR Support-09-typo,HR Support-09,typo,The overtime hours on my salary statmeent are incorrect.,HR Support,AI-authored synthetic; not a real customer ticket,HR Support,0.6257797213227544,True,True
+HR Support-10-plain,HR Support-10,plain,Please explain the employee benefits available during my probation period.,HR Support,AI-authored synthetic; not a real customer ticket,Hardware,0.6077004300657413,False,True
+HR Support-10-email,HR Support-10,email,"Hello service desk,
+
+Please explain the employee benefits available during my probation period.
+
+Please help with this request. Thank you.",HR Support,AI-authored synthetic; not a real customer ticket,Hardware,0.5516488537598059,False,False
+HR Support-10-typo,HR Support-10,typo,Please explain the employee benefits avaialble during my probation period.,HR Support,AI-authored synthetic; not a real customer ticket,Hardware,0.45208065057245983,False,False
+Internal Project-01-plain,Internal Project-01,plain,Please schedule the kickoff meeting for our planned internal identity migration project.,Internal Project,AI-authored synthetic; not a real customer ticket,Hardware,0.7379837151313178,False,True
+Internal Project-01-email,Internal Project-01,email,"Hello service desk,
+
+Please schedule the kickoff meeting for our planned internal identity migration project.
+
+Please help with this request. Thank you.",Internal Project,AI-authored synthetic; not a real customer ticket,Hardware,0.763209267735836,False,True
+Internal Project-01-typo,Internal Project-01,typo,Please schedule the kickoff meeting for our planned internal identity migrtaion project.,Internal Project,AI-authored synthetic; not a real customer ticket,Hardware,0.7193871910614321,False,True
+Internal Project-02-plain,Internal Project-02,plain,We need an IT work estimate for the approved office relocation project.,Internal Project,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.41742523714069524,False,False
+Internal Project-02-email,Internal Project-02,email,"Hello service desk,
+
+We need an IT work estimate for the approved office relocation project.
+
+Please help with this request. Thank you.",Internal Project,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.585706516644352,False,False
+Internal Project-02-typo,Internal Project-02,typo,We need an IT work estimate for the approved office reloctaion project.,Internal Project,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.4618781536757236,False,False
+Internal Project-03-plain,Internal Project-03,plain,Please coordinate the next milestone of the company-wide workstation rollout project.,Internal Project,AI-authored synthetic; not a real customer ticket,Internal Project,0.522070395464758,True,False
+Internal Project-03-email,Internal Project-03,email,"Hello service desk,
+
+Please coordinate the next milestone of the company-wide workstation rollout project.
+
+Please help with this request. Thank you.",Internal Project,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.532159865977395,False,False
+Internal Project-03-typo,Internal Project-03,typo,Please coordinate the next milestone of the company-wide worksattion rollout project.,Internal Project,AI-authored synthetic; not a real customer ticket,Internal Project,0.5093558210773923,True,False
+Internal Project-04-plain,Internal Project-04,plain,The internal data center migration project needs a technical planning workshop.,Internal Project,AI-authored synthetic; not a real customer ticket,Internal Project,0.5022564477875104,True,False
+Internal Project-04-email,Internal Project-04,email,"Hello service desk,
+
+The internal data center migration project needs a technical planning workshop.
+
+Please help with this request. Thank you.",Internal Project,AI-authored synthetic; not a real customer ticket,Hardware,0.4757847361269317,False,False
+Internal Project-04-typo,Internal Project-04,typo,The internal data center migrtaion project needs a technical planning workshop.,Internal Project,AI-authored synthetic; not a real customer ticket,Internal Project,0.5650742274244246,True,False
+Internal Project-05-plain,Internal Project-05,plain,Could the project team review the timeline for our planned intranet replacement?,Internal Project,AI-authored synthetic; not a real customer ticket,Hardware,0.4055146365812591,False,False
+Internal Project-05-email,Internal Project-05,email,"Hello service desk,
+
+Could the project team review the timeline for our planned intranet replacement?
+
+Please help with this request. Thank you.",Internal Project,AI-authored synthetic; not a real customer ticket,Hardware,0.5202838270038412,False,False
+Internal Project-05-typo,Internal Project-05,typo,Could the project team review the timeline for our planned intranet replaecment?,Internal Project,AI-authored synthetic; not a real customer ticket,Internal Project,0.5726520816044739,True,False
+Internal Project-06-plain,Internal Project-06,plain,Please allocate an engineer to the internal infrastructure modernization project.,Internal Project,AI-authored synthetic; not a real customer ticket,Internal Project,0.8051897299387962,True,True
+Internal Project-06-email,Internal Project-06,email,"Hello service desk,
+
+Please allocate an engineer to the internal infrastructure modernization project.
+
+Please help with this request. Thank you.",Internal Project,AI-authored synthetic; not a real customer ticket,Hardware,0.27818431149162515,False,False
+Internal Project-06-typo,Internal Project-06,typo,Please allocate an engineer to the internal infrasturcture modernization project.,Internal Project,AI-authored synthetic; not a real customer ticket,Internal Project,0.8617579246396438,True,True
+Internal Project-07-plain,Internal Project-07,plain,We need a project plan for the upcoming company network redesign.,Internal Project,AI-authored synthetic; not a real customer ticket,Hardware,0.6559673416693049,False,True
+Internal Project-07-email,Internal Project-07,email,"Hello service desk,
+
+We need a project plan for the upcoming company network redesign.
+
+Please help with this request. Thank you.",Internal Project,AI-authored synthetic; not a real customer ticket,Hardware,0.7423593382388638,False,True
+Internal Project-07-typo,Internal Project-07,typo,We need a project plan for the upcoimng company network redesign.,Internal Project,AI-authored synthetic; not a real customer ticket,Hardware,0.6701304656652219,False,True
+Internal Project-08-plain,Internal Project-08,plain,Please update the delivery milestones for the internal systems consolidation project.,Internal Project,AI-authored synthetic; not a real customer ticket,Internal Project,0.49679739045934534,True,False
+Internal Project-08-email,Internal Project-08,email,"Hello service desk,
+
+Please update the delivery milestones for the internal systems consolidation project.
+
+Please help with this request. Thank you.",Internal Project,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.5347374493435664,False,False
+Internal Project-08-typo,Internal Project-08,typo,Please update the delivery milestones for the internal systems consoldiation project.,Internal Project,AI-authored synthetic; not a real customer ticket,Internal Project,0.5648858749197558,True,False
+Internal Project-09-plain,Internal Project-09,plain,The planned archive migration project requires a change coordination meeting.,Internal Project,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6641077541198159,False,True
+Internal Project-09-email,Internal Project-09,email,"Hello service desk,
+
+The planned archive migration project requires a change coordination meeting.
+
+Please help with this request. Thank you.",Internal Project,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.7734438950468889,False,True
+Internal Project-09-typo,Internal Project-09,typo,The planned archive migration project requires a change coordiantion meeting.,Internal Project,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6641077541198159,False,True
+Internal Project-10-plain,Internal Project-10,plain,Please confirm the IT project resources assigned to the new office launch.,Internal Project,AI-authored synthetic; not a real customer ticket,Internal Project,0.6148310233995524,True,True
+Internal Project-10-email,Internal Project-10,email,"Hello service desk,
+
+Please confirm the IT project resources assigned to the new office launch.
+
+Please help with this request. Thank you.",Internal Project,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.5559799179627368,False,False
+Internal Project-10-typo,Internal Project-10,typo,Please confirm the IT project resoruces assigned to the new office launch.,Internal Project,AI-authored synthetic; not a real customer ticket,Internal Project,0.6431269976422946,True,True
+Miscellaneous-01-plain,Miscellaneous-01,plain,What are the service desk opening hours during the public holiday?,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.41902768406295043,True,False
+Miscellaneous-01-email,Miscellaneous-01,email,"Hello service desk,
+
+What are the service desk opening hours during the public holiday?
+
+Please help with this request. Thank you.",Miscellaneous,AI-authored synthetic; not a real customer ticket,HR Support,0.3881158864832637,False,False
+Miscellaneous-01-typo,Miscellaneous-01,typo,What are the serivce desk opening hours during the public holiday?,Miscellaneous,AI-authored synthetic; not a real customer ticket,HR Support,0.5447414843352777,False,False
+Miscellaneous-02-plain,Miscellaneous-02,plain,Where can I find the general IT support contact directory?,Miscellaneous,AI-authored synthetic; not a real customer ticket,Hardware,0.7401239301705089,False,True
+Miscellaneous-02-email,Miscellaneous-02,email,"Hello service desk,
+
+Where can I find the general IT support contact directory?
+
+Please help with this request. Thank you.",Miscellaneous,AI-authored synthetic; not a real customer ticket,Hardware,0.6469073729809265,False,True
+Miscellaneous-02-typo,Miscellaneous-02,typo,Where can I find the general IT support contact diretcory?,Miscellaneous,AI-authored synthetic; not a real customer ticket,Hardware,0.7624149161742706,False,True
+Miscellaneous-03-plain,Miscellaneous-03,plain,Please pass on my feedback about the helpful support service this week.,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.41501228811913365,True,False
+Miscellaneous-03-email,Miscellaneous-03,email,"Hello service desk,
+
+Please pass on my feedback about the helpful support service this week.
+
+Please help with this request. Thank you.",Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.38357143302945335,True,False
+Miscellaneous-03-typo,Miscellaneous-03,typo,Please pass on my feedabck about the helpful support service this week.,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.38385611654019824,True,False
+Miscellaneous-04-plain,Miscellaneous-04,plain,Could you send me the general guide for submitting a support ticket?,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6753042665912791,True,True
+Miscellaneous-04-email,Miscellaneous-04,email,"Hello service desk,
+
+Could you send me the general guide for submitting a support ticket?
+
+Please help with this request. Thank you.",Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6624227764425582,True,True
+Miscellaneous-04-typo,Miscellaneous-04,typo,Could you send me the general guide for submiting a support ticket?,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6973748719819934,True,True
+Miscellaneous-05-plain,Miscellaneous-05,plain,I opened two identical support requests by mistake. Please close the duplicate.,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.8922008214556134,True,True
+Miscellaneous-05-email,Miscellaneous-05,email,"Hello service desk,
+
+I opened two identical support requests by mistake. Please close the duplicate.
+
+Please help with this request. Thank you.",Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.8348657074960633,True,True
+Miscellaneous-05-typo,Miscellaneous-05,typo,I opened two idenitcal support requests by mistake. Please close the duplicate.,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.9090556322693317,True,True
+Miscellaneous-06-plain,Miscellaneous-06,plain,What is the standard response time for a nonurgent support request?,Miscellaneous,AI-authored synthetic; not a real customer ticket,HR Support,0.5679185025821074,False,False
+Miscellaneous-06-email,Miscellaneous-06,email,"Hello service desk,
+
+What is the standard response time for a nonurgent support request?
+
+Please help with this request. Thank you.",Miscellaneous,AI-authored synthetic; not a real customer ticket,HR Support,0.4718649145811421,False,False
+Miscellaneous-06-typo,Miscellaneous-06,typo,What is the standard response time for a nonugrent support request?,Miscellaneous,AI-authored synthetic; not a real customer ticket,HR Support,0.5679185025821074,False,False
+Miscellaneous-07-plain,Miscellaneous-07,plain,Who is the general contact for questions about the IT service catalog?,Miscellaneous,AI-authored synthetic; not a real customer ticket,Hardware,0.5123580097043572,False,False
+Miscellaneous-07-email,Miscellaneous-07,email,"Hello service desk,
+
+Who is the general contact for questions about the IT service catalog?
+
+Please help with this request. Thank you.",Miscellaneous,AI-authored synthetic; not a real customer ticket,Hardware,0.5096257125228407,False,False
+Miscellaneous-07-typo,Miscellaneous-07,typo,Who is the general contact for quesitons about the IT service catalog?,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.4498458911478357,True,False
+Miscellaneous-08-plain,Miscellaneous-08,plain,Please explain how to check the progress of an existing support ticket.,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.865087318715951,True,True
+Miscellaneous-08-email,Miscellaneous-08,email,"Hello service desk,
+
+Please explain how to check the progress of an existing support ticket.
+
+Please help with this request. Thank you.",Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.8185482647405443,True,True
+Miscellaneous-08-typo,Miscellaneous-08,typo,Please explain how to check the progerss of an existing support ticket.,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.8787802856057956,True,True
+Miscellaneous-09-plain,Miscellaneous-09,plain,Where is the general IT announcement board for planned service notices?,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.40766688887187436,True,False
+Miscellaneous-09-email,Miscellaneous-09,email,"Hello service desk,
+
+Where is the general IT announcement board for planned service notices?
+
+Please help with this request. Thank you.",Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.4003092102614795,True,False
+Miscellaneous-09-typo,Miscellaneous-09,typo,Where is the general IT announecment board for planned service notices?,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.4449101074593703,True,False
+Miscellaneous-10-plain,Miscellaneous-10,plain,Could the service desk explain its escalation procedure for unresolved requests?,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6354775456466977,True,True
+Miscellaneous-10-email,Miscellaneous-10,email,"Hello service desk,
+
+Could the service desk explain its escalation procedure for unresolved requests?
+
+Please help with this request. Thank you.",Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.5639897212123104,True,False
+Miscellaneous-10-typo,Miscellaneous-10,typo,Could the service desk explain its escaltaion procedure for unresolved requests?,Miscellaneous,AI-authored synthetic; not a real customer ticket,Miscellaneous,0.6804538068857385,True,True

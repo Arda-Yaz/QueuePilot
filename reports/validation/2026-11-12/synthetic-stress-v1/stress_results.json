@@ -1,0 +1,161 @@
+{
+  "interpretation": "Synthetic specification agreement only; no independence or production-accuracy claim",
+  "independent_real_world_evidence": false,
+  "plan_sha256": "8b67d2af9fe3f449887a99ec5f03c8eb990f5a1d020589c0486caea4ac2e8af8",
+  "models": {
+    "reference": {
+      "model_sha256": "ea6b1f9ca0075bd32ee39d01a249b4b8860537f576e52ba8e8afc6dd1a169843",
+      "plain_scenario_count": 80,
+      "plain_specification_agreement": 0.5625,
+      "all_variants_agreement": 0.5166666666666667,
+      "accepted_count": 142,
+      "accepted_specification_agreement": 0.6126760563380281,
+      "high_confidence_specification_mismatches": 18,
+      "agreement_by_variant": {
+        "email": 0.4125,
+        "plain": 0.5625,
+        "typo": 0.575
+      },
+      "plain_classification": {
+        "Access": {
+          "precision": 0.6923076923076923,
+          "recall": 0.9,
+          "f1-score": 0.782608695652174,
+          "support": 10.0
+        },
+        "Administrative rights": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 10.0
+        },
+        "HR Support": {
+          "precision": 0.6666666666666666,
+          "recall": 0.4,
+          "f1-score": 0.5,
+          "support": 10.0
+        },
+        "Hardware": {
+          "precision": 0.35714285714285715,
+          "recall": 1.0,
+          "f1-score": 0.5263157894736842,
+          "support": 10.0
+        },
+        "Internal Project": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1-score": 0.6666666666666666,
+          "support": 10.0
+        },
+        "Miscellaneous": {
+          "precision": 0.4117647058823529,
+          "recall": 0.7,
+          "f1-score": 0.5185185185185185,
+          "support": 10.0
+        },
+        "Purchase": {
+          "precision": 0.75,
+          "recall": 0.3,
+          "f1-score": 0.42857142857142855,
+          "support": 10.0
+        },
+        "Storage": {
+          "precision": 1.0,
+          "recall": 0.7,
+          "f1-score": 0.8235294117647058,
+          "support": 10.0
+        },
+        "accuracy": 0.5625,
+        "macro avg": {
+          "precision": 0.6097352402499461,
+          "recall": 0.5625,
+          "f1-score": 0.5307763138308972,
+          "support": 80.0
+        },
+        "weighted avg": {
+          "precision": 0.6097352402499461,
+          "recall": 0.5625,
+          "f1-score": 0.5307763138308972,
+          "support": 80.0
+        }
+      }
+    },
+    "candidate": {
+      "model_sha256": "d3c997c2d12d7ea793cf7db6f4dd6bd200a5da428a877fa4e657439f9aae4378",
+      "plain_scenario_count": 80,
+      "plain_specification_agreement": 0.5625,
+      "all_variants_agreement": 0.5291666666666667,
+      "accepted_count": 153,
+      "accepted_specification_agreement": 0.5947712418300654,
+      "high_confidence_specification_mismatches": 25,
+      "agreement_by_variant": {
+        "email": 0.4625,
+        "plain": 0.5625,
+        "typo": 0.5625
+      },
+      "plain_classification": {
+        "Access": {
+          "precision": 0.6428571428571429,
+          "recall": 0.9,
+          "f1-score": 0.75,
+          "support": 10.0
+        },
+        "Administrative rights": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 10.0
+        },
+        "HR Support": {
+          "precision": 0.6666666666666666,
+          "recall": 0.4,
+          "f1-score": 0.5,
+          "support": 10.0
+        },
+        "Hardware": {
+          "precision": 0.38461538461538464,
+          "recall": 1.0,
+          "f1-score": 0.5555555555555556,
+          "support": 10.0
+        },
+        "Internal Project": {
+          "precision": 1.0,
+          "recall": 0.6,
+          "f1-score": 0.75,
+          "support": 10.0
+        },
+        "Miscellaneous": {
+          "precision": 0.3888888888888889,
+          "recall": 0.7,
+          "f1-score": 0.5,
+          "support": 10.0
+        },
+        "Purchase": {
+          "precision": 0.6666666666666666,
+          "recall": 0.2,
+          "f1-score": 0.3076923076923077,
+          "support": 10.0
+        },
+        "Storage": {
+          "precision": 1.0,
+          "recall": 0.7,
+          "f1-score": 0.8235294117647058,
+          "support": 10.0
+        },
+        "accuracy": 0.5625,
+        "macro avg": {
+          "precision": 0.5937118437118437,
+          "recall": 0.5625,
+          "f1-score": 0.5233471593765712,
+          "support": 80.0
+        },
+        "weighted avg": {
+          "precision": 0.5937118437118437,
+          "recall": 0.5625,
+          "f1-score": 0.5233471593765712,
+          "support": 80.0
+        }
+      }
+    }
+  }
+}
