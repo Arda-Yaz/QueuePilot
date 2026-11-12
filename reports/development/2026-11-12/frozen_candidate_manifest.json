@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-11-12T14:49:50.311896+00:00",
+  "policy": {
+    "target_accuracy": 0.9,
+    "family_alpha": 0.05,
+    "model_count": 2,
+    "threshold_start": 0.1,
+    "threshold_stop": 1.0,
+    "threshold_step": 0.01,
+    "min_accepted_samples": 50,
+    "observed_coverage_gain": 0.01,
+    "macro_f1_loss_allowed": 0.0,
+    "admin_f1_loss_allowed": 0.02,
+    "no_automatic_promotion": true
+  },
+  "labels": [
+    "Access",
+    "Administrative rights",
+    "HR Support",
+    "Hardware",
+    "Internal Project",
+    "Miscellaneous",
+    "Purchase",
+    "Storage"
+  ],
+  "original_dataset_sha256": "044fdace33fa564e1e60453f2941dafc95539c99878b0d32746950394b9dd4d4",
+  "environment": {
+    "python": "3.12.10",
+    "sklearn": "1.9.0",
+    "numpy": "2.5.2",
+    "pandas": "2.3.3",
+    "scipy": "1.18.0"
+  },
+  "files": {
+    "candidate.joblib": "d3c997c2d12d7ea793cf7db6f4dd6bd200a5da428a877fa4e657439f9aae4378",
+    "comparison_plan.json": "03e940a051c1443a5b868fda88e90677d7de8cd3684e23056c2548ab66a0f26d",
+    "comparison_results.json": "814e8fa1ca711b536a812dfae8b27538fe66cd293aec798e1739724f31c75370",
+    "reference.joblib": "ea6b1f9ca0075bd32ee39d01a249b4b8860537f576e52ba8e8afc6dd1a169843",
+    "source_snapshot.json": "c8a5d9f2e06b56904c5a93493f814b1c69bd6ad812812eb5673f799900d4f357"
+  },
+  "models": {
+    "reference": "reference.joblib",
+    "candidate": "candidate.joblib"
+  }
+}
