@@ -1,33 +1,34 @@
-# Dış veri araması ve sentetik stres testi — 12 Kasım 2026
+# External data search and synthetic stress test - 12 November 2026
 
-Kapsam notu: bu belge ek geliştirme/kuruma uyarlama araştırmasıdır. Mevcut veri kümesinde tamamlanan benchmark sonucunu değiştirmez ve referans uygulamanın tamamlanması için yeni bir zorunluluk tanımlamaz. [Proje kapsamı ve yol haritası](PROJECT_SCOPE.md).
+Scope note: this document covers additional development and organization adaptation research. It does not change the completed benchmark result on the existing dataset or introduce a new requirement for completing the reference application. See [project scope and roadmap](PROJECT_SCOPE.md).
 
-Kullanıcının talebiyle hem internette gerçek veri arandı hem de ayrıca sentetik
-bir stres seti oluşturulup çalıştırıldı. Sonuçlar yeni bir eğitim veya model
-terfisi için kullanılmadı. Başarısız senaryolar sonuçlara bakılarak değiştirilmedi.
+At the user's request, real data was sought online and a separate synthetic
+stress set was created and evaluated. Results were not used for new training
+or model promotion. Failing scenarios were not changed after inspecting results.
 
-## Gerçek veri bulundu ve indirildi
+## Real data found and downloaded
 
-Kaynak: Leonardo Santiago Benitez Pereira, **Classification of IT Support
+Source: Leonardo Santiago Benitez Pereira, **Classification of IT Support
 Tickets**, [Zenodo v1](https://zenodo.org/records/7384758),
-DOI `10.5281/zenodo.7384758`. Yayıncı, gerçek bir IT şirketinden alınan 2.229
-biletin üç IT uzmanı tarafından 2020'de sınıflandırıldığını; anonimleştirme ve
-manuel kontrol uygulandığını belirtiyor. Veri çok dilli; English, German,
-Portuguese ve Spanish içeriyor. [Yayıncı metadata API'si](https://zenodo.org/api/records/7384758)
-lisansı `cc-by-4.0` olarak veriyor. Atıf: Pereira, Leonardo Santiago Benitez,
-*Classification of IT Support Tickets*, Zenodo, 2022, CC BY 4.0.
+DOI `10.5281/zenodo.7384758`. The publisher states that 2,229 tickets from a real
+IT company were classified by three IT professionals in 2020, with anonymization
+and manual verification. The corpus is multilingual, including English, German,
+Portuguese and Spanish. The [publisher metadata API](https://zenodo.org/api/records/7384758)
+identifies the license as `cc-by-4.0`. Attribution: Pereira, Leonardo Santiago
+Benitez, *Classification of IT Support Tickets*, Zenodo, 2022, CC BY 4.0.
 
-`X_train`, `X_test`, `y_train`, `y_test` CSV'leri indirildi; dört dosyanın MD5'i
-hem yayıncı metadata'sıyla hem sabitlenmiş checksum'larla doğrulandı. Model,
-tokenizer veya encoder pickle dosyaları indirilmedi/yüklenmedi.
-[Yeni v2 kayıt](https://zenodo.org/records/7648117) metadata'sı da kontrol edildi:
-dört CSV'nin checksum'ları v1 ile aynı; bunlar iki ayrı yeni veri kümesi değil.
+The `X_train`, `X_test`, `y_train` and `y_test` CSV files were downloaded. MD5s
+for all four were verified against both publisher metadata and pinned checksums.
+Model, tokenizer and encoder pickle files were not downloaded or loaded.
+Metadata for the [newer v2 record](https://zenodo.org/records/7648117) was also
+checked: its four CSV checksums match v1. These are not two distinct new datasets.
 
-Metin ve etiket dosyaları ID üzerinden bire bir birleştirildi. Etiketler gerçekten
-CSV'den okundu; ikincil repo açıklamalarındaki farklı kategori listeleri esas
-alınmadı. Veri, QueuePilot'un sekiz sınıfı yerine şu servis gruplarını içeriyor:
+Text and label files were joined one-to-one by ID. Labels were read from the
+actual CSV files rather than differing category lists in secondary repository
+descriptions. The corpus uses the following service groups instead of
+QueuePilot's eight classes:
 
-| Yayıncının sınıfı | Satır |
+| Publisher class | Rows |
 | --- | ---: |
 | Support general | 762 |
 | Fileservice | 684 |
@@ -37,112 +38,119 @@ alınmadı. Veri, QueuePilot'un sekiz sınıfı yerine şu servis gruplarını i
 | Computer-Services | 106 |
 | EOL | 103 |
 
-Kendi kontrollerimizde:
+Our checks found:
 
-- 2.229 satır, 1.471 farklı normalleştirilmiş metin; 758 tekrar satırı.
-- Bir normalleştirilmiş metin grubunda birden fazla kaynak etiketi var.
-- Kaynağın train/test dosyaları 33 normalleştirilmiş metni paylaşıyor.
-- QueuePilot'un eski ham veri metinleriyle normalize edilmiş bire bir örtüşme: 0.
-- Etiket şemasına doğrudan uyan kaynak sınıfı: 0.
+- 2,229 rows, 1,471 unique normalized texts and 758 duplicate rows.
+- One normalized-text group with multiple source labels.
+- 33 normalized texts shared by the source train/test files.
+- Zero normalized exact-text overlaps with QueuePilot's old raw corpus.
+- Zero source classes directly matching the label schema.
 
-Örtüşmenin sıfır olması tüm yakın kopyaların bulunmadığını veya aynı hedef
-dağılımından bağımsız örneklem elde edildiğini kanıtlamaz. Kaynağın kendi
-train/test adları bizim eski veri bölümlerimiz anlamına da gelmez.
+Zero overlap does not establish that all near duplicates were found or that
+an independent sample from the same target distribution was obtained. The
+source's train/test names also do not refer to our existing data partitions.
 
-**Karar:** gerçek dış veri kaynağı elde edildi, ancak mevcut sekiz sınıflı
-audit'e doğrudan uygun değil. `Fileservice -> Storage`, `O365 -> Access` gibi
-eşleştirmeler uydurulmadı; bir servis grubu birden fazla problem türünü kapsayabilir.
-Bu corpus üzerinde sekiz sınıflı doğruluk hesaplanmadı. Kullanılabilmesi için
-gerekçeli taksonomi uyumu veya bağımsız yeniden etiketleme, tekrar gruplarıyla
-bölme ve dil/dağılım kapsamının belirlenmesi gerekir.
+**Decision:** a real external source was obtained, but it is not directly
+compatible with the existing eight-class audit. Mappings such as
+`Fileservice -> Storage` or `O365 -> Access` were not invented; a service group
+can cover multiple problem types. Eight-class accuracy was not calculated on
+this corpus. Using it would require justified taxonomy alignment or independent
+relabeling, splitting by duplicate groups, and defining language/distribution
+coverage.
 
-Ham CSV'ler yalnız `reports/private/external/zenodo-7384758` altında. Paylaşılabilir
-kanıt: [public_source_qualification.json](../reports/validation/2026-11-12/public_source_qualification.json).
+Raw CSV files remain only under `reports/private/external/zenodo-7384758`.
+Shareable evidence:
+[public_source_qualification.json](../reports/validation/2026-11-12/public_source_qualification.json).
 
-## Diğer kaynakların sonucu
+## Other sources checked
 
-- [Mendeley IT Incidents](https://data.mendeley.com/datasets/7pfzrjpct7/1),
-  Endava/Microsoft destek sınıflandırma deposuna kaynak bağlantısı veriyor.
-  [Özgün depo](https://github.com/gabrielpreda/Support-Tickets-Classification)
-  operasyonel sınıfların sayısal kodlandığını ve metinlerin işlendiğini açıklıyor.
-  Doğrudan sekiz sınıf uyumu doğrulanamadı. Bağlı Azure CSV adresinde DNS hatası
-  alındı; içerik indirilmediği için aynı metinlerin bulunduğu iddia edilmedi.
-- [Tobi-Bueck corpus kartı](https://huggingface.co/datasets/Tobi-Bueck/customer-support-tickets)
-  farklı bir queue şeması ve CC BY-NC 4.0 lisansı listeliyor; sentetik veri
-  üretimini de tanıtıyor. Bu veri için bağımsız insan etiketli köken doğrulanmadı;
-  gerçek bağımsız audit kaynağı olarak seçilmedi. Bu gözlem corpus'un tamamının
-  sentetik olduğuna dair kesin bir iddia değildir.
+- [Mendeley IT Incidents](https://data.mendeley.com/datasets/7pfzrjpct7/1)
+  links to the Endava/Microsoft support classification repository. The
+  [original repository](https://github.com/gabrielpreda/Support-Tickets-Classification)
+  describes numerically encoded operational classes and processed texts.
+  Direct compatibility with the eight classes could not be verified. The linked
+  Azure CSV URL returned a DNS error; because the content was not downloaded,
+  no claim was made that it contains the same texts.
+- The [Tobi-Bueck corpus card](https://huggingface.co/datasets/Tobi-Bueck/customer-support-tickets)
+  lists a different queue schema and CC BY-NC 4.0 license, and also describes
+  synthetic data generation. Independent human-labeled provenance was not
+  verified for this data, so it was not selected as a real independent audit
+  source. This observation is not a definitive claim that the whole corpus
+  is synthetic.
 
-Arama evrensel bir yokluk kanıtı değil; kontrol edilen kaynaklar ve kararları
-[source_search_registry.json](../reports/validation/2026-11-12/source_search_registry.json)
-dosyasında kayıtlı.
+The search is not proof that no suitable source exists anywhere. Checked sources
+and decisions are recorded in
+[source_search_registry.json](../reports/validation/2026-11-12/source_search_registry.json).
 
-## Oluşturulan sentetik stres seti
+## Generated synthetic stress set
 
-Gerçek corpus'tan ayrı olarak 80 özgün, kurmaca senaryo yazıldı: her sınıfa 10
-senaryo. Her senaryodan düz metin, e-posta sarmalayıcısı ve tek yazım hatası olmak
-üzere üç varyant üretildi. Toplam 240 satır, **80 ilişkili senaryo grubu** var.
-Bu 240 bağımsız gerçek gözlem değildir. Metinler AI tarafından yazıldı; gerçek
-kullanıcı bileti oldukları iddia edilmedi. Senaryo metinleri CC0-1.0 olarak sunulur.
+Separately from the real corpus, 80 original fictional scenarios were written:
+10 per class. Each scenario has three variants: plain text, an email wrapper
+and a single typo. There are 240 rows in **80 correlated scenario groups**,
+not 240 independent real observations. Texts were AI-authored and were not
+presented as real user tickets. Scenario texts are offered under CC0-1.0.
 
-Senaryo etiketleri açıkça belirtilmiş geleneksel anlamları kullanır: Access
-oturum açma, Administrative rights ayrıcalıklı yetki, Hardware fiziksel arıza,
-Storage kapasite/kurtarma, Purchase satın alma, HR personel/izin/maaş,
-Internal Project planlı proje, Miscellaneous genel servis masası soruları.
-Bu anlamların orijinal eğitim taksonomisiyle eşdeğer olduğu kanıtlanmadı.
-Bu yüzden ölçümün adı **sentetik senaryo spesifikasyonuyla uyum**.
+Scenario labels use explicitly stated conventional meanings: Access for sign-in,
+Administrative rights for elevated privileges, Hardware for physical faults,
+Storage for capacity/recovery, Purchase for procurement, HR for personnel/leave/pay,
+Internal Project for planned projects, and Miscellaneous for general service-desk
+questions. Equivalence to the original training taxonomy has not been established.
+The measurement is therefore called **synthetic specification agreement**.
 
-Plan ve CSV model tahminlerinden önce hash'leriyle kaydedildi. Eski ham veriye
-normalize bire bir örtüşme kontrolü yapıldı; örtüşme yok. İki sabit modelin
-ikisine de 0,60 sayısal eşik uygulandı; eşik araması ve eğitim yapılmadı. Adayın
-0,60 eşiği yeni üretim eşiği olarak kaydedilmedi; aynı sayı iki modelde aynı
-kalibrasyon/coverage noktası anlamına gelmeyebilir.
+The plan and CSV were recorded with hashes before model inference. A normalized
+exact-text overlap check against the old raw corpus found no overlap. The same
+numeric threshold of 0.60 was applied to both fixed models; no threshold search
+or training was performed. The candidate's 0.60 threshold was not recorded as
+a new production threshold. The same number may not correspond to the same
+calibration/coverage point in both models.
 
-| Stres ölçümü | Referans | Kelime + karakter adayı |
+| Stress measurement | Reference | Word + character candidate |
 | --- | ---: | ---: |
-| Düz 80 senaryoda spesifikasyon uyumu | 45/80 — %56,25 | 45/80 — %56,25 |
-| E-posta varyantında uyum | %41,25 | %46,25 |
-| Yazım hatası varyantında uyum | %57,50 | %56,25 |
-| Tüm ilişkili varyantlarda uyum | %51,67 | %52,92 |
-| 0,60 ile kabul edilen varyant | 142/240 | 153/240 |
-| Kabul edilenlerde spesifikasyon uyumu | %61,27 | %59,48 |
-| Güveni >=0,80 olan uyumsuzluk | 18 | 25 |
+| Specification agreement on 80 plain scenarios | 45/80 - 56.25% | 45/80 - 56.25% |
+| Agreement on email variants | 41.25% | 46.25% |
+| Agreement on typo variants | 57.50% | 56.25% |
+| Agreement across all correlated variants | 51.67% | 52.92% |
+| Variants accepted at 0.60 | 142/240 | 153/240 |
+| Specification agreement on accepted variants | 61.27% | 59.48% |
+| Disagreements with confidence >=0.80 | 18 | 25 |
 
-Özellikle ayrıcalıklı yetki anlamıyla yazılan 10 düz Administrative rights
-senaryosunda iki model de doğru sınıfı bulamadı. Bu, etiket anlamlarının açıklığa
-kavuşturulmasının önemini artırıyor; orijinal gerçek veri performansının sıfır
-olduğunu kanıtlamıyor. E-posta çerçevesi eklendiğinde uyumun düşmesi de giriş
-biçimine karşı dayanıklılık sorunu için somut bir stres bulgusu.
+Neither model found the expected class in any of the 10 plain Administrative
+rights scenarios written to mean elevated privileges. This highlights the need
+to clarify label meanings; it does not establish zero performance on the
+original real data. The drop in agreement after adding an email wrapper is
+also a concrete stress finding about robustness to input format.
 
-Olumsuz sonuçlar silinmedi, kolay örnekler eklenerek skor yükseltilmedi. Adayın
-checkpoint'teki coverage kazancı, bu yeni senaryo spesifikasyonunda genel
-üstünlük olarak tekrarlanmadı. Sentetik sonuçlardan yeni Clopper-Pearson
-garantileri veya gerçek üretim doğruluğu iddiaları üretilmedi.
+Unfavorable results were retained and easy examples were not added to inflate
+the score. The candidate's checkpoint coverage gain did not reproduce as general
+superiority under this new scenario specification. No new Clopper-Pearson
+guarantees or real production accuracy claims were derived from synthetic results.
 
-Veri, plan, tahminler ve toplulaştırılmış sonuçlar:
+Data, plan, predictions and aggregate results:
 [`synthetic-stress-v1`](../reports/validation/2026-11-12/synthetic-stress-v1/).
-Çalıştırma: [`benchmarks/README.md`](../benchmarks/README.md).
+Commands: [`benchmarks/README.md`](../benchmarks/README.md).
 
-## Tamamlanan iş ve kalan sınır
+## Completed work and remaining limit
 
-Gerçek veri araması/indirme/kaynak doğrulaması ve sentetik veri üretimi/stres
-değerlendirmesi tamamlandı. Ancak QueuePilot'un sekiz sınıfı için uygun yeni
-gerçek etiketlerle bağımsız risk/audit doğrulaması **tamamlanmadı**. Bu farkı
-sentetik veriyi gerçekmiş gibi beyan ederek kapatmadık. Model terfisi yapılmadı.
-Mevcut üretim paketi ve önceki ölçümleri korunuyor; stres bulguları onun yeni
-veri ve taksonomilere doğrudan taşınabileceği yönünde bir iddiayı desteklemiyor.
+Real-data search, download and source verification, as well as synthetic data
+generation and stress evaluation, are complete. Independent risk/audit validation
+with suitable new real labels for QueuePilot's eight classes is **not complete**.
+Synthetic data was not represented as real to bridge that gap. No model was
+promoted. The existing production package and earlier measurements are retained;
+the stress findings do not support a claim that it transfers directly to new
+data and taxonomies.
 
-## Çalıştırılan kontroller
+## Checks performed in the original run
 
-- Kaynak checksum bozulması, text/label ID sırası, taksonomi uyumsuzluğu,
-  kaynak train/test metin tekrarı, sentetik grup yapısı ve plan sonrası veri
-  değişikliğini kapsayan altı yeni test geçti.
-- Tam takım: **150 test geçti**, 94 bağımlılık uyarısı, 12,72 saniye.
-- Ruff ve strict mypy (63 kaynak dosya) başarılı; `git diff --check` geçti.
-- Üretim DVC durumu `{}`; lock'taki 42 çıktı kaydının MD5/byte boyutları ve
-  Git'teki lock byte'ları değişmedi. Üretim kaynakları, modelleri ve eşikleri aynı.
-- Sabit model paketi, sentetik CSV ve senaryo kaynakları hash kontrollerinden
-  geçti. Yeni bir hosted CI koşusu, commit/push veya model terfisi yapılmadı.
+- Six new tests passed, covering source checksum corruption, text/label ID order,
+  taxonomy incompatibility, source train/test text duplication, synthetic group
+  structure and data changes after plan creation.
+- Full suite: **150 passed**, 94 dependency warnings, 12.72 seconds.
+- Ruff and strict mypy passed (63 source files); `git diff --check` passed.
+- Production DVC status was `{}`. MD5s and byte sizes for the 42 locked output
+  records and the lock's bytes in Git were unchanged. Production sources, models
+  and thresholds remained the same.
+- The frozen model package, synthetic CSV and scenario sources passed hash
+  checks. No new hosted CI run, commit/push or model promotion occurred in that run.
 
-Sayısal doğrulama kaydı:
+Numeric verification record:
 [`verification.json`](../reports/validation/2026-11-12/verification.json).

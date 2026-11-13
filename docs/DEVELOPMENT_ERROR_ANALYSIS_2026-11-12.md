@@ -1,41 +1,43 @@
-# QueuePilot geliştirme hata analizi — 12 Kasım 2026
+# QueuePilot development error analysis - 12 November 2026
 
-Kapsam notu: bu belge ek geliştirme/kuruma uyarlama araştırmasıdır. Mevcut veri kümesinde tamamlanan benchmark sonucunu değiştirmez ve referans uygulamanın tamamlanması için yeni bir zorunluluk tanımlamaz. [Proje kapsamı ve yol haritası](PROJECT_SCOPE.md).
+Scope note: this document covers additional development and organization adaptation research. It does not change the completed benchmark result on the existing dataset or introduce a new requirement for completing the reference application. See [project scope and roadmap](PROJECT_SCOPE.md).
 
-Bu çalışma mevcut üretim modelini değiştirmeden, train ve checkpoint üzerinde
-hata teşhisi ve önceden sınırlandırılmış tek bir aday karşılaştırması yapar.
-Risk, calibration ve test bölümlerinde yeni performans değerlendirmesi yapılmadı.
-Bu belgede karşılaştırılan sayılar **aynı 2.389 checkpoint kaydına** aittir;
-önceki test sonuçlarıyla birbirine karıştırılmamalıdır.
+This work diagnoses errors on train and checkpoint data and runs one comparison
+specified in advance, without changing the production model. No new performance
+evaluation was run on the risk, calibration or test partitions. The numbers
+compared here belong to **the same 2,389 checkpoint records** and should be kept
+separate from the earlier test results.
 
-## Referans ve veri sınırı
+## Reference and data boundary
 
-- Başlangıç Git sürümü: `b615135`; çalışma dalı `codex/development-error-analysis`.
-- Referans: protokol v2 baseline modeli; model SHA-256 değeri
+- Starting Git revision: `b615135`; working branch: `codex/development-error-analysis`.
+- Reference: protocol v2 baseline model, SHA-256
   `ea6b1f9ca0075bd32ee39d01a249b4b8860537f576e52ba8e8afc6dd1a169843`.
-- Train: 33.485; checkpoint: 2.389 kayıt. Kimlik listeleri ve ham veri hash'leri
-  doğrulandı; train/checkpoint kesişimi ve yinelenen ID'ler reddediliyor.
-- Ham veri, mevcut temizleyiciyle ID çözümlemesi için okunuyor. Analiz ve fit
-  yalnız train/checkpoint satırlarına uygulanıyor; risk/test ID, tahmin veya
-  performans raporları aday seçimine girdi olmuyor.
-- Tam metinler, satır bazındaki tahminler ve inceleme tablosu yalnız Git'in yok
-  saydığı `reports/private/development-analysis` dizininde tutuluyor. Paylaşılabilir
-  raporlar toplulaştırılmış sayıları ve provenance hash'lerini içeriyor.
+- Train: 33,485 records; checkpoint: 2,389. ID lists and raw-data hashes were
+  verified. Train/checkpoint overlap and duplicate IDs are rejected.
+- The raw data is read with the existing cleaner to resolve IDs. Analysis and
+  fitting use only train/checkpoint rows. Risk/test IDs, predictions and
+  performance reports are not inputs to candidate selection.
+- Full texts, row-level predictions and the review sheet are kept only in the
+  Git-ignored `reports/private/development-analysis` directory. Shareable reports
+  contain aggregates and provenance hashes.
 
-## Hata analizinin bulguları
+## Error analysis findings
 
-Train doğruluğu 0,9241 ve Macro-F1 0,9363; checkpoint doğruluğu 0,8564 ve Macro-F1
-0,8690. Train ölçümü modelin gördüğü veriden geldiği için genelleme kanıtı değildir.
-Bu fark tek başına hata nedeninin overfitting olduğunu da kanıtlamaz.
+Train accuracy is 0.9241 and Macro-F1 is 0.9363; checkpoint accuracy is 0.8564
+and Macro-F1 is 0.8690. The train measurement uses data already seen by the
+model, so it is not evidence of generalization. The gap alone also does not
+establish overfitting as the cause of the errors.
 
-Checkpoint'te 343 yanlış tahmin var; bunların 20'sinin güveni en az 0,80.
-Hataların yaklaşık %93,88'inde gerçek sınıf ilk üç tahmin içinde. Bu, doğru
-alternatifin çoğunlukla tamamen kaybolmadığını gösterir; ilk üç önerinin başarılı
-olması otomatik yönlendirmenin doğru olduğu anlamına gelmez.
+There are 343 incorrect checkpoint predictions, including 20 with confidence
+of at least 0.80. The true class appears among the top three predictions in
+about 93.88% of errors. The correct alternative is therefore usually still
+present, but a successful top-three suggestion does not mean automatic routing
+is correct.
 
-En yaygın hata çiftleri:
+The most common confusion pairs are:
 
-| Gerçek sınıf | Tahmin | Adet |
+| True class | Prediction | Count |
 | --- | --- | ---: |
 | HR Support | Hardware | 46 |
 | Hardware | Miscellaneous | 37 |
@@ -45,147 +47,168 @@ En yaygın hata çiftleri:
 | Access | Hardware | 15 |
 | Administrative rights | Hardware | 15 |
 
-Dolayısıyla yalnız Administrative rights'a odaklanmak toplam hatanın çoğunu
-çözmeyecektir. Checkpoint'te bu sınıfın 88 örneği var; 17 yanlışın 15'i Hardware'a
-gidiyor. Precision 0,8452, recall 0,8068 ve F1 0,8256.
+Focusing only on Administrative rights would therefore leave most errors
+unaddressed. This class has 88 checkpoint examples; 15 of its 17 errors are
+predicted as Hardware. Precision is 0.8452, recall is 0.8068 and F1 is 0.8256.
 
-Mevcut 0,60 eşiğinde iki farklı dilim farklı anlam taşır:
+At the existing 0.60 threshold, the following slices have different meanings:
 
-| Checkpoint dilimi | Kabul edilen | Doğru | Doğruluk |
+| Checkpoint slice | Accepted | Correct | Accuracy |
 | --- | ---: | ---: | ---: |
-| Gerçek etiketi Administrative rights olanlar | 71 | 61 | %85,92 |
-| Administrative rights olarak yönlendirilenler | 67 | 61 | %91,04 |
-| Hardware olarak yönlendirilenler | 562 | 500 | %88,97 |
+| True label is Administrative rights | 71 | 61 | 85.92% |
+| Routed as Administrative rights | 67 | 61 | 91.04% |
+| Routed as Hardware | 562 | 500 | 88.97% |
 
-Gerçek sınıf üretimde bilinmez. İlk satır sınıfın kaçırılmasıyla, ikinci ve üçüncü
-satırlar hedef kuyruğa yanlış bilet gönderilmesiyle ilgilidir. Genel doğruluk
-hedefi her kuyruk için ayrı bir güvence sağlamaz. Hardware dilimi, toplam kabul
-edilmiş hatalara katkısı nedeniyle ayrıca önemlidir.
+The true class is unknown in production. The first row concerns missed members
+of a class; the second and third concern tickets sent to the wrong destination
+queue. An overall accuracy target does not provide a separate assurance for
+each queue. The Hardware slice also matters because of its contribution to
+all accepted errors.
 
-### Örnek incelemesi ve doğrulanmamış nedenler
+### Example review and unverified explanations
 
-Yerel örnek incelemesinde Administrative rights etiketi altında kısa monitör,
-batarya ve ses sorunu anlatımları görüldü. Aynı sınıfın doğru tahmin edilen
-örneklerinde Outlook/profile ve Windows güncellemesi anlatımları bulunuyor.
-Bu, sınıf adının gündelik anlamı ile veri taksonomisi arasında belirsizlik
-olabileceğine işaret ediyor. Etiket rehberi veya alan uzmanı doğrulaması olmadan
-bu örnekler yanlış etiketli ilan edilmedi ve hiçbir etiket değiştirilmedi.
+Local example review found short descriptions of monitor, battery and audio
+problems under the Administrative rights label. Correctly predicted examples
+of the same class include Outlook/profile and Windows update descriptions.
+This suggests possible ambiguity between the everyday meaning of the class
+name and the dataset taxonomy. Without a labeling guide or domain expert
+confirmation, these examples were not declared mislabeled and no labels were
+changed.
 
-Kontrol olarak, ilk kalibrasyon fold'unun kelime TF-IDF uzayında 88 Administrative
-rights checkpoint kaydı için en yakın train kaydı incelendi. Farklı etiketli ve
-cosine similarity >=0,85 olan en yakın komşu sayısı sıfırdı. Bu dar kontrol
-neredeyse aynı metinlerin çelişkili etiketlendiğini doğrulamadı; taksonominin
-doğruluğunu veya bütün veri kümesinin temiz olduğunu kanıtlamaz.
+As a check, the nearest train record was examined for each of the 88
+Administrative rights checkpoint records in the first calibration fold's word
+TF-IDF space. No nearest neighbor had both a different label and cosine
+similarity >=0.85. This narrow check did not confirm conflicting labels on
+near-identical texts; it does not establish taxonomy correctness or the
+cleanliness of the entire dataset.
 
-Train fold'larının kelime sözlükleri birleştirilerek yapılan kapsam kontrolünde,
-checkpoint hatalarında ortalama bilinmeyen token oranı %0,35, doğrularda %0,40.
-Genel hata için basit bir OOV açıklaması desteklenmedi. Administrative rights
-hatalarında kısa token oranı daha yüksek (%23,35; doğrularda %16,88), fakat yalnız
-17 hata üzerinden bu gözlem nedensel bir açıklama değildir.
+A vocabulary coverage check combined the word vocabularies from the train
+folds. The mean unknown-token ratio was 0.35% for checkpoint errors and 0.40%
+for correct predictions. A simple out-of-vocabulary explanation for errors
+overall was not supported. Administrative rights errors had a higher short-token
+ratio (23.35%, versus 16.88% for correct predictions), but an observation based
+on only 17 errors is not a causal explanation.
 
-## Tek değişiklikli karşılaştırma
+## Comparison with one change
 
-Hipotez: kelime unigram/bigram özelliklerine karakter parçaları eklemek, kısa
-teknik ifadeler ve sözcük biçimleri için tamamlayıcı temsil sağlayabilir.
-Bu bir teşhis sonucu değil, sınanabilir geliştirme hipotezidir.
+Hypothesis: adding character fragments to word unigram/bigram features may
+provide complementary representations for short technical expressions and
+word forms. This is a testable development hypothesis, not an established
+diagnosis.
 
-Değişen tek özellik dalı: `char_wb`, 3–5 karakter, `min_df=2`, en fazla 50.000
-özellik, sublinear TF, ağırlık 1. Kelime dalının ayarları ve lojistik regresyonun
-parametreleri aynen korundu. Kalibrasyon yine train içinde beş katlı sigmoid;
-vektörleştiriciler her fold'un pipeline'ı içinde fit ediliyor. Checkpoint fit
-işlemine girmiyor. Hiperparametre araması veya ikinci aday çalıştırılmadı.
+The only changed feature branch uses `char_wb`, 3-5 characters, `min_df=2`, at
+most 50,000 features, sublinear TF and weight 1. Word-branch settings and logistic
+regression parameters are unchanged. Calibration still uses five-fold sigmoid
+calibration within train; vectorizers are fitted inside each fold's pipeline.
+Checkpoint is excluded from fitting. No hyperparameter search or second
+candidate was run.
 
-Plan fit öncesi kaydedildi. Önceden belirlenen geliştirme taraması: Macro-F1
-düşmesin; aynı hedef/güven sınırı formülüyle checkpoint coverage en az 1 yüzde
-puan artsın; Administrative rights F1 kaybı 2 yüzde puanı aşmasın. Bu tarama
-bir aday önceliklendirme kuralıdır; üretim kabul kriteri veya yeni garanti değildir.
+The plan was recorded before fitting. The predefined development screen requires
+no Macro-F1 loss, at least a 1 percentage point increase in checkpoint coverage
+under the same target/confidence-bound formula, and no more than a 2 percentage
+point loss in Administrative rights F1. This screen prioritizes candidates;
+it is not a production acceptance criterion or a new guarantee.
 
-### Checkpoint sonucu
+### Checkpoint result
 
-| Ölçüm | Referans | Kelime + karakter |
+| Measurement | Reference | Word + character |
 | --- | ---: | ---: |
-| Toplam doğruluk | %85,64 | %85,89 |
-| Macro-F1 | 0,8690 | 0,8712 |
-| Administrative rights F1 | 0,8256 | 0,8421 |
-| Geliştirme seçim eşiği | 0,59 | 0,56 |
-| Geliştirme coverage | %80,79 | %83,55 |
-| Kabul edilenlerde doğruluk | %92,23 | %92,48 |
-| Kabul edilen / doğru | 1.930 / 1.780 | 1.996 / 1.846 |
-| Keşif amaçlı hesaplanan alt sınır | %90,05 | %90,37 |
-| Güveni >=0,80 olan yanlışlar | 20 | 21 |
+| Overall accuracy | 85.64% | 85.89% |
+| Macro-F1 | 0.8690 | 0.8712 |
+| Administrative rights F1 | 0.8256 | 0.8421 |
+| Development selection threshold | 0.59 | 0.56 |
+| Development coverage | 80.79% | 83.55% |
+| Accuracy on accepted tickets | 92.23% | 92.48% |
+| Accepted / correct | 1,930 / 1,780 | 1,996 / 1,846 |
+| Exploratory lower bound | 90.05% | 90.37% |
+| Incorrect predictions with confidence >=0.80 | 20 | 21 |
 
-Coverage aynı 0,90 hedefi, alpha 0,05, 90 eşik adayı ve en az 50 kabul koşuluyla
-hesaplandı. Bu kez eşik ve aday checkpoint'e bakılarak değerlendirildiğinden
-tablodaki alt sınırlar **bağımsız risk doğrulaması değildir**. 0,56 adayın üretim
-eşiği olarak kaydedilmedi; referansın üretim eşiği 0,60 olarak kaldı.
+Coverage was calculated with the same 0.90 target, alpha 0.05, 90 threshold
+candidates and at least 50 accepted samples. Because both the threshold and
+candidate were evaluated using checkpoint, the lower bounds in this table
+are **not independent risk validation**. The candidate's 0.56 threshold was
+not recorded as a production threshold; the reference production threshold
+remains 0.60.
 
-Artış yaklaşık 2,76 yüzde puanı, yani 66 ek kabul. Aynı kayıtlardaki eşleştirilmiş
-karşılaştırmada aday 61 hatayı düzeltti, referansın doğru yaptığı 55 kaydı bozdu:
-net yalnız 6 ek doğru var. Dolayısıyla genel sınıflandırmada büyük veya istatistiksel
-olarak kanıtlanmış bir sıçrama iddia edilmiyor.
+The increase is about 2.76 percentage points, or 66 additional acceptances.
+In the paired comparison on the same records, the candidate corrected 61
+errors and made 55 previously correct predictions incorrect: a net gain of
+only 6 correct predictions. No large or statistically established improvement
+in overall classification is claimed.
 
-Sabit 0,60 eşiğinde farklı bir sonuç görülüyor: coverage %79,74'ten %77,94'e
-düşüyor; kabul doğruluğu %92,49'dan %93,93'e çıkıyor. Aynı sayısal eşik,
-kalibrasyonu değişen iki modelde aynı operasyonel noktayı temsil etmiyor.
-Bu nedenle hem sabit eşik hem sabit seçim ölçütü sonuçları birlikte raporlandı.
+At a fixed 0.60 threshold, the result differs: coverage falls from 79.74% to
+77.94%, while accepted accuracy rises from 92.49% to 93.93%. The same numeric
+threshold does not represent the same operating point for two differently
+calibrated models. Both fixed-threshold and fixed-selection-rule results are
+therefore reported.
 
-| Sınıf | Checkpoint adet | Referans F1 | Aday F1 | Fark (yüzde puanı) |
+| Class | Checkpoint count | Reference F1 | Candidate F1 | Difference (percentage points) |
 | --- | ---: | ---: | ---: | ---: |
-| Access | 356 | 0,8949 | 0,8927 | -0,22 |
-| Administrative rights | 88 | 0,8256 | 0,8421 | +1,65 |
-| HR Support | 545 | 0,8569 | 0,8493 | -0,75 |
-| Hardware | 680 | 0,8362 | 0,8424 | +0,62 |
-| Internal Project | 106 | 0,9135 | 0,8986 | -1,49 |
-| Miscellaneous | 352 | 0,8116 | 0,8275 | +1,59 |
-| Purchase | 123 | 0,8963 | 0,8926 | -0,37 |
-| Storage | 139 | 0,9170 | 0,9247 | +0,78 |
+| Access | 356 | 0.8949 | 0.8927 | -0.22 |
+| Administrative rights | 88 | 0.8256 | 0.8421 | +1.65 |
+| HR Support | 545 | 0.8569 | 0.8493 | -0.75 |
+| Hardware | 680 | 0.8362 | 0.8424 | +0.62 |
+| Internal Project | 106 | 0.9135 | 0.8986 | -1.49 |
+| Miscellaneous | 352 | 0.8116 | 0.8275 | +1.59 |
+| Purchase | 123 | 0.8963 | 0.8926 | -0.37 |
+| Storage | 139 | 0.9170 | 0.9247 | +0.78 |
 
-Aday önceden belirlenen geliştirme taramasını geçti. Buna rağmen bütün sınıflar
-iyileşmedi ve yüksek güvenli hatalar azalmadı. Model boyutu yaklaşık 53,10 MB'den
-68,22 MB'ye çıktı. Adayın eğitim ve checkpoint değerlendirmesi yaklaşık 115,5 saniye
-sürdü; referans yeniden eğitilmediği için süreler eğitim hızı karşılaştırması değildir.
+The candidate passed the predefined development screen. Nevertheless, not all
+classes improved and high-confidence errors did not decrease. Model size grew
+from about 53.10 MB to 68.22 MB. Candidate training and checkpoint evaluation
+took about 115.5 seconds. The reference was not retrained, so these timings
+are not a training-speed comparison.
 
-![Checkpoint coverage–doğruluk eğrileri ve sınıf F1 farkları](../reports/development/2026-11-12/development_comparison.png)
+![Checkpoint coverage-accuracy curves and class F1 differences](../reports/development/2026-11-12/development_comparison.png)
 
-Grafikteki noktalar aynı geliştirme seçim kuralının seçtiği eşikleri gösterir;
-bağımsız risk doğrulaması veya üretim için seçilmiş yeni eşikler değildir.
+The plotted points mark thresholds selected by the same development rule.
+They are neither independent risk validation nor new production thresholds.
 
-## Karar ve sonraki doğrulama
+## Decision and further validation
 
-Karakter özellikli aday yeni bağımsız risk verisiyle sınanmaya değer. Mevcut
-serving modeli, eşikleri ve otomatik backend seçimi değiştirilmedi. Özellikle
-Internal Project kaybı ve yüksek güvenli hatalar sonraki incelemeye taşınmalıdır.
+The character-feature candidate merits evaluation on new independent risk
+data. The serving model, thresholds and automatic backend selection remain
+unchanged. The Internal Project loss and high-confidence errors in particular
+should be carried into further review.
 
-Mevcut risk/test sonuçları daha önce görüldü; aynı bölümlerde yeni model aramak
-veya olumlu sonucu yeni bağımsız doğrulama diye sunmak uygun olmaz. Aday ve protokol
-sabitlendikten sonra yeni bağımsız risk verisi, daha güçlü bir sonraki doğrulama
-sağlar. Yeni veri gelmeden bu çalışma bir geliştirme bulgusu olarak kalır.
+Existing risk/test results have already been inspected. Searching for another
+model on those partitions or presenting a favorable result there as new
+independent validation would be inappropriate. After freezing the candidate
+and protocol, new independent risk data can provide stronger further validation.
+Until new data arrives, this work remains a development finding.
 
-Etiket/taksonomi şüphesi için sonraki insan katkısı bir etiket rehberi veya alan
-uzmanının örnek incelemesi olabilir. Bu inceleme yapılmadan değerlendirme
-etiketleri değiştirilmemelidir. Yeni bir geliştirme döngüsünde düzeltmelerin
-hangi veri sürümüne uygulandığı ayrıca kaydedilmelidir.
+A labeling guide or domain expert review of examples could help resolve the
+label/taxonomy concern. Evaluation labels should not be changed before that
+review. Any future development cycle should separately record the data version
+to which corrections were applied.
 
-## Dosyalar ve çalıştırılan kontroller
+## Files and checks performed
 
-Paylaşılabilir sayısal kanıtlar:
+Shareable numeric evidence:
 [`reports/development/2026-11-12`](../reports/development/2026-11-12/).
-Plan, kaynak dosya hash'leri, train/checkpoint ID hash'leri, referans ve aday model
-hash'leri, iki eşik eğrisi, sınıf raporları ve kaynak maliyeti kaydı içerir.
-Çalıştırma komutları: [`experiments/README.md`](../experiments/README.md).
+It includes the plan, source hashes, train/checkpoint ID hashes, reference and
+candidate model hashes, both threshold curves, class reports and resource costs.
+Commands: [`experiments/README.md`](../experiments/README.md).
 
-Yerel aday ağırlıkları `.checks/development-analysis/word_char.joblib`, tam metinli
-inceleme dosyaları ve eşleştirilmiş tahminler `reports/private/development-analysis`
-altında. Aday üretim artefaktı veya DVC release çıktısı olarak kaydedilmedi.
+Local candidate weights are at `.checks/development-analysis/word_char.joblib`;
+full-text review files and paired predictions are under
+`reports/private/development-analysis`. The candidate was not recorded as a
+production artifact or a DVC release output.
 
-- Yeni veri sınırı, dilim yorumu, parametre eşitliği ve tarama kuralları için 8 test geçti.
-- Tam takım: **125 test geçti**, 46 mevcut bağımlılık uyarısı, 11,48 saniye.
-- Ruff ve strict mypy: başarılı (55 kaynak dosya).
-- DVC durumu `{}`; lock'taki 42 üretim çıktı kaydının MD5/byte boyutları ve
-  mevcut lock'un Git'teki byte'ları değişmedi. `src`, üretim artefaktları ve
-  mevcut veri/metrik/figür dizinlerinde diff yok.
-- Yeni test dosyası ve `experiments` tip kontrolü CI'ın ilgili adımlarına eklendi;
-  bu çalışma için yeni hosted CI koşusu çalıştırılmadı.
-- Risk/test için yeni metrik koşusu veya üretim modeline geçiş yapılmadı.
+The following results describe the original development run:
 
-Bağımsız veri için sonraki hazırlık adımı tamamlandı: [veri kabul, model sabitleme ve iki aşamalı doğrulama](INDEPENDENT_VALIDATION.md). Yeni bağımsız veri henüz yok; bu hazırlık yeni bir başarı ölçümü değildir.
+- Eight tests passed for the new data boundary, slice interpretation, parameter
+  equality and screening rules.
+- Full suite: **125 passed**, 46 existing dependency warnings, 11.48 seconds.
+- Ruff and strict mypy passed (55 source files).
+- DVC status was `{}`. MD5s and byte sizes for the 42 production outputs in the
+  lock, and the lock's bytes in Git, were unchanged. There was no diff in `src`,
+  production artifacts or existing data/metric/figure directories.
+- The new test file and `experiments` type checking were added to the relevant
+  CI steps. No new hosted CI run was executed for this work.
+- No new risk/test metric run or production model promotion was performed.
+
+The next preparation step for independent data is complete:
+[data intake, model freezing and two-stage validation](INDEPENDENT_VALIDATION.md).
+New independent data is not yet available; this preparation is not a new
+performance measurement.

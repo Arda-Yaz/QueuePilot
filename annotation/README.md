@@ -29,3 +29,10 @@ after the blind pilot proposals had been recorded.
 
 Raw ticket text remains private. Aggregate findings and provenance:
 [`docs/TAXONOMY_AND_ANNOTATION_2026-11-12.md`](../docs/TAXONOMY_AND_ANNOTATION_2026-11-12.md).
+
+For English-language review, use the rationale translation in ignored
+`reports/private/taxonomy-pilot-v1-en`. The original pilot remains historical
+evidence; only the authored rationale text changed. The
+[revision record](../reports/annotation/2026-11-12/english_revision.json) links
+both versions and their integrity checks. Labels and source ticket languages
+are unchanged, and the revision is not a new adjudication or independent audit.

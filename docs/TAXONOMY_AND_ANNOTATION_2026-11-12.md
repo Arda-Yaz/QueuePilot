@@ -1,160 +1,182 @@
-# Taksonomi araştırması ve kör etiketleme pilotu — 12 Kasım 2026
+# Taxonomy research and blind annotation pilot - 12 November 2026
 
-Kapsam notu: bu belge ek geliştirme/kuruma uyarlama araştırmasıdır. Mevcut veri kümesinde tamamlanan benchmark sonucunu değiştirmez ve referans uygulamanın tamamlanması için yeni bir zorunluluk tanımlamaz. [Proje kapsamı ve yol haritası](PROJECT_SCOPE.md).
+Scope note: this document covers additional development and organization adaptation research. It does not change the completed benchmark result on the existing dataset or introduce a new requirement for completing the reference application. See [project scope and roadmap](PROJECT_SCOPE.md).
 
-## Kaynaktan doğrulanan ve doğrulanamayan bilgi
+## What the source did and did not verify
 
-[Orijinal Kaggle sayfası](https://www.kaggle.com/datasets/adisongoh/it-service-ticket-classification-dataset)
-ve [yayıncı metadata API'si](https://www.kaggle.com/api/v1/datasets/view/adisongoh/it-service-ticket-classification-dataset)
-kontrol edildi. API yanıtı yerelde korunup hash'lendi. Sürüm 1, iki alan
-(`Document`, `Topic_group`), 47.837 satır ve sekiz sınıf adı doğrulanabiliyor.
-Metadata lisansı CC0: Public Domain olarak belirtiyor.
+The [original Kaggle page](https://www.kaggle.com/datasets/adisongoh/it-service-ticket-classification-dataset)
+and [publisher metadata API](https://www.kaggle.com/api/v1/datasets/view/adisongoh/it-service-ticket-classification-dataset)
+were checked. The API response was preserved locally and hashed. Version 1,
+two fields (`Document`, `Topic_group`), 47,837 rows and eight class names can
+be verified. Metadata identifies the license as CC0: Public Domain.
 
-İncelenen yayıncı metadata'sı sınıfların dahil etme/dışlama koşullarını,
-etiketleyici talimatlarını veya etiketleme sürecini açıklamıyor. Yerel notebook
-ve kaynak kayıtlarında da bu anlamları otoritatif biçimde tamamlayan bir rehber
-bulunmadı. Bu nedenle **orijinal sınıf anlamları doğrulanmış sayılmadı**.
-Bu sonuç, başka yerde hiçbir rehber bulunmadığına dair evrensel bir iddia değil.
+The inspected publisher metadata does not describe class inclusion/exclusion
+rules, annotator instructions or the labeling process. No authoritative guide
+completing those meanings was found in the local notebook or source records
+either. The **original class meanings are therefore not considered verified**.
+This is not a universal claim that no guide exists elsewhere.
 
-Sayısal kayıt:
+Numeric record:
 [`taxonomy_source_evidence.json`](../reports/annotation/2026-11-12/taxonomy_source_evidence.json).
 
-## Train verisinin gösterdiği örüntüler
+## Patterns in train data
 
-Model tahminleri kullanılmadan yalnız train metin/etiketleri üzerinde kelime
-örüntüsü çıkarıldı. Sınıf ortalama TF-IDF ve genel ortalamaya göre ayrıştırıcılık
-kullanıldı; en az 10 sınıf belgesinde görülen ifadeler tutuldu. Bunlar sınıf
-tanımları değil, **mevcut etiketlerle ampirik ilişkilerdir**.
+Word patterns were extracted from train texts/labels only, without model
+predictions. The analysis used class mean TF-IDF and distinctiveness relative
+to the overall mean, retaining phrases seen in at least 10 class documents.
+These are **empirical associations with existing labels**, not class definitions.
 
-| Eski etiket | Öne çıkan train ifadeleri | Çözülemeyen sınır |
+| Original label | Prominent train phrases | Unresolved boundary |
 | --- | --- | --- |
-| Access | confluence, card, license, password, user | Hesap erişimi, lisans ve uygulama yetkileri aynı grupta görünebiliyor |
-| Administrative rights | upgrade, outlook, windows, windows upgrade, issues | Yönetici yetkisi mi, uç cihaz yazılım/OS desteği mi? |
-| HR Support | starter, form, new starter, error, leave | Personel süreci ile hesap açma talepleri nasıl ayrılıyor? |
-| Hardware | monitor, laptop, meeting, room, cable | Fiziksel arıza ile oda/bağlantı hizmeti kapsamı |
-| Internal Project | code, project, codes, setup, pipeline | Proje kodu/kurulum hizmeti ile planlı proje koordinasyonu |
-| Miscellaneous | change, add, approval, owner, approve | Grup/listeler/onay akışları ile genel servis soruları |
-| Purchase | po, purchase, purchase po, purchased, item | Satın alma ile lisans aktivasyonu/erişimi |
-| Storage | wants, mailbox, folder, accept decline, decline | Depolama kapasitesi ile klasör/posta kutusu erişim yetkileri |
+| Access | confluence, card, license, password, user | Account access, licensing and application permissions may share a group |
+| Administrative rights | upgrade, outlook, windows, windows upgrade, issues | Administrator privileges or endpoint software/OS support? |
+| HR Support | starter, form, new starter, error, leave | How are personnel processes separated from account creation? |
+| Hardware | monitor, laptop, meeting, room, cable | Physical faults versus room/connectivity services |
+| Internal Project | code, project, codes, setup, pipeline | Project code/setup services versus planned project coordination |
+| Miscellaneous | change, add, approval, owner, approve | Groups/lists/approval workflows versus general service questions |
+| Purchase | po, purchase, purchase po, purchased, item | Procurement versus license activation/access |
+| Storage | wants, mailbox, folder, accept decline, decline | Storage capacity versus folder/mailbox access permissions |
 
-Bu kanıt özellikle önceki sentetik stres testinin yorumunu daraltır: o testte
-Administrative rights geleneksel ayrıcalıklı yetki anlamıyla, Storage ise kapasite
-ve kurtarma anlamıyla tanımlanmıştı. Eğitim etiketleri farklı bir operasyonel
-sınıflamayı yansıtıyor olabilir. Stres puanları silinmedi; fakat bu puanlar eski
-taksonomiye göre gerçek model doğruluğu veya tek başına model hatası kanıtı değildir.
+This evidence narrows the interpretation of the earlier synthetic stress test.
+That test defined Administrative rights as conventional elevated privileges
+and Storage as capacity/recovery. Training labels may reflect a different
+operational taxonomy. Stress scores were retained, but they do not measure
+real model accuracy against the old taxonomy or establish model error on their own.
 
-Örüntüleri kaynak otoritesinin yerine koyarak etiketler yeniden adlandırılmadı.
-Örneğin Administrative rights doğrudan Software diye değiştirilmedi, bütün
-paylaşım istekleri de otomatik Storage yapılmadı.
+Labels were not renamed by treating patterns as source authority. For example,
+Administrative rights was not simply renamed Software, nor were all sharing
+requests automatically assigned to Storage.
 
-## İnceleme için açık öneri rehberi
+## Explicit proposed review guide
 
-[`annotation/taxonomy_v1.json`](../annotation/taxonomy_v1.json) sınıf başına dahil
-etme/dışlama kurallarını tanımlar. Durumu `proposal_requires_domain_adjudication`;
-`equivalent_to_original_training_taxonomy=false`. Bu, eski veri setinin
-doğrulanmış sözlüğü veya aktif modelin yeni etiketi değildir.
+[`annotation/taxonomy_v1.json`](../annotation/taxonomy_v1.json) defines inclusion
+and exclusion rules per class. Its status is
+`proposal_requires_domain_adjudication`, with
+`equivalent_to_original_training_taxonomy=false`. It is neither a verified
+dictionary for the old dataset nor a new labeling scheme for the active model.
 
-Temel öneri ayrımları:
+The main proposed distinctions are:
 
-- Olağan kimlik doğrulama ve kullanıcı kaynağı izinleri: Access.
-- Açık admin/root/sudo/elevated yetki talepleri: Administrative rights.
-- Açık fiziksel cihaz arızası: Hardware; her yazdırma hatası donanım sayılmaz.
-- Kapasite, yedek/kurtarma ve dosya kalıcılığı: Storage; erişim izni otomatik Storage sayılmaz.
-- Ticari alım/sipariş/teklif: Purchase; yalnız kurulum veya aktivasyon satın alma değildir.
-- Personel/izin/maaş iş süreci: HR Support; stajyere hesap açma sırf stajyer sözcüğü nedeniyle HR değildir.
-- Açık planlı proje koordinasyonu: Internal Project; metindeki project sözcüğü yeterli değildir.
-- Genel servis masası süreç bilgisi: Miscellaneous; bilinmeyen her talep buraya atılmaz.
+- Ordinary authentication and user resource permissions: Access.
+- Explicit admin/root/sudo/elevated privilege requests: Administrative rights.
+- Explicit physical device faults: Hardware; not every printing error is hardware.
+- Capacity, backup/recovery and file persistence: Storage; access permission alone does not imply Storage.
+- Commercial purchases/orders/quotes: Purchase; installation or activation alone is not procurement.
+- Personnel/leave/pay business processes: HR Support; creating an intern's account is not HR solely because the text says intern.
+- Explicit planned project coordination: Internal Project; the word project alone is insufficient.
+- General service-desk process information: Miscellaneous; unknown requests are not automatically assigned here.
 
-Bu katı öneri genel yazılım, ağ, mesajlaşma ve güvenlik hizmetlerinin tümünü
-kapsamıyor. Bunlar eski sekiz sınıfa zorla dağıtılmak yerine `OUT_OF_SCOPE` veya
-`TAXONOMY_REVIEW` olarak kaydedilir. Eksik bağlam `INSUFFICIENT_CONTEXT`, baskın
-isteği olmayan farklı talepler `MULTI_INTENT` olarak ayrılır.
+This strict proposal does not cover all general software, network, messaging
+and security services. Instead of forcing them into the old eight classes,
+they are recorded as `OUT_OF_SCOPE` or `TAXONOMY_REVIEW`. Missing context is
+`INSUFFICIENT_CONTEXT`; separate requests without a dominant intent are
+`MULTI_INTENT`.
 
-## Gerçek veride 64 kayıtlık kör pilot
+## Blind pilot on 64 real records
 
-Kaynak: Pereira'nın [Zenodo corpus'u](https://zenodo.org/records/7384758), CC BY 4.0.
-Kaynak metin/etiket CSV checksum'ları doğrulandı. Normalleştirilmiş metinler grup
-halinde tekilleştirildi; çelişkili kaynak etiketi olan bir grup karantinaya alındı.
-Eski ham veriyle bire bir normalize metin örtüşmesi yok.
+Source: Pereira's [Zenodo corpus](https://zenodo.org/records/7384758), CC BY 4.0.
+Source text/label CSV checksums were verified. Normalized texts were deduplicated
+as groups, and one group with conflicting source labels was quarantined.
+There is no normalized exact-text overlap with the old raw data.
 
-1.470 uygun farklı metin grubu kaldı. Sabit seed42 hash sırasıyla 64 grup seçildi;
-model skoru, kaynak servis kategorisi veya kolay örnek seçimi kullanılmadı.
-1.406 grup ayrı `reserved_unreviewed_pool.csv` listesine kondu. Liste bir audit
-seti değil; henüz incelenmemiş havuzdur ve gelecekte kullanılabilirliği ayrıca
-doğrulanmalıdır.
+This left 1,470 eligible distinct text groups. A fixed seed42 hash ordering
+selected 64 groups, without model scores, source service categories or selection
+of easy examples. Another 1,406 groups were placed in a separate
+`reserved_unreviewed_pool.csv` list. This list is an unreviewed pool, not an
+audit set; its suitability for future use requires separate verification.
 
-Etiketleme sırasında görülen dosyada yalnız metin, yerel pilot ID ve metin hash'i
-vardı; kaynak servis etiketi ve model tahmini yoktu. Kaynak lineage ayrı dosyada
-tutuldu. 64 metin için tam metne dayanan gerekçe ve geçici AI kararı kaydedildi.
+The file viewed during annotation contained only text, local pilot ID and text
+hash, with no source service label or model prediction. Source lineage was
+kept separately. A rationale based on the full text and a provisional AI decision
+were recorded for each of the 64 texts.
 
-| Geçici pilot kararı | Kayıt |
+| Provisional pilot decision | Records |
 | --- | ---: |
-| Öneri rehberiyle sınıf atanabilir | 23 |
-| Yetersiz bağlam | 20 |
-| Önerilen sekiz sınıfın kapsamı dışında | 13 |
-| Taksonomi sınırı kararı gerekli | 7 |
-| Çoklu istek | 1 |
+| Labelable under the proposed guide | 23 |
+| Insufficient context | 20 |
+| Outside the proposed eight-class scope | 13 |
+| Taxonomy boundary decision needed | 7 |
+| Multiple intents | 1 |
 
-Atanabilir 23 kaydın geçici dağılımı Access 20, Administrative rights 2 ve Storage
-1. Bu dağılım, dış corpus'un gerçek hedef dağılımına veya sekiz sınıfın tümüne
-dair iddia değildir. Özellikle yazılım/ağ/mesajlaşma taleplerinin önerideki
-kapsam boşluğunu ve kısa başlıkların bilgi eksikliğini görünür kılar.
+The provisional distribution of the 23 labelable records is Access 20,
+Administrative rights 2 and Storage 1. This does not establish the real target
+distribution of the external corpus or coverage of all eight classes. It
+particularly exposes gaps in the proposed software/network/messaging scope
+and missing information in short titles.
 
-**İnsan onaylı kayıt: 0. Gold kayıt: 0.** AI güven alanı kalibre edilmiş olasılık
-değil, inceleme notudur. Bu öneriler bağımsız uzman etiketlemesinin yerine geçmez.
-İncelenen pilot geliştirme verisidir; sonradan insan onayı almak onu yeni bağımsız
-audit verisine dönüştürmez. Araç bu tür audit kullanımını reddeder.
+**Human-approved records: 0. Gold records: 0.** The AI confidence field is a
+review note, not a calibrated probability. These proposals do not replace
+independent expert annotation. The inspected pilot is development data; later
+human approval does not turn it into new independent audit data. The tool
+rejects that use.
 
-## İnsan incelemesi için hazır dosyalar
+## Files ready for human review
 
-Tam metinler ve inceleme dosyaları Git'in yok saydığı
-`reports/private/taxonomy-pilot-v1` altında:
+Full texts and original review files are in the Git-ignored directory
+`reports/private/taxonomy-pilot-v1`:
 
-- `review_blind.csv`: kaynak kategori ve tahmin olmadan boş inceleme formu.
-- `provisional_annotations.csv`: AI önerisi, gerekçe ve boş insan kararı alanları.
-- `ai_proposals.json`: satır ID'siyle tam gerekçeli öneri kaydı.
-- `hidden_source_lineage.csv`: yalnız adjudication aşamasında açılacak kaynak etiketleri.
-- `pilot_group_members.csv`: aynı metne bağlı tüm kaynak ID'leri.
-- `reserved_unreviewed_pool.csv`: pilotla kesişmeyen, henüz incelenmemiş gruplar.
-- `quarantined_conflicts.csv`: kaynak etiket çelişkileri.
+- `review_blind.csv`: blank review sheet without source categories or predictions.
+- `provisional_annotations.csv`: AI proposals, rationales and blank human-decision fields.
+- `ai_proposals.json`: complete rationale records keyed by row ID.
+- `hidden_source_lineage.csv`: source labels to open only during adjudication.
+- `pilot_group_members.csv`: all source IDs associated with each text.
+- `reserved_unreviewed_pool.csv`: unreviewed groups disjoint from the pilot.
+- `quarantined_conflicts.csv`: source-label conflicts.
 
-Kaynak anonimleştirme beyanına rağmen metinlerde kalıntı tanımlayıcılar bulunabilir;
-tam metinler yayımlanmadı. Paylaşılan raporlar yalnız sayılar, durumlar, genel
-kelime örüntüleri ve hash'lerdir. Atıf: Leonardo Santiago Benitez Pereira,
-*Classification of IT Support Tickets*, Zenodo, 2022, DOI 10.5281/zenodo.7384758,
-CC BY 4.0.
+An English revision of the authored rationales is available in
+`reports/private/taxonomy-pilot-v1-en`. Use this revision for English-language
+review. The original pilot is retained as historical evidence. Translation
+changes only the rationale wording; source ticket texts, IDs, labels, statuses,
+confidence values and human review fields are preserved. The public
+[English revision record](../reports/annotation/2026-11-12/english_revision.json)
+links the original and translated hashes and records the integrity checks.
+The original summary and verification records continue to describe the original
+pilot; [the English revision summary](../reports/annotation/2026-11-12/english_annotation_summary.json)
+describes the translated copy.
 
-## Karara bağlanması gereken somut sınırlar
+Residual identifiers may remain in texts despite the source's anonymization
+statement, so full texts were not published. Shared reports contain only counts,
+statuses, general word patterns and hashes. Attribution: Leonardo Santiago
+Benitez Pereira, *Classification of IT Support Tickets*, Zenodo, 2022,
+DOI 10.5281/zenodo.7384758, CC BY 4.0.
 
-1. Eski etiketleri bire bir korumak isteniyorsa, eski kaynağın kuralları veya
-   yetkili alan sahibinin açıklaması gerekir. Train kelimelerinden kesin sözlük çıkarılamaz.
-2. İş anlamına göre yeni rehber kabul edilecekse bu yeni bir taksonomi sürümüdür;
-   eski etiketli train verisi kendiliğinden doğru etiketli hale gelmez. Yeni
-   etiketleme ve uygun veriyle yeniden eğitim gerekir.
-3. Yazılım/ağ/mesajlaşma/güvenlik desteği bu ürünün kapsamındaysa açık sınıflar
-   veya gerekçeli sınırlar tanımlanmalı; Miscellaneous sessizce genişletilmemeli.
-4. Paylaşılan posta kutusu oluşturma, posta adresi/listesi bakımı ve dosya kilidi
-   örnekleri rehber sınırı kararı gerektiriyor. Belirsizlikler cevaplanmadan bu
-   kayıtlar gold veri olarak dışarı verilmemeli.
-5. Gerçek bağımsız risk/audit için taksonomi ve örnekleme protokolü sabitlendikten
-   sonra, pilot dışında kalan uygun gruplar uzmanlarca tahminlere bakmadan
-   etiketlenmeli; dil, tekrar ve temsil kapsamı kontrol edilmeli.
+## Specific boundaries requiring a decision
 
-Üretim etiketlerine yeni anlamlar atayan bir değişiklik veya model terfisi
-yapılmadı. Bu adımın çıktısı, doğrulanamayan kısmı gizlemeyen kaynak araştırması,
-açık bir rehber önerisi ve gerçek metinler üzerinde tamamlanmış geçici pilot
-incelemesidir.
+1. Preserving the old labels exactly requires the old source's rules or an
+   explanation from an authorized domain owner. Train vocabulary cannot establish
+   a definitive dictionary.
+2. Adopting a guide based on business meanings creates a new taxonomy version;
+   old labeled train data does not become correctly labeled automatically.
+   New annotation and retraining on suitable data are required.
+3. If software/network/messaging/security support is in scope, explicit classes
+   or justified boundaries must be defined; Miscellaneous must not be silently
+   expanded.
+4. Shared mailbox creation, email address/list maintenance and file-lock examples
+   need guide boundary decisions. They must not be exported as gold data while
+   those ambiguities remain unresolved.
+5. For genuine independent risk/audit validation, freeze the taxonomy and sampling
+   protocol first. Experts should then label suitable groups outside the pilot
+   without viewing predictions, with checks for language, duplicates and
+   representativeness.
 
-## Çalıştırılan doğrulamalar
+No change assigning new meanings to production labels or promoting a model
+was made. This step produced source research that exposes what could not be
+verified, an explicit proposed guide and a completed provisional review of
+real texts.
 
-- Kör örnekleme, ID bütünlüğü, zorla etiket atamayı reddetme, değiştirilmiş
-  inceleme dosyasını yakalama ve pilotun audit'e dönüşmemesi için 8 test geçti.
-- Tam takım: **158 test geçti**, 94 bağımlılık uyarısı, 18,02 saniye.
-- Ruff, strict mypy (67 kaynak dosya) ve `git diff --check` başarılı.
-- Pilot metin/öneri/taksonomi hash'leri doğrulandı. Ayrılmış 1.406 metin grubu
-  pilotun hiçbir tekrar üyesiyle kesişmiyor; insan onaylı yeni gold sayısı sıfır.
-- DVC durumu `{}`; 42 üretim çıktı kaydı, üretim kaynakları, model/eşik dosyaları
-  ve lock değişmedi. Sabit aday paketi de bütünlük kontrolünü geçti.
-- Yeni model eğitimi/terfisi, hosted CI koşusu veya commit/push yapılmadı.
+## Checks performed in the original pilot run
 
-Sayısal kayıt: [`verification.json`](../reports/annotation/2026-11-12/verification.json).
+- Eight tests passed for blind sampling, ID integrity, rejection of forced
+  labeling, detection of changed review sheets and preventing the pilot from
+  becoming audit data.
+- Full suite: **158 passed**, 94 dependency warnings, 18.02 seconds.
+- Ruff, strict mypy (67 source files) and `git diff --check` passed.
+- Pilot text/proposal/taxonomy hashes were verified. The 1,406 reserved text
+  groups do not overlap any duplicate member of the pilot; the count of new
+  human-approved gold records is zero.
+- DVC status was `{}`. The 42 production output records, production sources,
+  model/threshold files and lock were unchanged. The frozen candidate package
+  also passed integrity checks.
+- No new model training/promotion, hosted CI run or commit/push occurred in that run.
+
+Numeric record: [`verification.json`](../reports/annotation/2026-11-12/verification.json).
