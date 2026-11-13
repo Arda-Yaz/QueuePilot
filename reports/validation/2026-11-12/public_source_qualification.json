@@ -1,0 +1,53 @@
+{
+  "rows": 2229,
+  "source_label_counts": {
+    "Support general": 762,
+    "Fileservice": 684,
+    "Software": 222,
+    "O365": 219,
+    "Active Directory": 133,
+    "Computer-Services": 106,
+    "EOL": 103
+  },
+  "source_id_duplicates": 0,
+  "normalized_text_duplicates": 758,
+  "unique_normalized_texts": 1471,
+  "conflicting_label_text_groups": 1,
+  "source_train_test_shared_normalized_texts": 33,
+  "source_split_counts": {
+    "train": 1572,
+    "test": 657
+  },
+  "blank_texts": 0,
+  "exact_normalized_overlap_with_original": 0,
+  "unsupported_labels": [
+    "Active Directory",
+    "Computer-Services",
+    "EOL",
+    "Fileservice",
+    "O365",
+    "Software",
+    "Support general"
+  ],
+  "label_mapping_applied": false,
+  "compatible_with_full_eight_class_audit": false,
+  "source_train_test_names_do_not_refer_to_queuepilot_partitions": true,
+  "independence_limit": "Distinct provenance and normalized exact-text check; near-duplicate and taxonomy equivalence not proven",
+  "source": "https://zenodo.org/records/7384758",
+  "doi": "10.5281/zenodo.7384758",
+  "author": "Leonardo Santiago Benitez Pereira",
+  "license": "CC-BY-4.0",
+  "publisher_description": "2229 real IT tickets classified by three IT professionals in 2020; multilingual; anonymized",
+  "checksums_sha256": {
+    "metadata.json": "c713baea6a2339a09bc29af8341c708a632874d7ed87d1dfc313c0dc87d25705",
+    "X_train.csv": "789712f97fb472544eeb82d8f5a142ed46e0bf254c6c34ac53a9f1575a9d460e",
+    "X_test.csv": "4b808bc32c57f063960a3a4e7a4a30769c96be8143649aadc86835f4cb9763e5",
+    "y_train.csv": "cb851ff4d5e792886504b3040bcc85a5dbf94514d31293eddd6d69fcb7278d53",
+    "y_test.csv": "2b10db5e2f071e649efb3d40dd007ec62bc661f35b4afaf44117a00865760f94"
+  },
+  "metadata_license_checked": true,
+  "model_predictions_used_to_map_labels": false,
+  "qualification_source_sha256": "3908262940d7d7cab032034c3e6b0fee4ea736a91c03b638759fff35e3d25ea5",
+  "original_dataset_sha256": "044fdace33fa564e1e60453f2941dafc95539c99878b0d32746950394b9dd4d4",
+  "decision": "Do not use as an eight-class risk/audit corpus without a justified taxonomy alignment"
+}

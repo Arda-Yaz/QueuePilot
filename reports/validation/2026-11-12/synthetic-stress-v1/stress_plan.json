@@ -1,0 +1,38 @@
+{
+  "origin": "AI-authored, fictional policy specifications; no real labels or tickets",
+  "license": "CC0-1.0",
+  "independent_real_world_evidence": false,
+  "category_meanings": "Conventional authored meanings for these scenarios, NOT verified equivalence to the original training taxonomy",
+  "scenario_count": 80,
+  "rows": 240,
+  "variants": [
+    "plain",
+    "email",
+    "typo"
+  ],
+  "variants_are_correlated": true,
+  "thresholds": {
+    "reference": 0.6,
+    "candidate": 0.6
+  },
+  "threshold_interpretation": "Fixed shared numeric stress-test setting; not a new candidate production threshold or calibration-equivalent operating point",
+  "no_threshold_search": true,
+  "no_retraining": true,
+  "no_automatic_promotion": true,
+  "cases_sha256": "6354a4c1e2d624fa7a14f015d105ca51cbb5564b78ff21adb001bb9f9c2cbf79",
+  "frozen_bundle_sha256": "00f7468877729c8bfa9b25d32993419ef0d41cb17c169a96b1eaf1d3b782d05f",
+  "source_sha256": {
+    "benchmarks/stress_scenarios.py": "350e34f81c1deafb939a3909417f05fc24da034eac402f9f0e00a3471da88d89",
+    "benchmarks/synthetic_stress.py": "991d6412a4b0db473d9e1914c0d28aa6c56d69ac32e4ae3918015d3cbf5c8859"
+  },
+  "label_specification": {
+    "Access": "Ordinary account sign-in/authentication",
+    "Administrative rights": "Privileged/elevated permission requests",
+    "Hardware": "Physical equipment faults",
+    "Storage": "Capacity, file backup/recovery",
+    "Purchase": "Procurement, orders, licenses",
+    "HR Support": "Payroll, leave, personnel questions",
+    "Internal Project": "Planned internal IT project coordination",
+    "Miscellaneous": "General service-desk process questions"
+  }
+}

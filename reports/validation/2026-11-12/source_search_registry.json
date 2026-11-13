@@ -1,0 +1,30 @@
+{
+  "checked_on": "2026-11-12",
+  "sources": [
+    {
+      "url": "https://zenodo.org/records/7384758",
+      "latest_record": "https://zenodo.org/records/7648117",
+      "downloaded": true,
+      "license_verified": "CC-BY-4.0",
+      "human_label_provenance": "Publisher states three IT professionals labeled real company tickets in 2020",
+      "latest_four_csv_checksums_identical": true,
+      "decision": "Real external corpus acquired; seven service labels do not match QueuePilot taxonomy; no automatic mapping or accuracy calculation"
+    },
+    {
+      "url": "https://data.mendeley.com/datasets/7pfzrjpct7/1",
+      "source_repository": "https://github.com/gabrielpreda/Support-Tickets-Classification",
+      "downloaded": false,
+      "license_on_record": "CC-BY-4.0",
+      "decision": "Original repository uses encoded operational labels; compatible independent eight-class labels not established. Linked Azure CSV endpoint failed DNS resolution; no content-overlap claim made."
+    },
+    {
+      "url": "https://huggingface.co/datasets/Tobi-Bueck/customer-support-tickets",
+      "downloaded": false,
+      "license_on_card": "CC-BY-NC-4.0",
+      "decision": "Different queue taxonomy; card promotes synthetic ticket generation and independently human-labeled provenance was not established; not selected for real independent audit"
+    }
+  ],
+  "real_eight_class_independent_audit_completed": false,
+  "synthetic_stress_completed": true,
+  "no_model_promotion": true
+}

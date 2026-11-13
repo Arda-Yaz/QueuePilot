@@ -1,0 +1,31 @@
+{
+  "version": "operational-proposal-v1",
+  "status": "proposal_requires_domain_adjudication",
+  "equivalent_to_original_training_taxonomy": false,
+  "original_source": "https://www.kaggle.com/datasets/adisongoh/it-service-ticket-classification-dataset",
+  "source_evidence": "Publisher metadata lists names, Document and Topic_group, but supplies no class inclusion/exclusion or annotation rules.",
+  "classes": {
+    "Access": {"include": "Ordinary account activation, sign-in, authentication, password/MFA, ordinary application or resource access permissions.", "exclude": "Explicit administrative/root/sudo/elevated privileges; storage capacity or recovery; unspecified software failures."},
+    "Administrative rights": {"include": "Grant, revoke or use explicitly privileged admin/root/sudo/elevated roles or execution.", "exclude": "Ordinary login/password resets; ordinary file-share permissions without administrative elevation; a generic application failure."},
+    "Hardware": {"include": "Explicit physical equipment fault, damaged component, power failure or physical device replacement due to a fault.", "exclude": "Unspecified software, email or network service failure; a purchase order; an issue where physical fault is not established."},
+    "Storage": {"include": "Storage quota/capacity, file backup or recovery, storage volume/disk data integrity and file persistence.", "exclude": "A user lacks permission to open a share (Access); privileged ACL administration (Administrative rights); unspecified application failure."},
+    "Purchase": {"include": "Procurement, supplier quote/order/invoice, buying or commercially renewing equipment/software licenses.", "exclude": "Repair only; activate an already-owned license without a procurement request; unrelated payroll."},
+    "HR Support": {"include": "Personnel, leave, payroll, benefits or employment record/process requests.", "exclude": "A generic HR application login problem (Access); generic software failure without an HR business-process request."},
+    "Internal Project": {"include": "Explicit planning, milestones, staffing or coordination of a planned internal IT project/change program.", "exclude": "Ordinary incidents or requests merely mentioning a project/customer name; an unspecified 'project' keyword."},
+    "Miscellaneous": {"include": "Explicit general service-desk process, contact, opening-hours, ticket-status/duplicate closure or general IT service information.", "exclude": "Not a fallback for missing context, ambiguous intent, network/software incidents or categories absent from this proposal."}
+  },
+  "unresolved_statuses": {
+    "INSUFFICIENT_CONTEXT": "Text cannot establish a primary request or decisive class evidence.",
+    "OUT_OF_SCOPE": "Clear request, but generic software/network/other issue has no justified class in this eight-class proposal.",
+    "MULTI_INTENT": "Two independently actionable intents require different classes; no supported primary request.",
+    "TAXONOMY_REVIEW": "Class boundary or scope must be decided by the domain owner.",
+    "SOURCE_LABEL_CONFLICT": "Identical normalized source text has conflicting original service labels; quarantine before pilot."
+  },
+  "annotation_rules": [
+    "Use the full provided text, including negations. Never infer absent intent from product names alone.",
+    "Do not see model predictions, confidence scores or source service labels while assigning a provisional label.",
+    "Give one short rationale grounded in visible text. Record ambiguity explicitly instead of forcing a class.",
+    "All AI annotations remain provisional; human adjudication and an approved taxonomy are required before any audit export.",
+    "The pilot is development data; never use it as a new independent risk/audit set."
+  ]
+}

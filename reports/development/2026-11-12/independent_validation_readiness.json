@@ -1,0 +1,21 @@
+{
+  "status": "waiting_for_genuinely_new_labeled_data",
+  "real_new_data_evaluations": 0,
+  "bundle_manifest_sha256": "00f7468877729c8bfa9b25d32993419ef0d41cb17c169a96b1eaf1d3b782d05f",
+  "reference_model_sha256": "ea6b1f9ca0075bd32ee39d01a249b4b8860537f576e52ba8e8afc6dd1a169843",
+  "candidate_model_sha256": "d3c997c2d12d7ea793cf7db6f4dd6bd200a5da428a877fa4e657439f9aae4378",
+  "new_data_available": false,
+  "production_model_changed": false,
+  "validation_scope": "Only frozen-package integrity and synthetic automated tests completed",
+  "external_real_corpus_acquired": true,
+  "external_source": "https://zenodo.org/records/7384758",
+  "compatible_eight_class_data_available": false,
+  "synthetic_stress_completed": true,
+  "external_qualification_report": "reports/validation/2026-11-12/public_source_qualification.json",
+  "limitation": "Downloaded real corpus uses incompatible service labels; synthetic scenario results are not real independent audit evidence",
+  "taxonomy_pilot_rows": 64,
+  "provisional_eight_class_labels": 23,
+  "new_human_gold_rows": 0,
+  "taxonomy_rules_approved": false,
+  "remaining_unreviewed_groups": 1406
+}

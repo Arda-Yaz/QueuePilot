@@ -1,0 +1,62 @@
+{
+  "revision": "english_rationales_v1",
+  "date": "2026-11-13",
+  "change": "English translation of 64 authored AI rationale notes; no relabeling or new review",
+  "translation_origin": "codex_ai_translation_of_existing_provisional_notes",
+  "independent_domain_review_performed": false,
+  "source": {
+    "directory": "reports/private/taxonomy-pilot-v1",
+    "files_sha256": {
+      "ai_proposals.json": "0f1372f4f8beeac76e2e9b11cf61c28250587e65924d7f4eba2f6d2c02c28532",
+      "provisional_annotations.csv": "bd8e19578be11564e1faaa3acd01786c5a8f813971aa09e6a71b701dde02ce74",
+      "annotation_summary.json": "a54e04184c08c772deb8832b31d600575240098301e59a0a74fbd97251ed8d8b"
+    }
+  },
+  "english_revision": {
+    "directory": "reports/private/taxonomy-pilot-v1-en",
+    "files_sha256": {
+      "ai_proposals.json": "ad5eb2b59bbf1ad3f2d736e8efbb77b109223cb6c4002616c117cf2700db3b25",
+      "provisional_annotations.csv": "3972bbd41dfebb6ba93c2e3d1d9396a57ff3725e1769f62f8a56f4c128edb6f0",
+      "annotation_summary.json": "f9a511675db464da4ae883b9a91aab8f859d9b66a8090808e4aac6bb757d74b5"
+    }
+  },
+  "language": "English for authored rationales; original languages retained in source ticket text",
+  "pilot_rows": 64,
+  "changed_fields": [
+    "rationale"
+  ],
+  "unchanged_annotation_fields": [
+    "annotation_id",
+    "Document",
+    "text_sha256",
+    "proposed_label",
+    "status",
+    "confidence",
+    "annotator_id",
+    "human_reviewer_id",
+    "human_decision",
+    "gold_approved"
+  ],
+  "copied_files_sha256": {
+    "hidden_source_lineage.csv": "e95f23c9c1d26ca52f26956115c62783739f16bf0925775ea5c8b51ebc9bc615",
+    "pilot_group_members.csv": "aaf1517d999bd55fe6d7a74ab9e1a1eb08c4d039fb6129dc30a29a205022f3b8",
+    "pilot_manifest.json": "a4d00cb28a59bf77ab979b980fccdafa47f7f0a7628d010988a3dd98c80b2908",
+    "quarantined_conflicts.csv": "a0b2e9ed53bfbfc084ae801cec0854dc7b926b166b1f0c1de74f59b7d8c45131",
+    "reserved_unreviewed_pool.csv": "eff292bde46dfe0498e096ff7396217350b4b8d2030f3dabce4859ad788e6669",
+    "review_blind.csv": "41c2c317d55c0c4d2f67261ea32891fddb2fc152420b1dbd94fdd48fd138d780",
+    "train_label_profiles.json": "f02df862bb6e822a7793a44c5880bfe2756a80b8fe8ee179e5ae88278a45fa2f"
+  },
+  "checks": {
+    "all_original_files_byte_identical": true,
+    "copied_source_and_lineage_files_byte_identical": true,
+    "all_annotation_fields_except_rationale_equal": true,
+    "proposal_fields_except_rationale_equal": true,
+    "summary_fields_except_annotation_hash_equal": true,
+    "all_64_rationales_match_translated_proposals": true
+  },
+  "human_adjudicated_rows": 0,
+  "gold_rows": 0,
+  "eligible_for_independent_audit": false,
+  "publication": "Hashes and aggregate counts only; full texts and rationale files remain Git-ignored",
+  "historical_records": "Original annotation_summary.json and verification.json remain records of the original pilot"
+}

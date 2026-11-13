@@ -1,0 +1,85 @@
+{
+  "interpretation": "Empirical associations in train labels, not verified class definitions",
+  "profiles": {
+    "Access": {
+      "train_rows": 4987,
+      "top_associated_terms": [
+        "confluence",
+        "card",
+        "license",
+        "password",
+        "user"
+      ]
+    },
+    "Administrative rights": {
+      "train_rows": 1232,
+      "top_associated_terms": [
+        "upgrade",
+        "outlook",
+        "windows",
+        "windows upgrade",
+        "issues"
+      ]
+    },
+    "HR Support": {
+      "train_rows": 7640,
+      "top_associated_terms": [
+        "starter",
+        "form",
+        "new starter",
+        "error",
+        "leave"
+      ]
+    },
+    "Hardware": {
+      "train_rows": 9532,
+      "top_associated_terms": [
+        "monitor",
+        "laptop",
+        "meeting",
+        "room",
+        "cable"
+      ]
+    },
+    "Internal Project": {
+      "train_rows": 1483,
+      "top_associated_terms": [
+        "code",
+        "project",
+        "codes",
+        "setup",
+        "pipeline"
+      ]
+    },
+    "Miscellaneous": {
+      "train_rows": 4942,
+      "top_associated_terms": [
+        "change",
+        "add",
+        "approval",
+        "owner",
+        "approve"
+      ]
+    },
+    "Purchase": {
+      "train_rows": 1725,
+      "top_associated_terms": [
+        "po",
+        "purchase",
+        "purchase po",
+        "purchased",
+        "item"
+      ]
+    },
+    "Storage": {
+      "train_rows": 1944,
+      "top_associated_terms": [
+        "wants",
+        "mailbox",
+        "folder",
+        "accept decline",
+        "decline"
+      ]
+    }
+  }
+}

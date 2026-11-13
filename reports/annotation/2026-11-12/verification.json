@@ -1,0 +1,13 @@
+{
+  "full_suite_passed": 158,
+  "dependency_warnings": 94,
+  "seconds": 18.02,
+  "ruff": "passed",
+  "strict_mypy": "passed (67 source files)",
+  "dvc_status": {},
+  "production_output_records_unchanged": 42,
+  "pilot_rows": 64,
+  "reserved_groups": 1406,
+  "new_human_gold_rows": 0,
+  "original_operational_taxonomy_verified": false
+}

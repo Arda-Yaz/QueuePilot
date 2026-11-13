@@ -4,6 +4,8 @@
 
 **Stack** · Python · scikit-learn · PyTorch · FastAPI · DVC · Docker
 
+QueuePilot is a reproducible reference system evaluated on a public eight-label dataset. Organization adoption is intended to start with a human-reviewed pilot: validate category-to-queue meanings, collect corrections, then adapt the model and thresholds to that organization's data. Operator feedback storage, configurable organization queue mapping and automatic retraining are roadmap items. [Current scope and adaptation roadmap](docs/PROJECT_SCOPE.md)
+
 A ticket like “Cannot access my account” illustrates the triage problem. The baseline predicts **Access**, but its confidence is **0.533**, below its **0.60** routing threshold. QueuePilot returns the category suggestion and flags the ticket for review. For “My laptop keyboard is broken,” the same model predicts **Hardware** with **0.976** confidence and recommends automatic routing. Both examples are outputs from the fitted baseline.
 
 ## How a ticket becomes a routing decision
@@ -51,9 +53,10 @@ Read `category` for the suggested queue and `needs_manual_review` for the routin
 <details>
 <summary>Start the baseline on Windows</summary>
 
-The current v2 models are local and have not been published to the remote. The
-`dvc pull` step below applies after their model objects have been uploaded; until
-then use the locally trained artifacts or [reproduce the pipeline](docs/REPRODUCTION.md).
+The `dvc pull` step requires the model objects referenced by the current lock to
+be available in the remote and DVC credentials to be configured. Remote
+availability was not rechecked in this documentation/analysis change. Locally
+available artifacts can also be used, or [reproduce the pipeline](docs/REPRODUCTION.md).
 
 From the repository root, with Python 3.12 and DVC authenticated to the [QueuePilot model repository](https://dagshub.com/Arda-Yaz/QueuePilot), run:
 
@@ -70,3 +73,9 @@ dvc pull artifacts/baseline.joblib
 
 
 See [reproduction instructions](docs/REPRODUCTION.md) for inputs, source snapshots, prediction provenance and the historical LF lock migration.
+
+## Scope and further development
+
+The 92.95% accepted accuracy above belongs to the recorded dataset benchmark. Queue descriptions and routing policies should be validated against an organization's actual workflows during adoption; new label meanings require suitable labeled data and evaluation.
+
+Additional [development experiments](docs/DEVELOPMENT_ERROR_ANALYSIS_2026-11-12.md), [external/synthetic diagnostics](docs/EXTERNAL_DATA_AND_STRESS_2026-11-12.md) and a [taxonomy review pilot](docs/TAXONOMY_AND_ANNOTATION_2026-11-12.md) are preserved as research evidence. They have not replaced the release model or its benchmark results. Proposed category definitions are not presented as the original publisher's verified taxonomy. [Implemented capabilities versus roadmap](docs/PROJECT_SCOPE.md)

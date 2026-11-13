@@ -1,0 +1,20 @@
+{
+  "pilot_rows": 64,
+  "status_counts": {
+    "LABELABLE": 23,
+    "INSUFFICIENT_CONTEXT": 20,
+    "OUT_OF_SCOPE": 13,
+    "TAXONOMY_REVIEW": 7,
+    "MULTI_INTENT": 1
+  },
+  "proposed_label_counts": {
+    "Access": 20,
+    "Administrative rights": 2,
+    "Storage": 1
+  },
+  "human_adjudicated_rows": 0,
+  "gold_rows": 0,
+  "eligible_for_independent_audit": false,
+  "annotations_sha256": "bd8e19578be11564e1faaa3acd01786c5a8f813971aa09e6a71b701dde02ce74",
+  "taxonomy_sha256": "88032c490664145ffd9e90e82a9d91d4a78f3fa3f389549d0eb66b1e90d01ee5"
+}
