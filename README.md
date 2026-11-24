@@ -50,6 +50,8 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/predict `
 
 Read `category` for the suggested queue and `needs_manual_review` for the routing decision. The response also includes `confidence`, `threshold` and `top_3`. When API-key authentication is enabled, supply the key in the `X-API-Key` header.
 
+Operators can also request a draft with citations from a local support corpus. [Resolution suggestions and offline demo](support/README.md)
+
 <details>
 <summary>Start the baseline on Windows</summary>
 

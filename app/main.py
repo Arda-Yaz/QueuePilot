@@ -1,6 +1,7 @@
 import json
 import os
 import secrets
+import sqlite3
 import time
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -8,11 +9,19 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response, status
+from fastapi.exception_handlers import request_validation_exception_handler
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from prometheus_client import Counter, Histogram, make_asgi_app
 from starlette.routing import Match
 
+from app.resolution.service import (
+    IdempotencyConflict,
+    ResolutionResult,
+    ResolutionService,
+    service_from_env,
+)
 from app.schemas import PredictionResponse as PredictionResponse
 from app.schemas import TicketRequest as TicketRequest
 from app.schemas import TopPrediction as TopPrediction
@@ -60,8 +69,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         )
     print(f"Loading model: {MODEL_BACKEND} (APP_ENV={APP_ENV})")
     app.state.predictor = get_predictor(MODEL_BACKEND)
-    yield
-    app.state.predictor = None
+    app.state.resolution = service_from_env(api_key_configured=bool(API_KEY))
+    try:
+        yield
+    finally:
+        app.state.predictor = None
+        app.state.resolution = None
 
 
 app = FastAPI(
@@ -104,6 +117,17 @@ def require_api_key(x_api_key: str | None = Header(default=None)) -> None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing API key")
     if not secrets.compare_digest(x_api_key, API_KEY):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
+
+
+@app.exception_handler(RequestValidationError)
+async def handle_request_validation(request: Request, exc: RequestValidationError) -> Response:
+    if getattr(request.scope.get("route"), "path", None) == "/suggest-resolution":
+        # Keep ticket text and idempotency keys out of validation responses.
+        exc = RequestValidationError([
+            {key: value for key, value in error.items() if key in {"type", "loc", "msg"}}
+            for error in exc.errors()
+        ])
+    return await request_validation_exception_handler(request, exc)
 
 
 @app.get("/", include_in_schema=False)
@@ -175,3 +199,22 @@ def predict_ticket(
         AUTO_ROUTE_COUNT.inc()
 
     return result
+
+
+@app.post("/suggest-resolution", response_model=ResolutionResult)
+async def suggest_resolution(
+    request: Request,
+    ticket: TicketRequest,
+    idempotency_key: str = Header(min_length=1, max_length=128, pattern=r"^[A-Za-z0-9._~-]+$"),
+    _: None = Depends(require_api_key),
+) -> ResolutionResult:
+    service: ResolutionService | None = getattr(request.app.state, "resolution", None)
+    if service is None:
+        raise HTTPException(503, detail="Resolution suggestions are disabled.")
+    scope = "anonymous" if API_KEY is None else f"api-key:{API_KEY}"
+    try:
+        return await service.suggest(ticket.text, scope, idempotency_key)
+    except IdempotencyConflict:
+        raise HTTPException(409, detail="Idempotency-Key already used for a different ticket.") from None
+    except (sqlite3.Error, TimeoutError):
+        raise HTTPException(503, detail="Resolution operation storage is unavailable.") from None

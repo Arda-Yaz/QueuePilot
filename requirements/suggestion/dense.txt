@@ -1,0 +1,4 @@
+# Optional local embedding runtime outside the classifier's training requirements.
+sentence-transformers==5.2.0
+transformers==4.57.3
+huggingface-hub==0.36.0

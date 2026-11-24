@@ -157,6 +157,7 @@
 
     var headers = { "Content-Type": "application/json" };
     var key = els.keyInput.value.trim();
+    var text = els.text.value;
     if (key) headers["X-API-Key"] = key;
 
     var requestTimedOut = false;
@@ -169,7 +170,7 @@
     fetch("/predict", {
       method: "POST",
       headers: headers,
-      body: JSON.stringify({ text: els.text.value }),
+      body: JSON.stringify({ text: text }),
       signal: controller.signal
     })
       .then(function (response) {
@@ -185,6 +186,11 @@
         clearTimeout(timer);
         if (result.ok) {
           renderPrediction(result.payload);
+          if (els.text.value === text && els.keyInput.value.trim() === key) {
+            els.form.dispatchEvent(new CustomEvent("queuepilot:routing-decision", {
+              detail: result.payload.needs_manual_review === true
+            }));
+          }
         } else if (result.status === 401) {
           els.conn.hidden = false;
           els.keyInput.focus();

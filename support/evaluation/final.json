@@ -1,0 +1,8 @@
+[
+  {"id":"final-tr-storage","language":"tr","ticket":"Ortak dosya alanında silinen dosya için nereye bakmalıyım?","gold_sources":["storage:recover:1"],"expected":"Web arayüzündeki geri dönüşüm kutusunu kontrol et. Dosya varsa özgün konumuna geri yükle, yoksa silinme zamanı ve klasör yolunu operatöre ilet."},
+  {"id":"final-tr-wifi","language":"tr","ticket":"Wi-Fi bağlantısı parola değişikliğinden sonra sürekli parola soruyor.","gold_sources":["wifi:saved-network:1"],"expected":"Eski kablosuz ağ profilini unut, kurumsal Wi-Fi ağını seç ve yeni parolayla bağlan."},
+  {"id":"final-en-display","language":"en","ticket":"My second screen stays dark when I plug the notebook into the hub.","gold_sources":["display:dock-monitor:1"],"expected":"Reseat the display cable, verify the selected input, then use Detect in display settings."},
+  {"id":"final-en-mic","language":"en","ticket":"Nobody can hear my headset microphone in the meeting. What should I check?","gold_sources":["headset:input:1"],"expected":"Select the headset as the input in meeting audio settings, run the mic test, and check the physical mute switch if the meter stays flat."},
+  {"id":"final-en-procurement","language":"en","ticket":"Can you order a replacement headset microphone from the supplier?","gold_sources":[],"expected":null},
+  {"id":"final-tr-travel","language":"tr","ticket":"Yurt dışı seyahat harcırahı avansını hangi tarihte alabilirim?","gold_sources":[],"expected":null}
+]

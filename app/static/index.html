@@ -90,6 +90,17 @@
           <span class="data-label">Alternative predictions</span>
           <ol id="r-top3" class="pred-list"></ol>
         </div>
+
+        <section id="suggest-panel" hidden>
+          <form id="suggest-form">
+            <button type="submit" id="suggest-btn" disabled>Suggest resolution</button>
+          </form>
+          <div id="suggest-result" aria-live="polite">
+            <p id="suggest-status"></p>
+            <p id="suggest-draft" hidden></p>
+            <ul id="suggest-sources" hidden></ul>
+          </div>
+        </section>
       </div>
     </section>
 
@@ -162,5 +173,6 @@
 </footer>
 
 <script src="/static/app.js"></script>
+<script src="/static/suggest.js"></script>
 </body>
 </html>

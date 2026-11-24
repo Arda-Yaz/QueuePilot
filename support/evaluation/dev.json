@@ -1,0 +1,7 @@
+[
+  {"id":"dev-en-vpn","language":"en","ticket":"The VPN client says the profile expired. How do I renew the VPN profile?","gold_sources":["vpn:expired-profile:1"],"expected":"Download a fresh profile from the self-service portal, import it, and reconnect."},
+  {"id":"dev-tr-print","language":"tr","ticket":"Yazıcı kuyruğunda takılı yazdırma işi var, ne yapmalıyım?","gold_sources":["printer:stuck-queue:1"],"expected":"Kendi takılı işini iptal et ve tek sayfalık test çıktısı gönder."},
+  {"id":"dev-en-calendar","language":"en","ticket":"My shared calendar is missing a new meeting. What should I check?","gold_sources":["calendar:refresh:1"],"expected":"Check the calendar in the browser first. If present, sync and reopen the desktop calendar. Otherwise verify calendar and permissions with the organizer."},
+  {"id":"dev-en-unsupported","language":"en","ticket":"Can you refund my cafeteria meal voucher?","gold_sources":[],"expected":null},
+  {"id":"dev-tr-unsupported","language":"tr","ticket":"Servis güzergahı nerede açıklanıyor?","gold_sources":[],"expected":null}
+]
